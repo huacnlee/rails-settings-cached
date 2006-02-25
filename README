@@ -1,0 +1,46 @@
+Settings
+
+Settings is a plugin that makes managing a table of global key, value pair easy.
+Think of it like a global Hash stored in you database, that uses simple ActiveRecord
+like methods for manipulation.  Keep track of any global setting that you dont want
+to hard code into your rails app.
+
+The syntax is easy.  First, lets create some settings to keep track of:
+	Settings.admin_password = 'supersecret'
+	Settings.date_format = '%m %d, %Y'
+	Settings.foo = 'bar'
+
+Now lets read them back:
+	Settings.foo						# returns 'bar'
+
+Changing an existing setting is the same as creating a new setting:
+	Settings.foo = 'super duper bar'
+
+Decide you dont want to track a particular setting anymore?
+	Settings.destroy :foo
+	Settings.foo						# Now gives a setting variable not found error.
+
+Want a list of all the settings?
+	Settings.all						# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
+
+
+
+To get started, you must create the table used by the Settings model.  Create a new
+migration with "ruby script/generate migration CreateSettingsTable", then go to your
+db/migrate and open the migration we just created.  Replace the the definitions you
+see there with the following:
+
+	def self.up
+		create_table :settings do |t|
+			t.column :var, :string, :null => false
+			t.column :value, :string, :null => true
+			t.column :created_at, :datetime
+			t.column :updated_at, :datetime
+		end
+	end
+
+	def self.down
+		drop_table :settings
+	end
+
+Then you are all set. Enjoy!
