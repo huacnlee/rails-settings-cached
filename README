@@ -24,23 +24,35 @@ Want a list of all the settings?
 	Settings.all						# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
 
+***
+* To get started:
 
-To get started, you must create the table used by the Settings model.  Create a new
-migration with "ruby script/generate migration CreateSettingsTable", then go to your
-db/migrate and open the migration we just created.  Replace the the definitions you
-see there with the following:
+You must create the table used by the Settings model.  Simply run this command:
+	ruby script/generate settings_migration
 
-	def self.up
-		create_table :settings do |t|
+Now just put that migration in the database with:
+	rake migrate
+
+
+
+All there is to it!. Enjoy!
+
+
+
+
+The migration generator gives you the following schema:
+
+	class AddSettingsTable < ActiveRecord::Migration
+	  def self.up
+		create_table :settings, :force => true do |t|
 			t.column :var, :string, :null => false
 			t.column :value, :string, :null => true
 			t.column :created_at, :datetime
 			t.column :updated_at, :datetime
 		end
-	end
+	  end
 
-	def self.down
+	  def self.down
 		drop_table :settings
+	  end
 	end
-
-Then you are all set. Enjoy!
