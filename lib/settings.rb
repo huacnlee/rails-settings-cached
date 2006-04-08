@@ -55,10 +55,14 @@ class Settings < ActiveRecord::Base
 
   def self.[]=(var_name, value)
     #set a value to a var name
-    var_name = var_name.to_s
-    
-    if (update_all(['value = ?',value], ['var = ?',var_name]) > 0) || create(:var => var_name, :value => value)
-      @cache[var_name] = value 
+    if self[var_name] != value
+      var_name = var_name.to_s
+      
+      record = Settings.find(:first, :conditions => ['var = ?', var_name]) || Settings.new(:var => var_name)
+      record.value = value
+      record.save
+      
+      @cache[var_name] = value
     end
   end
 end
