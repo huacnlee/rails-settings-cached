@@ -23,6 +23,15 @@ Decide you dont want to track a particular setting anymore?
 Want a list of all the settings?
 	Settings.all						# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
+Set defaults for certain settings of your app.  This will cause the defined settings to return with the
+Specified value even if they are not in the database.
+	Settings.default_values = {:some_setting => 'foo'}
+  			or
+  Settings.default_values.merge!({:some_setting => 'foo'}) #put a line like this in environment.rb
+  
+  Settings.some_setting           #=> returns "foo" even though no record is in the databse for "some_setting"
+  Settings.some_setting = 'bar'   # Database record is now created and this record will be used instead of the default
+
 
 ***
 * To get started:

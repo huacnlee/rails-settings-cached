@@ -8,6 +8,16 @@ class SettingsTest < Test::Unit::TestCase
 		Settings.create(:var => 'secondary_test', :value => 'bar')
 	end
 	
+  def test_defaults
+    Settings.default_values.merge!({:some_setting => 'foo'})
+    assert_equal 'foo', Settings.some_setting
+    assert_nil Settings.find(:first, :conditions => ['var = ?', 'some_setting'])
+    
+    Settings.some_setting = 'bar'
+    assert_equal 'bar', Settings.some_setting
+    assert_not_nil Settings.find(:first, :conditions => ['var = ?', 'some_setting'])
+  end
+  
 	def test_get
 		assert_equal 'foo', Settings.test
 		assert_equal 'foo', Settings[:test]
