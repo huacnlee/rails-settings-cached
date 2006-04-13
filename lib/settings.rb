@@ -1,16 +1,7 @@
 class Settings < ActiveRecord::Base
-  @@defaults  = {}.with_indifferent_access
   @@cache     = {}.with_indifferent_access
   
-  #returns the default values hash
-  def self.default_values
-    @@defaults
-  end
-  
-  #sets the default values hash
-  def self.default_values=(hash)
-    @@defaults = hash.with_indifferent_access
-  end
+  DEFAULT_VALUES = {}.with_indifferent_access
   
   #get or set a variable with the variable as the called method
   def self.method_missing(method, *args)
@@ -61,8 +52,8 @@ class Settings < ActiveRecord::Base
     if var = find(:first, :conditions => ['var = ?', var_name])
       @@cache[var_name] = var.value
       var.value
-    elsif @@defaults[var_name]
-      @@defaults[var_name]
+    elsif DEFAULT_VALUES[var_name]
+      DEFAULT_VALUES[var_name]
     else
       nil
     end

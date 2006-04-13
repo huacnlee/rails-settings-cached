@@ -9,7 +9,7 @@ class SettingsTest < Test::Unit::TestCase
 	end
 	
   def test_defaults
-    Settings.default_values.merge!({:some_setting => 'foo'})
+    Settings::DEFAULT_VALUES.merge!({:some_setting => 'foo'})
     assert_equal 'foo', Settings.some_setting
     assert_nil Settings.find(:first, :conditions => ['var = ?', 'some_setting'])
     
