@@ -3,11 +3,13 @@ Settings
 Settings is a plugin that makes managing a table of global key, value pair easy.
 Think of it like a global Hash stored in you database, that uses simple ActiveRecord
 like methods for manipulation.  Keep track of any global setting that you dont want
-to hard code into your rails app.
+to hard code into your rails app.  You can store any kind of object.  Strings, numbers,
+arrays, or any object.
 
 The syntax is easy.  First, lets create some settings to keep track of:
 	Settings.admin_password = 'supersecret'
 	Settings.date_format = '%m %d, %Y'
+  Settings.cocktails = ['Martini', 'Screwdriver', 'White Russian']
 	Settings.foo = 'bar'
 
 Now lets read them back:

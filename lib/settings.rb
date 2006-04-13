@@ -1,7 +1,6 @@
 class Settings < ActiveRecord::Base
-  @@cache     = {}.with_indifferent_access
-  
-  DEFAULT_VALUES = {}.with_indifferent_access
+  DEFAULT_VALUES  = {}.with_indifferent_access
+  @@cache         = {}.with_indifferent_access
   
   #get or set a variable with the variable as the called method
   def self.method_missing(method, *args)
@@ -30,7 +29,7 @@ class Settings < ActiveRecord::Base
     
     result = {}
     vars.each do |record|
-      result[record.var] = record.value
+      result[record.var] = YAML::load(record.value)
     end
     @@cache = result
     result.with_indifferent_access
@@ -50,23 +49,23 @@ class Settings < ActiveRecord::Base
     return @@cache[var_name] if @@cache[var_name] #return cached value
     
     if var = find(:first, :conditions => ['var = ?', var_name])
-      @@cache[var_name] = var.value
-      var.value
+      value = YAML::load(var.value)
+      @@cache[var_name] = value
+      return value
     elsif DEFAULT_VALUES[var_name]
-      DEFAULT_VALUES[var_name]
+      return DEFAULT_VALUES[var_name]
     else
-      nil
+      return nil
     end
   end
   
   #set a setting value by [] notation
   def self.[]=(var_name, value)
-    #set a value to a var name
     if self[var_name] != value
       var_name = var_name.to_s
       
       record = Settings.find(:first, :conditions => ['var = ?', var_name]) || Settings.new(:var => var_name)
-      record.value = value
+      record.value = value.to_yaml
       record.save
       
       @@cache[var_name] = value

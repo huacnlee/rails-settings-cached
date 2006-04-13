@@ -4,8 +4,8 @@ require File.dirname(__FILE__) + '/../../../../test/test_helper'
 class SettingsTest < Test::Unit::TestCase
 	
 	def setup
-		Settings.create(:var => 'test', :value => 'foo')
-		Settings.create(:var => 'secondary_test', :value => 'bar')
+		Settings.create(:var => 'test',           :value => 'foo'.to_yaml)
+		Settings.create(:var => 'secondary_test', :value => 'bar'.to_yaml)
 	end
 	
   def test_defaults
@@ -43,4 +43,17 @@ class SettingsTest < Test::Unit::TestCase
 		
 		assert_equal '123', Settings.onetwothree
 	end
+  
+  def test_complex_serialization
+    object = [1, '2', {:three => true}]
+    Settings.object = object
+    assert_equal object, Settings.reload.object
+  end
+  
+  def test_serialization_of_float
+    Settings.float = 0.01
+    Settings.reload
+    assert_equal 0.01, Settings.float
+    assert_equal 0.02, Settings.float * 2
+  end
 end
