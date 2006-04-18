@@ -1,5 +1,5 @@
 class Settings < ActiveRecord::Base
-  DEFAULT_VALUES  = {}.with_indifferent_access
+  @@defaults      = (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
   @@cache         = {}.with_indifferent_access
   
   #get or set a variable with the variable as the called method
@@ -52,8 +52,8 @@ class Settings < ActiveRecord::Base
       value = YAML::load(var.value)
       @@cache[var_name] = value
       return value
-    elsif DEFAULT_VALUES[var_name]
-      return DEFAULT_VALUES[var_name]
+    elsif @@defaults[var_name]
+      return @@defaults[var_name]
     else
       return nil
     end

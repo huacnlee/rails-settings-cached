@@ -26,11 +26,16 @@ Want a list of all the settings?
 	Settings.all						# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
 Set defaults for certain settings of your app.  This will cause the defined settings to return with the
-Specified value even if they are not in the database.
-  Settings::DEFAULT_VALUES.merge!({:some_setting => 'foo'}) #put a line like this in environment.rb
+Specified value even if they are not in the database.  Here is what you insert into your environment.rb
+  module SettingsDefaults
+    DEFAULTS = {
+      :setting_one => 'footastic',
+      :setting_two => 123.321
+    }
+  end
   
-  Settings.some_setting           #=> returns "foo" even though no record is in the databse for "some_setting"
-  Settings.some_setting = 'bar'   # Database record is now created and this record will be used instead of the default
+  Settings.some_one          #=> returns "footastic" even though no record is in the databse for "some_setting"
+  Settings.some_one = 'bar'  # Database record is now created and 'bar' will be used instead of the default.
 
 
 ***
