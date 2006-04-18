@@ -37,6 +37,8 @@ Specified value even if they are not in the database.  Here is what you insert i
   Settings.some_one          #=> returns "footastic" even though no record is in the databse for "some_setting"
   Settings.some_one = 'bar'  # Database record is now created and 'bar' will be used instead of the default.
 
+NOTE: the server must be restarted in order to see new default settings.
+
 
 ***
 * To get started:
