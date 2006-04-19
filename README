@@ -1,32 +1,49 @@
-Settings
+= Settings Plugin
 
-Settings is a plugin that makes managing a table of global key, value pair easy.
+Settings is a plugin that makes managing a table of global key, value pairs easy.
 Think of it like a global Hash stored in you database, that uses simple ActiveRecord
 like methods for manipulation.  Keep track of any global setting that you dont want
 to hard code into your rails app.  You can store any kind of object.  Strings, numbers,
 arrays, or any object.
 
+== Setup
+
+You must create the table used by the Settings model.  Simply run this command:
+  ruby script/generate settings_migration
+
+Now just put that migration in the database with:
+  rake migrate
+
+
+== Usage
+
 The syntax is easy.  First, lets create some settings to keep track of:
-	Settings.admin_password = 'supersecret'
-	Settings.date_format = '%m %d, %Y'
-  Settings.cocktails = ['Martini', 'Screwdriver', 'White Russian']
-	Settings.foo = 'bar'
+
+  Settings.admin_password = 'supersecret'
+  Settings.date_format    = '%m %d, %Y'
+  Settings.cocktails      = ['Martini', 'Screwdriver', 'White Russian']
+  Settings.foo            = 123
 
 Now lets read them back:
-	Settings.foo						# returns 'bar'
+
+  Settings.foo            # returns 123
 
 Changing an existing setting is the same as creating a new setting:
-	Settings.foo = 'super duper bar'
+
+  Settings.foo = 'super duper bar'
 
 Decide you dont want to track a particular setting anymore?
-	Settings.destroy :foo
-	Settings.foo						# Now gives a setting variable not found error.
+
+  Settings.destroy :foo
+  Settings.foo            # Now gives a setting variable not found error.
 
 Want a list of all the settings?
-	Settings.all						# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
+
+  Settings.all            # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
 Set defaults for certain settings of your app.  This will cause the defined settings to return with the
 Specified value even if they are not in the database.  Here is what you insert into your environment.rb
+
   module SettingsDefaults
     DEFAULTS = {
       :setting_one => 'footastic',
@@ -34,41 +51,9 @@ Specified value even if they are not in the database.  Here is what you insert i
     }
   end
   
-  Settings.some_one          #=> returns "footastic" even though no record is in the databse for "some_setting"
-  Settings.some_one = 'bar'  # Database record is now created and 'bar' will be used instead of the default.
+  Settings.setting_one          #=> returns "footastic" even though no record is in the databse for "some_setting"
+  Settings.setting_one = 'bar'  # Database record is now created and 'bar' will be used instead of the default.
 
 NOTE: the server must be restarted in order to see new default settings.
 
-
-***
-* To get started:
-
-You must create the table used by the Settings model.  Simply run this command:
-	ruby script/generate settings_migration
-
-Now just put that migration in the database with:
-	rake migrate
-
-
-
 All there is to it!. Enjoy!
-
-
-
-
-The migration generator gives you the following schema:
-
-	class AddSettingsTable < ActiveRecord::Migration
-	  def self.up
-		create_table :settings, :force => true do |t|
-			t.column :var, :string, :null => false
-			t.column :value, :string, :null => true
-			t.column :created_at, :datetime
-			t.column :updated_at, :datetime
-		end
-	  end
-
-	  def self.down
-		drop_table :settings
-	  end
-	end
