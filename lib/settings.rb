@@ -1,6 +1,5 @@
 class Settings < ActiveRecord::Base
   @@defaults      = (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
-  @@cache         = {}.with_indifferent_access
   
   #get or set a variable with the variable as the called method
   def self.method_missing(method, *args)
@@ -19,7 +18,6 @@ class Settings < ActiveRecord::Base
   
   #destroy the specified settings record
   def self.destroy(var_name)
-    return @@cache.delete(var_name.to_s) if delete_all(['var = ?', var_name.to_s]) #variable exists, destroy row and cache
     raise "Setting variable \"#{var_name}\" not found"
   end
 
@@ -31,14 +29,12 @@ class Settings < ActiveRecord::Base
     vars.each do |record|
       result[record.var] = YAML::load(record.value)
     end
-    @@cache = result
     result.with_indifferent_access
   end
   
   #reload all settings form the db
-  def self.reload
-    self.all
-    self
+  def self.reload # :nodoc:
+    # deprecated
   end
   
   #retrieve a setting value bar [] notation
@@ -46,16 +42,12 @@ class Settings < ActiveRecord::Base
     #retrieve a setting
     var_name = var_name.to_s
     
-    return @@cache[var_name] if @@cache[var_name] #return cached value
-    
     if var = find(:first, :conditions => ['var = ?', var_name])
-      value = YAML::load(var.value)
-      @@cache[var_name] = value
-      return value
+      YAML::load(var.value)
     elsif @@defaults[var_name]
-      return @@defaults[var_name]
+      @@defaults[var_name]
     else
-      return nil
+      nil
     end
   end
   
@@ -67,8 +59,6 @@ class Settings < ActiveRecord::Base
       record = Settings.find(:first, :conditions => ['var = ?', var_name]) || Settings.new(:var => var_name)
       record.value = value.to_yaml
       record.save
-      
-      @@cache[var_name] = value
     end
   end
 end
