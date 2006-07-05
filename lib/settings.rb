@@ -1,6 +1,8 @@
 class Settings < ActiveRecord::Base
   @@defaults      = (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
   
+  class SettingNotFound < RuntimeError; end
+  
   #get or set a variable with the variable as the called method
   def self.method_missing(method, *args)
     method_name = method.to_s
@@ -18,7 +20,13 @@ class Settings < ActiveRecord::Base
   
   #destroy the specified settings record
   def self.destroy(var_name)
-    raise "Setting variable \"#{var_name}\" not found"
+    var_name = var_name.to_s
+    if self[var_name]
+      find(:first, :conditions => ['var = ?', var_name]).destroy
+      true
+    else
+      raise SettingNotFound, "Setting variable \"#{var_name}\" not found"
+    end
   end
 
   #retrieve all settings as a hash
@@ -34,7 +42,7 @@ class Settings < ActiveRecord::Base
   
   #reload all settings form the db
   def self.reload # :nodoc:
-    # deprecated
+    self # deprecated, no longer needed since caching is not used.
   end
   
   #retrieve a setting value bar [] notation
