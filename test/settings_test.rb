@@ -22,29 +22,16 @@ class SettingsTest < Test::Unit::TestCase
 #  end
   
 	def test_get
-		assert_equal 'foo', Settings.test
-		assert_equal 'foo', Settings[:test]
-		assert_equal 'foo', Settings['test']
-		
-		assert_equal 'bar', Settings.secondary_test
-		assert_equal 'bar', Settings[:secondary_test]
-		assert_equal 'bar', Settings['secondary_test']
+		assert_setting 'foo', :test
+		assert_setting 'bar', :secondary_test
 	end
 	
-	def test_set
-		assert_equal '321', Settings.test = '321'
-		assert_equal '321', Settings[:test] = '321'
-		assert_equal '321', Settings['test'] = '321'
-		
-		assert_equal '321', Settings.test
+	def test_update
+		assert_assign_setting '321', :test
 	end
 	
 	def test_create
-		assert_equal '123', Settings.onetwothree = '123'
-		assert_equal '123', Settings[:onetwothree] = '123'
-		assert_equal '123', Settings['onetwothree'] = '123'
-		
-		assert_equal '123', Settings.onetwothree
+    assert_assign_setting '123', :onetwothree
 	end
   
   def test_complex_serialization
@@ -59,4 +46,26 @@ class SettingsTest < Test::Unit::TestCase
     assert_equal 0.01, Settings.float
     assert_equal 0.02, Settings.float * 2
   end
+  
+  private
+    def assert_setting(value, key)
+      key = key.to_sym
+      assert_equal value, eval("Settings.#{key}")
+      assert_equal value, Settings[key]
+      assert_equal value, Settings[key.to_s]
+    end
+    
+    def assert_assign_setting(value, key)
+      key = key.to_sym
+      assert_equal value, eval("Settings.#{key} = value")
+      assert_setting value, key
+      eval("Settings.#{key} = nil")
+      
+      assert_equal value, (Settings[key] = value)
+      assert_setting value, key
+      Settings[key] = nil
+      
+      assert_equal value, (Settings[key.to_s] = value)
+      assert_setting value, key
+    end
 end
