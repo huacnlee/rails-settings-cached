@@ -37,7 +37,7 @@ class SettingsTest < Test::Unit::TestCase
   def test_complex_serialization
     object = [1, '2', {:three => true}]
     Settings.object = object
-    assert_equal object, Settings.reload.object
+    assert_equal object, Settings.object
   end
   
   def test_serialization_of_float

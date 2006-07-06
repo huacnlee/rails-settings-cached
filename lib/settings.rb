@@ -40,7 +40,7 @@ class Settings < ActiveRecord::Base
     result.with_indifferent_access
   end
   
-  #reload all settings form the db
+  #reload all settings from the db
   def self.reload # :nodoc:
     self # deprecated, no longer needed since caching is not used.
   end
