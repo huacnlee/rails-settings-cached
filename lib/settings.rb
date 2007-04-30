@@ -1,5 +1,5 @@
 class Settings < ActiveRecord::Base
-  @@defaults  = (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
+  # @@defaults  = (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
   
   class SettingNotFound < RuntimeError; end
   
@@ -44,6 +44,9 @@ class Settings < ActiveRecord::Base
   
   #retrieve a setting value by [] notation
   def self.[](var_name)
+    #Ensure defaults are loaded
+    @@defaults ||= (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
+    
     #retrieve a setting
     var_name = var_name.to_s
     
