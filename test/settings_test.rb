@@ -1,29 +1,27 @@
 #!/usr/bin/env ruby
 require File.dirname(__FILE__) + '/../../../../test/test_helper'
 
-#module SettingsDefaults
-#  DEFAULTS = {:some_setting => 'foo'}
-#end
-
 class SettingsTest < Test::Unit::TestCase
   
 	def setup
-		Settings.create(:var => 'test',           :value => 'foo'.to_yaml)
-		Settings.create(:var => 'secondary_test', :value => 'bar'.to_yaml)
+		Settings.create(:var => 'test',  :value => 'foo')
+		Settings.create(:var => 'test2', :value => 'bar')
 	end
 	
-#  def test_defaults
-#    assert_equal 'foo', Settings.some_setting
-#    assert_nil Settings.find(:first, :conditions => ['var = ?', 'some_setting'])
-#    
-#    Settings.some_setting = 'bar'
-#    assert_equal 'bar', Settings.some_setting
-#    assert_not_nil Settings.find(:first, :conditions => ['var = ?', 'some_setting'])
-#  end
+  def test_defaults
+    Settings.defaults[:foo] = 'default foo'
+    
+    assert_nil Settings.object(:foo)
+    assert_equal 'default foo', Settings.foo
+    
+    Settings.foo = 'bar'
+    assert_equal 'bar', Settings.foo
+    assert_not_nil Settings.object(:foo)
+  end
   
 	def test_get
 		assert_setting 'foo', :test
-		assert_setting 'bar', :secondary_test
+		assert_setting 'bar', :test2
 	end
 	
 	def test_update
@@ -35,9 +33,9 @@ class SettingsTest < Test::Unit::TestCase
 	end
   
   def test_complex_serialization
-    object = [1, '2', {:three => true}]
-    Settings.object = object
-    assert_equal object, Settings.object
+    complex = [1, '2', {:three => true}]
+    Settings.complex = complex
+    assert_equal complex, Settings.complex
   end
   
   def test_serialization_of_float
@@ -51,7 +49,7 @@ class SettingsTest < Test::Unit::TestCase
     def assert_setting(value, key)
       key = key.to_sym
       assert_equal value, eval("Settings.#{key}")
-      assert_equal value, Settings[key]
+      assert_equal value, Settings[key.to_sym]
       assert_equal value, Settings[key.to_s]
     end
     

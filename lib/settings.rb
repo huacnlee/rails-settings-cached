@@ -1,7 +1,13 @@
 class Settings < ActiveRecord::Base
-  # @@defaults  = (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
-  
   class SettingNotFound < RuntimeError; end
+  
+  cattr_accessor :defaults
+  @@defaults = {}.with_indifferent_access
+  
+  # Support old plugin
+  if defined?(SettingsDefaults::DEFAULTS)
+    @@defaults = SettingsDefaults::DEFAULTS.with_indifferent_access
+  end
   
   #get or set a variable with the variable as the called method
   def self.method_missing(method, *args)
@@ -9,14 +15,16 @@ class Settings < ActiveRecord::Base
     super(method, *args)
     
   rescue NoMethodError
-    if method_name[-1..-1] == '='
-      #set a value for a variable
+    #set a value for a variable
+    if method_name =~ /=$/
       var_name = method_name.gsub('=', '')
       value = args.first
       self[var_name] = value
+    
+    #retrieve a value
     else
-      #retrieve a value
       self[method_name]
+      
     end
   end
   
@@ -44,16 +52,10 @@ class Settings < ActiveRecord::Base
   
   #retrieve a setting value by [] notation
   def self.[](var_name)
-    #Ensure defaults are loaded
-    @@defaults ||= (defined?(SettingsDefaults) ? SettingsDefaults::DEFAULTS : {}).with_indifferent_access
-    
-    #retrieve a setting
-    var_name = var_name.to_s
-    
     if var = object(var_name)
       var.value
-    elsif @@defaults[var_name]
-      @@defaults[var_name]
+    elsif @@defaults[var_name.to_s]
+      @@defaults[var_name.to_s]
     else
       nil
     end

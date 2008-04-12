@@ -6,13 +6,14 @@ like methods for manipulation.  Keep track of any global setting that you dont w
 to hard code into your rails app.  You can store any kind of object.  Strings, numbers,
 arrays, or any object.
 
+
 == Setup
 
 You must create the table used by the Settings model.  Simply run this command:
   ruby script/generate settings_migration
 
 Now just put that migration in the database with:
-  rake migrate
+  rake db:migrate
 
 
 == Usage
@@ -35,25 +36,21 @@ Changing an existing setting is the same as creating a new setting:
 Decide you dont want to track a particular setting anymore?
 
   Settings.destroy :foo
-  Settings.foo            # Now gives a setting variable not found error.
+  Settings.foo            # returns nil
 
 Want a list of all the settings?
 
   Settings.all            # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
 Set defaults for certain settings of your app.  This will cause the defined settings to return with the
-Specified value even if they are not in the database.  Here is what you insert into your environment.rb
+Specified value even if they are not in the database.  Make a new file in config/initializers/settings.rb
+with the following:
 
-  module SettingsDefaults
-    DEFAULTS = {
-      :setting_one => 'footastic',
-      :setting_two => 123.321
-    }
-  end
+  Settings.defaults[:some_setting] = 'footastic'
   
-  Settings.setting_one          #=> returns "footastic" even though no record is in the databse for "some_setting"
-  Settings.setting_one = 'bar'  # Database record is now created and 'bar' will be used instead of the default.
+Now even if the database is completely empty, you app will have some intelligent defaults:
 
-NOTE: the server must be restarted in order to see new default settings.
+  Settings.some_setting   # returns 'footastic'
 
-All there is to it!. Enjoy!
+
+That's all there is to it!. Enjoy!
