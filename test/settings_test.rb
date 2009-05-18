@@ -1,12 +1,15 @@
-#!/usr/bin/env ruby
-require File.dirname(__FILE__) + '/../../../../test/test_helper'
+require 'test_helper'
 
 class SettingsTest < Test::Unit::TestCase
-  
-	def setup
-		Settings.create(:var => 'test',  :value => 'foo')
-		Settings.create(:var => 'test2', :value => 'bar')
-	end
+  def setup
+    setup_db
+    Settings.create(:var => 'test',  :value => 'foo')
+    Settings.create(:var => 'test2', :value => 'bar')
+  end
+
+  def teardown
+    teardown_db
+  end
 	
   def test_defaults
     Settings.defaults[:foo] = 'default foo'
