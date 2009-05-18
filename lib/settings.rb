@@ -41,7 +41,7 @@ class Settings < ActiveRecord::Base
 
   #retrieve all settings as a hash
   def self.all
-    vars = find(:all, :select => 'var, value')
+    vars = object_scoped.find(:all, :select => 'var, value')
     
     result = {}
     vars.each do |record|
@@ -50,8 +50,8 @@ class Settings < ActiveRecord::Base
     result.with_indifferent_access
   end
   
-  #retrieve a setting value
-  def self.get(var_name)
+  #get a setting value by [] notation
+  def self.[](var_name)
     if var = object(var_name)
       var.value
     elsif @@defaults[var_name.to_s]
@@ -60,30 +60,19 @@ class Settings < ActiveRecord::Base
       nil
     end
   end
-
-  #set a setting value
-  def self.set(var_name, value)
+  
+  #set a setting value by [] notation
+  def self.[]=(var_name, value)
     var_name = var_name.to_s
     
-    record = object(var_name) || Settings.new(:var => var_name)
+    record = object(var_name) || object_scoped.new(:var => var_name)
     record.value = value
     record.save
     value
   end
-  
-  #get a setting value by [] notation
-  def self.[](var_name)
-    self.get(var_name)
-  end
-  
-  #set a setting value by [] notation
-  def self.[]=(var_name, value)
-    self.set(var_name, value)
-  end
-  
-  #retrieve the actual Setting record
+
   def self.object(var_name)
-    self.scoped_by_object_type_and_object_id(nil, nil).find_by_var(var_name.to_s)
+    object_scoped.find_by_var(var_name.to_s)
   end
   
   #get the value field, YAML decoded
@@ -96,8 +85,23 @@ class Settings < ActiveRecord::Base
     self[:value] = new_value.to_yaml
   end
   
+  def self.object_scoped
+    Settings.scoped_by_object_type_and_object_id(nil, nil)
+  end
+  
   #Deprecated!
   def self.reload # :nodoc:
     self
+  end
+end
+
+class ScopedSettings < Settings
+  def self.for_object(object)
+    @object = object
+    self
+  end
+  
+  def self.object_scoped
+    Settings.scoped_by_object_type_and_object_id(@object.class.base_class.to_s, @object.id)
   end
 end

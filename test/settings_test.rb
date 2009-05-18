@@ -52,17 +52,17 @@ class SettingsTest < Test::Unit::TestCase
     user1 = User.create :name => 'First user'
     user2 = User.create :name => 'Second user'
     
-    
     assert_assign_setting 1, :one, user1
     assert_assign_setting 2, :two, user2
 		
     assert_setting 1, :one, user1
     assert_setting 2, :two, user2
     
-    assert_nil Settings.one
-    assert_nil Settings.two
-    assert_nil user1.settings.two
-    assert_nil user2.settings.one
+    assert_setting nil, :one
+    assert_setting nil, :two
+    
+    assert_setting nil, :two, user1
+    assert_setting nil, :one, user2
   end
   
   private
@@ -71,14 +71,8 @@ class SettingsTest < Test::Unit::TestCase
       
       if scope_object
         assert_equal value, scope_object.instance_eval("settings.#{key}")
-        
-        # Array indexing on scopes does not work. Why?
-        # assert_equal value, scope_object.settings[key.to_sym]
-        # assert_equal value, scope_object.settings[key.to_s]
-        #
-        # As a work-around, use a "get" method
-        assert_equal value, scope_object.settings.get(key.to_sym)
-        assert_equal value, scope_object.settings.get(key.to_s)
+        assert_equal value, scope_object.settings[key.to_sym]
+        assert_equal value, scope_object.settings[key.to_s]
       else
         assert_equal value, eval("Settings.#{key}")
         assert_equal value, Settings[key.to_sym]
@@ -90,21 +84,13 @@ class SettingsTest < Test::Unit::TestCase
       key = key.to_sym
       
       if scope_object
-        assert_equal value, scope_object.instance_eval("settings.#{key} = value")
+        assert_equal value, (scope_object.settings[key] = value)
         assert_setting value, key, scope_object
-        scope_object.instance_eval("settings.#{key} = nil")
+        scope_object.settings[key] = nil
       
-        assert_equal value, (scope_object.settings.set(key,value))
-        assert_setting value, key, scope_object
-        scope_object.settings.set(key, nil)
-      
-        assert_equal value, (scope_object.settings.set(key.to_s,value))
+        assert_equal value, (scope_object.settings[key.to_s] = value)
         assert_setting value, key, scope_object
       else
-        assert_equal value, eval("Settings.#{key} = value")
-        assert_setting value, key
-        eval("Settings.#{key} = nil")
-      
         assert_equal value, (Settings[key] = value)
         assert_setting value, key
         Settings[key] = nil
