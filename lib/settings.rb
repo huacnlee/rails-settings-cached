@@ -50,8 +50,8 @@ class Settings < ActiveRecord::Base
     result.with_indifferent_access
   end
   
-  #retrieve a setting value by [] notation
-  def self.[](var_name)
+  #retrieve a setting value
+  def self.get(var_name)
     if var = object(var_name)
       var.value
     elsif @@defaults[var_name.to_s]
@@ -60,19 +60,30 @@ class Settings < ActiveRecord::Base
       nil
     end
   end
-  
-  #set a setting value by [] notation
-  def self.[]=(var_name, value)
+
+  #set a setting value
+  def self.set(var_name, value)
     var_name = var_name.to_s
     
     record = object(var_name) || Settings.new(:var => var_name)
     record.value = value
     record.save
+    value
+  end
+  
+  #get a setting value by [] notation
+  def self.[](var_name)
+    self.get(var_name)
+  end
+  
+  #set a setting value by [] notation
+  def self.[]=(var_name, value)
+    self.set(var_name, value)
   end
   
   #retrieve the actual Setting record
   def self.object(var_name)
-    Settings.find_by_var(var_name.to_s)
+    self.scoped_by_object_type_and_object_id(nil, nil).find_by_var(var_name.to_s)
   end
   
   #get the value field, YAML decoded

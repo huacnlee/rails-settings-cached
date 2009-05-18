@@ -52,5 +52,17 @@ Now even if the database is completely empty, you app will have some intelligent
 
   Settings.some_setting   # returns 'footastic'
 
+Settings may be bound to any existing ActiveRecord object. Define this association like this:
 
-That's all there is to it!. Enjoy!
+  class User < ActiveRecord::Base
+    has_settings
+  end
+
+Then you can set/get a setting for a given user instance just by doing this:
+
+  user = User.find(123)
+  user.settings.foo = 'Foo of user with ID 123'
+  user.settings.foo   # returns 'Foo of user with ID 123'
+
+
+That's all there is to it! Enjoy!
