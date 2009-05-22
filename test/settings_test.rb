@@ -77,6 +77,23 @@ class SettingsTest < Test::Unit::TestCase
     assert_equal({}, Settings.all('non_existing_var'))
   end
   
+  def test_merge
+    assert_raise(TypeError) do
+      Settings.merge! :test, { :a => 1 }
+    end
+
+    Settings[:hash] = { :one => 1 }
+    Settings.merge! :hash, { :two => 2 }
+    assert_equal({ :one => 1, :two => 2 }, Settings[:hash])
+    
+    assert_raise(ArgumentError) do
+      Settings.merge! :hash, 123
+    end
+    
+    Settings.merge! :empty_hash, { :two => 2 }
+    assert_equal({ :two => 2 }, Settings[:empty_hash])
+  end
+  
   private
     def assert_setting(value, key, scope_object=nil)
       key = key.to_sym

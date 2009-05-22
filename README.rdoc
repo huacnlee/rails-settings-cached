@@ -24,6 +24,7 @@ The syntax is easy.  First, lets create some settings to keep track of:
   Settings.date_format    = '%m %d, %Y'
   Settings.cocktails      = ['Martini', 'Screwdriver', 'White Russian']
   Settings.foo            = 123
+  Settings.credentials    = { :username => 'tom', :password => 'secret' }
 
 Now lets read them back:
 
@@ -32,6 +33,10 @@ Now lets read them back:
 Changing an existing setting is the same as creating a new setting:
 
   Settings.foo = 'super duper bar'
+
+For changing an existing setting which is a Hash, you can merge new values with existing ones:
+  Settings.merge! :credentials, :password => 'topsecret'
+  Settings.credentials    # returns { :username => 'tom', :password => 'topsecret' }
 
 Decide you dont want to track a particular setting anymore?
 
