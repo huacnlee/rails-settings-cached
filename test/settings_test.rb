@@ -94,6 +94,11 @@ class SettingsTest < Test::Unit::TestCase
     assert_equal({ :two => 2 }, Settings[:empty_hash])
   end
   
+  def test_destroy
+    Settings.destroy :test
+    assert_equal nil, Settings.test
+  end
+  
   private
     def assert_setting(value, key, scope_object=nil)
       key = key.to_sym
