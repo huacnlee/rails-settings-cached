@@ -42,6 +42,13 @@ Want a list of all the settings?
 
   Settings.all            # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
+You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Settings.all like this:
+
+  Settings['preferences.color'] = :blue
+  Settings['preferences.size'] = :large
+  Settings['license.key'] = 'ABC-DEF'
+  Settings.all('preferences.')   # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
+
 Set defaults for certain settings of your app.  This will cause the defined settings to return with the
 Specified value even if they are not in the database.  Make a new file in config/initializers/settings.rb
 with the following:

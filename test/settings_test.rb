@@ -63,6 +63,18 @@ class SettingsTest < Test::Unit::TestCase
     
     assert_setting nil, :two, user1
     assert_setting nil, :one, user2
+    
+    assert_equal({ "one" => 1}, user1.settings.all('one'))
+    assert_equal({ "two" => 2}, user2.settings.all('two'))
+    assert_equal({ "one" => 1}, user1.settings.all('o'))
+    assert_equal({}, user1.settings.all('non_existing_var'))
+  end
+  
+  def test_all
+    assert_equal({ "test2" => "bar", "test" => "foo" }, Settings.all)
+    assert_equal({ "test2" => "bar" }, Settings.all('test2'))
+    assert_equal({ "test2" => "bar", "test" => "foo" }, Settings.all('test'))
+    assert_equal({}, Settings.all('non_existing_var'))
   end
   
   private
