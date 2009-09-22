@@ -1,8 +1,8 @@
-require 'test/unit'
-
 require 'rubygems'
-gem 'activerecord', '>= 1.15.4.7794'
+require 'active_support'
+require 'active_support/test_case'
 require 'active_record'
+require 'test/unit'
 
 require "#{File.dirname(__FILE__)}/../init"
 
@@ -26,11 +26,5 @@ def setup_db
     create_table :users do |t|
       t.string :name
     end
-  end
-end
-
-def teardown_db
-  ActiveRecord::Base.connection.tables.each do |table|
-    ActiveRecord::Base.connection.drop_table(table)
   end
 end

@@ -1,14 +1,15 @@
 require 'test_helper'
 
 class SettingsTest < Test::Unit::TestCase
+  setup_db
+  
   def setup
-    setup_db
     Settings.create(:var => 'test',  :value => 'foo')
     Settings.create(:var => 'test2', :value => 'bar')
   end
 
   def teardown
-    teardown_db
+    Settings.delete_all
   end
   
   def test_defaults
