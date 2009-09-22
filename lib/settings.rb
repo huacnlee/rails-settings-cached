@@ -33,7 +33,6 @@ class Settings < ActiveRecord::Base
     var_name = var_name.to_s
     if self[var_name]
       object(var_name).destroy
-      set_cache(var_name, nil)
       true
     else
       raise SettingNotFound, "Setting variable \"#{var_name}\" not found"
@@ -69,8 +68,7 @@ class Settings < ActiveRecord::Base
     
     record = object(var_name) || object_scoped.new(:var => var_name)
     record.value = value
-    record.save
-    set_cache(var_name, record)
+    record.save!
     
     value
   end
@@ -88,22 +86,7 @@ class Settings < ActiveRecord::Base
   end
 
   def self.object(var_name)
-    result = get_cache(var_name)
-    unless result
-      result = object_scoped.find_by_var(var_name.to_s)
-      set_cache(var_name, result)
-    end
-    result
-  end
-  
-  def self.get_cache(var_name)
-    Thread.current[:settings] ||= {}
-    Thread.current[:settings]["#{var_name}#{object_type}#{object_id}"]
-  end
-  
-  def self.set_cache(var_name, value)
-    Thread.current[:settings] ||= {}
-    Thread.current[:settings]["#{var_name}#{object_type}#{object_id}"] = value
+    object_scoped.find_by_var(var_name.to_s)
   end
   
   #get the value field, YAML decoded
