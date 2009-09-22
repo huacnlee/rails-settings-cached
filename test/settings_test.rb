@@ -10,7 +10,7 @@ class SettingsTest < Test::Unit::TestCase
   def teardown
     teardown_db
   end
-	
+  
   def test_defaults
     Settings.defaults[:foo] = 'default foo'
     
@@ -22,18 +22,18 @@ class SettingsTest < Test::Unit::TestCase
     assert_not_nil Settings.object(:foo)
   end
   
-	def test_get
-		assert_setting 'foo', :test
-		assert_setting 'bar', :test2
-	end
+  def test_get
+    assert_setting 'foo', :test
+    assert_setting 'bar', :test2
+  end
 
-	def test_update
-		assert_assign_setting '321', :test
-	end
-	
-	def test_create
+  def test_update
+    assert_assign_setting '321', :test
+  end
+  
+  def test_create
     assert_assign_setting '123', :onetwothree
-	end
+  end
   
   def test_complex_serialization
     complex = [1, '2', {:three => true}]
@@ -54,7 +54,7 @@ class SettingsTest < Test::Unit::TestCase
     
     assert_assign_setting 1, :one, user1
     assert_assign_setting 2, :two, user2
-		
+    
     assert_setting 1, :one, user1
     assert_setting 2, :two, user2
     
