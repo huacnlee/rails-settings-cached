@@ -73,8 +73,16 @@ Settings may be bound to any existing ActiveRecord object. Define this associati
 Then you can set/get a setting for a given user instance just by doing this:
 
   user = User.find(123)
-  user.settings.foo = 'Foo of user with ID 123'
-  user.settings.foo   # returns 'Foo of user with ID 123'
+  user.settings.color = :red
+  user.settings.color # returns :red
+  user.settings.all # { "color" => :red }
 
+I you want to find users having or not having some settings, there are named scopes for this:
+
+  User.with_settings # => returns a scope of users having any setting
+  User.with_settings_for('color') # => returns a scope of users having a 'color' setting
+  
+  User.without_settings # returns a scope of users having no setting at all (means user.settings.all == {})
+  User.without_settings('color') # returns a scope of users having no 'color' setting (means user.settings.color == nil)
 
 That's all there is to it! Enjoy!

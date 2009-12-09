@@ -71,6 +71,23 @@ class SettingsTest < Test::Unit::TestCase
     assert_equal({}, user1.settings.all('non_existing_var'))
   end
   
+  def test_named_scope
+    user_without_settings = User.create :name => 'User without settings'
+    user_with_settings = User.create :name => 'User with settings'
+    user_with_settings.settings.one = '1'
+    user_with_settings.settings.two = '2'
+    
+    assert_equal [user_with_settings], User.with_settings
+    assert_equal [user_with_settings], User.with_settings_for('one')
+    assert_equal [user_with_settings], User.with_settings_for('two')
+    assert_equal [], User.with_settings_for('foo')
+    
+    assert_equal [user_without_settings], User.without_settings
+    assert_equal [user_without_settings], User.without_settings_for('one')
+    assert_equal [user_without_settings], User.without_settings_for('two')
+    assert_equal [user_without_settings, user_with_settings], User.without_settings_for('foo')
+  end
+  
   def test_all
     assert_equal({ "test2" => "bar", "test" => "foo" }, Settings.all)
     assert_equal({ "test2" => "bar" }, Settings.all('test2'))
