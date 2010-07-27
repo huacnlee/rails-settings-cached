@@ -39,9 +39,10 @@ class Settings < ActiveRecord::Base
     end
   end
 
-  #retrieve all settings as a hash
-  def self.all
-    vars = find(:all, :select => 'var, value')
+  #retrieve all settings as a hash (optionally starting with a given namespace)
+  def self.all(starting_with=nil)
+    options = starting_with ? { :conditions => "var LIKE '#{starting_with}%'"} : {}
+    vars = object_scoped.find(:all, {:select => 'var, value'}.merge(options))
     
     result = {}
     vars.each do |record|
@@ -50,7 +51,7 @@ class Settings < ActiveRecord::Base
     result.with_indifferent_access
   end
   
-  #retrieve a setting value by [] notation
+  #get a setting value by [] notation
   def self.[](var_name)
     if var = object(var_name)
       var.value
@@ -65,14 +66,27 @@ class Settings < ActiveRecord::Base
   def self.[]=(var_name, value)
     var_name = var_name.to_s
     
-    record = object(var_name) || Settings.new(:var => var_name)
+    record = object(var_name) || object_scoped.new(:var => var_name)
     record.value = value
-    record.save
+    record.save!
+    
+    value
   end
   
-  #retrieve the actual Setting record
+  def self.merge!(var_name, hash_value)
+    raise ArgumentError unless hash_value.is_a?(Hash)
+    
+    old_value = self[var_name] || {}
+    raise TypeError, "Existing value is not a hash, can't merge!" unless old_value.is_a?(Hash)
+    
+    new_value = old_value.merge(hash_value)
+    self[var_name] = new_value if new_value != old_value
+    
+    new_value
+  end
+
   def self.object(var_name)
-    Settings.find_by_var(var_name.to_s)
+    object_scoped.find_by_var(var_name.to_s)
   end
   
   #get the value field, YAML decoded
@@ -85,8 +99,35 @@ class Settings < ActiveRecord::Base
     self[:value] = new_value.to_yaml
   end
   
+  def self.object_scoped
+    Settings.scoped_by_object_type_and_object_id(object_type, object_id)
+  end
+  
   #Deprecated!
   def self.reload # :nodoc:
     self
+  end
+  
+  def self.object_id
+    nil
+  end
+
+  def self.object_type
+    nil
+  end
+end
+
+class ScopedSettings < Settings
+  def self.for_object(object)
+    @object = object
+    self
+  end
+  
+  def self.object_id
+    @object.id
+  end
+  
+  def self.object_type
+    @object.class.base_class.to_s
   end
 end

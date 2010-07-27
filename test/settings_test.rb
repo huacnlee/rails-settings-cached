@@ -1,16 +1,17 @@
 require 'test_helper'
 
 class SettingsTest < Test::Unit::TestCase
+  setup_db
+  
   def setup
-    setup_db
     Settings.create(:var => 'test',  :value => 'foo')
     Settings.create(:var => 'test2', :value => 'bar')
   end
 
   def teardown
-    teardown_db
+    Settings.delete_all
   end
-	
+  
   def test_defaults
     Settings.defaults[:foo] = 'default foo'
     
@@ -22,18 +23,18 @@ class SettingsTest < Test::Unit::TestCase
     assert_not_nil Settings.object(:foo)
   end
   
-	def test_get
-		assert_setting 'foo', :test
-		assert_setting 'bar', :test2
-	end
-	
-	def test_update
-		assert_assign_setting '321', :test
-	end
-	
-	def test_create
+  def test_get
+    assert_setting 'foo', :test
+    assert_setting 'bar', :test2
+  end
+
+  def test_update
+    assert_assign_setting '321', :test
+  end
+  
+  def test_create
     assert_assign_setting '123', :onetwothree
-	end
+  end
   
   def test_complex_serialization
     complex = [1, '2', {:three => true}]
@@ -48,25 +49,106 @@ class SettingsTest < Test::Unit::TestCase
     assert_equal 0.02, Settings.float * 2
   end
   
-  private
-    def assert_setting(value, key)
-      key = key.to_sym
-      assert_equal value, eval("Settings.#{key}")
-      assert_equal value, Settings[key.to_sym]
-      assert_equal value, Settings[key.to_s]
+  def test_object_scope
+    user1 = User.create :name => 'First user'
+    user2 = User.create :name => 'Second user'
+    
+    assert_assign_setting 1, :one, user1
+    assert_assign_setting 2, :two, user2
+    
+    assert_setting 1, :one, user1
+    assert_setting 2, :two, user2
+    
+    assert_setting nil, :one
+    assert_setting nil, :two
+    
+    assert_setting nil, :two, user1
+    assert_setting nil, :one, user2
+    
+    assert_equal({ "one" => 1}, user1.settings.all('one'))
+    assert_equal({ "two" => 2}, user2.settings.all('two'))
+    assert_equal({ "one" => 1}, user1.settings.all('o'))
+    assert_equal({}, user1.settings.all('non_existing_var'))
+  end
+  
+  def test_named_scope
+    user_without_settings = User.create :name => 'User without settings'
+    user_with_settings = User.create :name => 'User with settings'
+    user_with_settings.settings.one = '1'
+    user_with_settings.settings.two = '2'
+    
+    assert_equal [user_with_settings], User.with_settings
+    assert_equal [user_with_settings], User.with_settings_for('one')
+    assert_equal [user_with_settings], User.with_settings_for('two')
+    assert_equal [], User.with_settings_for('foo')
+    
+    assert_equal [user_without_settings], User.without_settings
+    assert_equal [user_without_settings], User.without_settings_for('one')
+    assert_equal [user_without_settings], User.without_settings_for('two')
+    assert_equal [user_without_settings, user_with_settings], User.without_settings_for('foo')
+  end
+  
+  def test_all
+    assert_equal({ "test2" => "bar", "test" => "foo" }, Settings.all)
+    assert_equal({ "test2" => "bar" }, Settings.all('test2'))
+    assert_equal({ "test2" => "bar", "test" => "foo" }, Settings.all('test'))
+    assert_equal({}, Settings.all('non_existing_var'))
+  end
+  
+  def test_merge
+    assert_raise(TypeError) do
+      Settings.merge! :test, { :a => 1 }
+    end
+
+    Settings[:hash] = { :one => 1 }
+    Settings.merge! :hash, { :two => 2 }
+    assert_equal({ :one => 1, :two => 2 }, Settings[:hash])
+    
+    assert_raise(ArgumentError) do
+      Settings.merge! :hash, 123
     end
     
-    def assert_assign_setting(value, key)
+    Settings.merge! :empty_hash, { :two => 2 }
+    assert_equal({ :two => 2 }, Settings[:empty_hash])
+  end
+  
+  def test_destroy
+    Settings.destroy :test
+    assert_equal nil, Settings.test
+  end
+  
+  private
+    def assert_setting(value, key, scope_object=nil)
       key = key.to_sym
-      assert_equal value, eval("Settings.#{key} = value")
-      assert_setting value, key
-      eval("Settings.#{key} = nil")
       
-      assert_equal value, (Settings[key] = value)
-      assert_setting value, key
-      Settings[key] = nil
+      if scope_object
+        assert_equal value, scope_object.instance_eval("settings.#{key}")
+        assert_equal value, scope_object.settings[key.to_sym]
+        assert_equal value, scope_object.settings[key.to_s]
+      else
+        assert_equal value, eval("Settings.#{key}")
+        assert_equal value, Settings[key.to_sym]
+        assert_equal value, Settings[key.to_s]
+      end
+    end
+    
+    def assert_assign_setting(value, key, scope_object=nil)
+      key = key.to_sym
       
-      assert_equal value, (Settings[key.to_s] = value)
-      assert_setting value, key
+      if scope_object
+        assert_equal value, (scope_object.settings[key] = value)
+        assert_setting value, key, scope_object
+        scope_object.settings[key] = nil
+      
+        assert_equal value, (scope_object.settings[key.to_s] = value)
+        assert_setting value, key, scope_object
+      else
+        assert_equal value, (Settings[key] = value)
+        assert_setting value, key
+        Settings[key] = nil
+      
+        assert_equal value, (Settings[key.to_s] = value)
+        assert_setting value, key
+      end
     end
 end
