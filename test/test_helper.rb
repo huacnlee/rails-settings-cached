@@ -21,7 +21,7 @@ def setup_db
       t.string :object_type, :limit => 30, :null => true
       t.timestamps
     end
-    add_index :settings, [ :object_type, :object_id, :var ], :uniq => true
+    add_index :settings, [ :object_type, :object_id, :var ], :unique => true
     
     create_table :users do |t|
       t.string :name

@@ -8,7 +8,7 @@ class <%= class_name %> < ActiveRecord::Migration
       t.timestamps
     end
     
-    add_index :settings, [ :object_type, :object_id, :var ], :uniq => true
+    add_index :settings, [ :object_type, :object_id, :var ], :unique => true
   end
 
   def self.down
