@@ -1,6 +1,6 @@
 module RailsSettings
   class ScopedSettings < Settings
-    def self.for_object(object)
+    def self.for_thing(object)
       @object = object
       self
     end

@@ -104,7 +104,7 @@ module RailsSettings
     end
     
     def self.thing_scoped
-      Settings.scoped_by_thing_type_and_thing_id(nil, nil)
+      self.scoped_by_thing_type_and_thing_id(nil, nil)
     end
     
     
