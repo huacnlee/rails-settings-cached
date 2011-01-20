@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
      "lib/rails-settings/scoped_settings.rb",
      "lib/rails-settings/settings.rb",
      "lib/rails-settings/cached_settings.rb",
-     "rails-settings.gemspec",
+     "rails-settings-cached.gemspec",
      "rails/init.rb"
   ]
   s.homepage = %q{http://theblackestbox.net}
