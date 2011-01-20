@@ -11,8 +11,8 @@ arrays, or any object. Ported to Rails 3!
 == Setup
 
 Edit your Gemfile:
-  gem "rails-settings-cached"
-  
+	gem "rails-settings-cached", :require => "rails-settings"  
+
 Generate your settings:
   rails g settings <settings_name>
 
@@ -58,7 +58,7 @@ Want a list of all the settings?
 
   Setting.all            # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
-You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Settings.all like this:
+You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Setting.all like this:
 
   Setting['preferences.color'] = :blue
   Setting['preferences.size'] = :large
