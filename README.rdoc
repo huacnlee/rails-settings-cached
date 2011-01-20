@@ -1,5 +1,6 @@
 = Settings Gem
 
+This is imporved from rails-settings, added caching for all settings.
 Settings is a plugin that makes managing a table of global key, value pairs easy.
 Think of it like a global Hash stored in you database, that uses simple ActiveRecord
 like methods for manipulation.  Keep track of any global setting that you dont want
@@ -10,7 +11,7 @@ arrays, or any object. Ported to Rails 3!
 == Setup
 
 Edit your Gemfile:
-  gem "rails-settings", :git => "git://github.com/100hz/rails-settings.git"
+  gem "rails-settings-cached"
   
 Generate your settings:
   rails g settings <settings_name>
@@ -20,55 +21,63 @@ Now just put that migration in the database with:
 
 
 == Usage
+  
+You need create a class in app/models/setting.rb :
+  
+  # app/models/setting.rb
+  # extension RailsSettings::CachedSettings
+  class Setting < RailsSettings::CachedSettings  
+  end
 
 The syntax is easy.  First, lets create some settings to keep track of:
 
-  MySettings.admin_password = 'supersecret'
-  MySettings.date_format    = '%m %d, %Y'
-  MySettings.cocktails      = ['Martini', 'Screwdriver', 'White Russian']
-  MySettings.foo            = 123
-  MySettings.credentials    = { :username => 'tom', :password => 'secret' }
+  Setting.admin_password = 'supersecret'
+  Setting.date_format    = '%m %d, %Y'
+  Setting.cocktails      = ['Martini', 'Screwdriver', 'White Russian']
+  Setting.foo            = 123
+  Setting.credentials    = { :username => 'tom', :password => 'secret' }
 
 Now lets read them back:
 
-  MySettings.foo            # returns 123
+  Settings.foo            # returns 123
 
 Changing an existing setting is the same as creating a new setting:
 
-  MySettings.foo = 'super duper bar'
+  Setting.foo = 'super duper bar'
 
 For changing an existing setting which is a Hash, you can merge new values with existing ones:
-  MySettings.merge! :credentials, :password => 'topsecret'
-  MySettings.credentials    # returns { :username => 'tom', :password => 'topsecret' }
+  Setting.merge! :credentials, :password => 'topsecret'
+  Setting.credentials    # returns { :username => 'tom', :password => 'topsecret' }
 
 Decide you dont want to track a particular setting anymore?
 
-  MySettings.destroy :foo
-  MySettings.foo            # returns nil
+  Setting.destroy :foo
+  Setting.foo            # returns nil
 
 Want a list of all the settings?
 
-  MySettings.all            # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
+  Setting.all            # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 
 You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Settings.all like this:
 
-  MySettings['preferences.color'] = :blue
-  MySettings['preferences.size'] = :large
-  MySettings['license.key'] = 'ABC-DEF'
-  MySettings.all('preferences.')   # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
+  Setting['preferences.color'] = :blue
+  Setting['preferences.size'] = :large
+  Setting['license.key'] = 'ABC-DEF'
+  Setting.all('preferences.')   # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
 
 Set defaults for certain settings of your app.  This will cause the defined settings to return with the
-Specified value even if they are not in the database.  Make a new file in config/initializers/settings.rb
+Specified value even if they are not in the database.  Make a new file in config/initializers/default_settings.rb
 with the following:
 
-  MySettings.defaults[:some_setting] = 'footastic'
+  Setting.defaults[:some_setting] = 'footastic'
   
 Now even if the database is completely empty, you app will have some intelligent defaults:
 
-  MySettings.some_setting   # returns 'footastic'
+  Setting.some_setting   # returns 'footastic'
 
 Settings may be bound to any existing ActiveRecord object. Define this association like this:
-
+Notice! has_settings is not do caching in this version.
+  
   class User < ActiveRecord::Base
     has_settings
   end
