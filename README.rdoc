@@ -39,7 +39,7 @@ The syntax is easy.  First, lets create some settings to keep track of:
 
 Now lets read them back:
 
-  Settings.foo            # returns 123
+  Setting.foo            # returns 123
 
 Changing an existing setting is the same as creating a new setting:
 
