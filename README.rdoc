@@ -11,6 +11,7 @@ arrays, or any object. Ported to Rails 3!
 == Setup
 
 Edit your Gemfile:
+
 	gem "rails-settings-cached", :require => "rails-settings"  
 
 Generate your settings:
