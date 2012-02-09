@@ -82,7 +82,7 @@ Now even if the database is completely empty, you app will have some intelligent
     Setting.some_setting   # returns 'footastic'
 
 Settings may be bound to any existing ActiveRecord object. Define this association like this:
-Notice! has_settings is not do caching in this version.
+Notice! is not do caching in this version.
   
     class User < ActiveRecord::Base
       include RailsSettings::Extend 
