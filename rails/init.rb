@@ -1,1 +1,1 @@
-require 'rails-settings'
+require 'rails-settings-cached'
