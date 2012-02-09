@@ -2,18 +2,16 @@ require 'rubygems'
 require "rspec"
 require "active_record"
 require 'active_support'
+
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'rails'))
+require "init"
+
 require "rails/railtie"
-
-
-ENV["RAILS_ENV"] ||= 'test'
 
 module Rails
   def self.cache
     @cache ||= ActiveSupport::Cache::MemoryStore.new
-  end
-  
-  def self.version
-    "3"
   end
 end
 
@@ -30,23 +28,30 @@ ActiveRecord::Schema.define(:version => 1) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+  
+  create_table :users do |t|
+    t.string :login
+    t.string :password
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 end
 
-$LOAD_PATH.unshift(File.dirname(__FILE__))
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
-
-require "rails-settings-cached"
-
 RSpec.configure do |config|
-  config.before(:each) do
+  config.before(:all) do
     class ::Setting < RailsSettings::CachedSettings
+    end
+    
+    class User < ActiveRecord::Base
+      include RailsSettings::Extend
+      # has_settings
     end
     
     ::Setting.destroy_all
     Rails.cache.clear
   end
   
-  config.after(:each) do
+  config.after(:all) do
     Object.send(:remove_const, :Setting)
   end
 end

@@ -7,6 +7,9 @@ like methods for manipulation.  Keep track of any global setting that you dont w
 to hard code into your rails app.  You can store any kind of object.  Strings, numbers,
 arrays, or any object. Ported to Rails 3!
 
+## Status
+
+[![CI Status](https://secure.travis-ci.org/huacnlee/rails-settings-cached.png)](http://travis-ci.org/huacnlee/rails-settings-cached)
 
 ## Setup
 
@@ -21,7 +24,6 @@ Generate your settings:
 Now just put that migration in the database with:
     
     rake db:migrate
-
 
 ## Usage
   
@@ -50,7 +52,7 @@ Changing an existing setting is the same as creating a new setting:
 
 For changing an existing setting which is a Hash, you can merge new values with existing ones:
 
-    Setting.merge! :credentials, :password => 'topsecret'
+    Setting.merge!(:credentials, :password => 'topsecret')
     Setting.credentials    # returns { :username => 'tom', :password => 'topsecret' }
 
 Decide you dont want to track a particular setting anymore?
@@ -83,7 +85,7 @@ Settings may be bound to any existing ActiveRecord object. Define this associati
 Notice! has_settings is not do caching in this version.
   
     class User < ActiveRecord::Base
-      has_settings
+      include RailsSettings::Extend 
     end
 
 Then you can set/get a setting for a given user instance just by doing this:
