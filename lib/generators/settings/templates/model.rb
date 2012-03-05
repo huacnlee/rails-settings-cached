@@ -1,3 +1,2 @@
-class <%= class_name %> < RailsSettings::Settings
-  
+class <%= class_name %> < RailsSettings::CachedSettings
 end
