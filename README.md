@@ -26,13 +26,6 @@ Now just put that migration in the database with:
     rake db:migrate
 
 ## Usage
-  
-You need create a class in `app/models/setting.rb` :
-  
-    # app/models/setting.rb
-    # extension RailsSettings::CachedSettings
-    class Setting < RailsSettings::CachedSettings  
-    end
 
 The syntax is easy.  First, lets create some settings to keep track of:
 
