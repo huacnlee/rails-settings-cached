@@ -5,7 +5,6 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Squeegy", "Georg Ledermann", "100hz", "Jason Lee"]
-  s.date = %q{2011-01-14}
   s.email = %q{huacnlee@gmail.com}
 	s.files = Dir.glob("lib/**/*") + %w(README.md)
   s.homepage = %q{https://github.com/huacnlee/rails-settings-cached}
