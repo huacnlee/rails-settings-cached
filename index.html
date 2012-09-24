@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>rails-settings-cached by huacnlee</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>rails-settings-cached</h1>
+        <p>This is imporved from rails-settings, added caching for all settings</p>
+
+        <p class="view"><a href="https://github.com/huacnlee/rails-settings-cached">View the Project on GitHub <small>huacnlee/rails-settings-cached</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/huacnlee/rails-settings-cached/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/huacnlee/rails-settings-cached/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/huacnlee/rails-settings-cached">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Settings Gem</h1>
+
+<p>This is improved from rails-settings, added caching for all settings.
+Settings is a plugin that makes managing a table of global key, value pairs easy.
+Think of it like a global Hash stored in you database, that uses simple ActiveRecord
+like methods for manipulation.  Keep track of any global setting that you dont want
+to hard code into your rails app.  You can store any kind of object.  Strings, numbers,
+arrays, or any object. Ported to Rails 3!</p>
+
+<h2>Status</h2>
+
+<p><a href="http://travis-ci.org/huacnlee/rails-settings-cached"><img src="https://secure.travis-ci.org/huacnlee/rails-settings-cached.png" alt="CI Status"></a></p>
+
+<h2>Setup</h2>
+
+<p>Edit your Gemfile:</p>
+
+<div class="highlight"><pre><span class="n">gem</span> <span class="s2">"rails-settings-cached"</span>
+</pre></div>
+
+<p>Generate your settings:</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>rails g settings &lt;settings_name&gt;
+</pre></div>
+
+<p>Now just put that migration in the database with:</p>
+
+<div class="highlight"><pre>rake db:migrate
+</pre></div>
+
+<h2>Usage</h2>
+
+<p>The syntax is easy.  First, lets create some settings to keep track of:</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">admin_password</span> <span class="o">=</span> <span class="s1">'supersecret'</span>
+<span class="no">Setting</span><span class="o">.</span><span class="n">date_format</span>    <span class="o">=</span> <span class="s1">'%m %d, %Y'</span>
+<span class="no">Setting</span><span class="o">.</span><span class="n">cocktails</span>      <span class="o">=</span> <span class="o">[</span><span class="s1">'Martini'</span><span class="p">,</span> <span class="s1">'Screwdriver'</span><span class="p">,</span> <span class="s1">'White Russian'</span><span class="o">]</span>
+<span class="no">Setting</span><span class="o">.</span><span class="n">foo</span>            <span class="o">=</span> <span class="mi">123</span>
+<span class="no">Setting</span><span class="o">.</span><span class="n">credentials</span>    <span class="o">=</span> <span class="p">{</span> <span class="ss">:username</span> <span class="o">=&gt;</span> <span class="s1">'tom'</span><span class="p">,</span> <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="s1">'secret'</span> <span class="p">}</span>
+</pre></div>
+
+<p>Now lets read them back:</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">foo</span>            <span class="c1"># returns 123</span>
+</pre></div>
+
+<p>Changing an existing setting is the same as creating a new setting:</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">'super duper bar'</span>
+</pre></div>
+
+<p>For changing an existing setting which is a Hash, you can merge new values with existing ones:</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">merge!</span><span class="p">(</span><span class="ss">:credentials</span><span class="p">,</span> <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="s1">'topsecret'</span><span class="p">)</span>
+<span class="no">Setting</span><span class="o">.</span><span class="n">credentials</span>    <span class="c1"># returns { :username =&gt; 'tom', :password =&gt; 'topsecret' }</span>
+</pre></div>
+
+<p>Decide you dont want to track a particular setting anymore?</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">destroy</span> <span class="ss">:foo</span>
+<span class="no">Setting</span><span class="o">.</span><span class="n">foo</span>            <span class="c1"># returns nil</span>
+</pre></div>
+
+<p>Want a list of all the settings?</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">all</span>    
+<span class="c1"># returns {'admin_password' =&gt; 'super_secret', 'date_format' =&gt; '%m %d, %Y'}        </span>
+</pre></div>
+
+<p>You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Setting.all like this:</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">[</span><span class="s1">'preferences.color'</span><span class="o">]</span> <span class="o">=</span> <span class="ss">:blue</span>
+<span class="no">Setting</span><span class="o">[</span><span class="s1">'preferences.size'</span><span class="o">]</span> <span class="o">=</span> <span class="ss">:large</span>
+<span class="no">Setting</span><span class="o">[</span><span class="s1">'license.key'</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'ABC-DEF'</span>
+<span class="no">Setting</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="s1">'preferences.'</span><span class="p">)</span>   
+<span class="c1"># returns { 'preferences.color' =&gt; :blue, 'preferences.size' =&gt; :large }</span>
+</pre></div>
+
+<p>Set defaults for certain settings of your app.  This will cause the defined settings to return with the
+Specified value even if they are not in the database.  Make a new file in <code>config/initializers/default_settings.rb</code>
+with the following:</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">defaults</span><span class="o">[</span><span class="ss">:some_setting</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'footastic'</span>
+</pre></div>
+
+<p>Now even if the database is completely empty, you app will have some intelligent defaults:</p>
+
+<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">some_setting</span>   <span class="c1"># returns 'footastic'</span>
+</pre></div>
+
+<p>Settings may be bound to any existing ActiveRecord object. Define this association like this:
+Notice! is not do caching in this version.</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="kp">include</span> <span class="no">RailsSettings</span><span class="o">::</span><span class="no">Extend</span> 
+<span class="k">end</span>
+</pre></div>
+
+<p>Then you can set/get a setting for a given user instance just by doing this:</p>
+
+<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">user</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="ss">:red</span>
+<span class="n">user</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">color</span> <span class="c1"># returns :red</span>
+<span class="n">user</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">all</span> <span class="c1"># { "color" =&gt; :red }</span>
+</pre></div>
+
+<p>I you want to find users having or not having some settings, there are named scopes for this:</p>
+
+<div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">with_settings</span> 
+<span class="c1"># =&gt; returns a scope of users having any setting</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">with_settings_for</span><span class="p">(</span><span class="s1">'color'</span><span class="p">)</span> 
+<span class="c1"># =&gt; returns a scope of users having a 'color' setting</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">without_settings</span> 
+<span class="c1"># returns a scope of users having no setting at all (means user.settings.all == {})</span>
+
+<span class="no">User</span><span class="o">.</span><span class="n">without_settings</span><span class="p">(</span><span class="s1">'color'</span><span class="p">)</span> 
+<span class="c1"># returns a scope of users having no 'color' setting (means user.settings.color == nil)</span>
+</pre></div>
+
+<p>That's all there is to it! Enjoy!</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/huacnlee">huacnlee</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-9745660-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
