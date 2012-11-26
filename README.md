@@ -87,18 +87,28 @@ Setting.all('preferences.')
 ```
 
 Set defaults for certain settings of your app.  This will cause the defined settings to return with the
-Specified value even if they are not in the database.  Make a new file in `config/initializers/default_settings.rb`
+Specified value even if they are **not in the database**.  Make a new file in `config/initializers/default_settings.rb`
 with the following:
 
 ```ruby
 Setting.defaults[:some_setting] = 'footastic'
+Setting.where(:var => "some_setting").count
+=> 0
+Setting.some_setting   
+=> "footastic"
 ```
-  
-Now even if the database is completely empty, you app will have some intelligent defaults:
+
+Init defualt value in database, this has indifferent with `Setting.defaults[:some_setting]`, this will **save the value into database**:
 
 ```ruby
-Setting.some_setting   # returns 'footastic'
+Setting.save_default(:some_key) = "123"
+Setting.where(:var => "some_key").count
+=> 1
+Setting.some_key 
+=> "123"
 ```
+  
+
 
 Settings may be bound to any existing ActiveRecord object. Define this association like this:
 Notice! is not do caching in this version.

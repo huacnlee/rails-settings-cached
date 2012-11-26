@@ -15,5 +15,11 @@ module RailsSettings
 			}
       obj || @@defaults[var_name.to_s]
     end    
+    
+    def self.save_default(key,value)
+      if self.send(key) == nil
+        self.send("#{key}=",value)
+      end
+    end
 	end
 end

@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Setting.save_default method to direct write default value in database.
+
 ## 0.2.3
 
 * Fix bug with when key has cached a nil value, and then set a default value for that key, the default value can't right return.

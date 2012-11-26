@@ -77,6 +77,15 @@ describe RailsSettings do
       Setting.defaults[:has_cached_nil_key] = "123"
       Setting.has_cached_nil_key.should == "123"
     end
+    
+    it "#save_default" do
+      Setting.test_save_default_key
+      Setting.save_default(:test_save_default_key, "321")
+      Setting.where(:var => "test_save_default_key").count.should == 1
+      Setting.test_save_default_key.should == "321"
+      Setting.save_default(:test_save_default_key, "3211")
+      Setting.test_save_default_key.should == "321"
+    end
   end
   
   describe "Implementation by embeds a Model" do
