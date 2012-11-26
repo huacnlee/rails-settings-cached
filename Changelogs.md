@@ -1,6 +1,7 @@
 ## 0.3.0
 
 * Setting.save_default method to direct write default value in database.
+* fix mass-update bug.
 
 ## 0.2.3
 
