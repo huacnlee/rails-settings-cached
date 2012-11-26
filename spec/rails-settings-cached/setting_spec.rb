@@ -71,6 +71,12 @@ describe RailsSettings do
       Setting.defaults[:bar] = @bar
       Setting.bar.should == @bar
     end
+    
+    it "can use default value, when the setting it cached with nil value" do
+      Setting.has_cached_nil_key
+      Setting.defaults[:has_cached_nil_key] = "123"
+      Setting.has_cached_nil_key.should == "123"
+    end
   end
   
   describe "Implementation by embeds a Model" do

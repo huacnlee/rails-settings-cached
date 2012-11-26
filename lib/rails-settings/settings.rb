@@ -91,7 +91,7 @@ module RailsSettings
     end
 
     def self.object(var_name)
-      thing_scoped.find_by_var(var_name.to_s)
+      thing_scoped.where(:var => var_name.to_s).first
     end
 
     #get the value field, YAML decoded
