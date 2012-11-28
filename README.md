@@ -25,6 +25,14 @@ Generate your settings:
 $ rails g settings <settings_name>
 ```
 
+Note: If you migrating from gem `rails-settings` then make sure you have it in your model
+
+```ruby
+class Settings < RailsSettings::CachedSettings
+  ...
+end
+```
+
 Now just put that migration in the database with:
     
 ```bash
