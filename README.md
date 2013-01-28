@@ -109,7 +109,7 @@ Setting.some_setting
 Init defualt value in database, this has indifferent with `Setting.defaults[:some_setting]`, this will **save the value into database**:
 
 ```ruby
-Setting.save_default(:some_key) = "123"
+Setting.save_default(:some_key, "123")
 Setting.where(:var => "some_key").count
 => 1
 Setting.some_key 
