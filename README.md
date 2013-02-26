@@ -16,7 +16,10 @@ arrays, or any object. Ported to Rails 3!
 Edit your Gemfile:
 
 ```ruby
-gem "rails-settings-cached"
+# Rails 4+
+gem "rails-settings-cached", "0.3.0"
+# Rails 3.x
+gem "rails-settings-cached", "0.2.4"
 ```
 
 Generate your settings:
