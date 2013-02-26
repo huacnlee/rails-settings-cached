@@ -56,7 +56,7 @@ describe RailsSettings do
       Setting.hashes.should == @merged_hash
     end
     
-    it "can list all entries by Setting.all" do
+    it "can list all entries by Setting.all" do 
       Setting.all.count.should == 6
       Setting.all('config').count.should == 2
     end
@@ -93,6 +93,10 @@ describe RailsSettings do
       @user.settings.level = 30
       @user.settings.locked = true
       @user.settings.last_logined_at = @tm
+      Setting.level = 20
+      Setting.unscoped.where(:var => "level").count == 2
+      Setting.where(:var => "level").count == 1
+      Setting.where(:var => "level").first.value == 20
     end
     
     it "can read values" do

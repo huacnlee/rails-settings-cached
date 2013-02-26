@@ -2,6 +2,7 @@ require 'rubygems'
 require "rspec"
 require "active_record"
 require 'active_support'
+require 'sqlite3'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'rails'))
@@ -15,6 +16,7 @@ module Rails
   end
 end
 
+# ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
 ActiveRecord::Base.configurations = true
 
@@ -44,10 +46,9 @@ RSpec.configure do |config|
     
     class User < ActiveRecord::Base
       include RailsSettings::Extend
-      # has_settings
     end
     
-    ::Setting.destroy_all
+    ActiveRecord::Base.connection.execute("delete from settings")
     Rails.cache.clear
   end
   

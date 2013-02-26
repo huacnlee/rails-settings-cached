@@ -6,7 +6,7 @@ module RailsSettings
     end
     
     def self.thing_scoped
-      Settings.scoped_by_thing_type_and_thing_id(@object.class.base_class.to_s, @object.id)
+      unscoped.where(:thing_type => @object.class.base_class.to_s, :thing_id => @object.id)
     end
  
   end
