@@ -6,12 +6,19 @@ module RailsSettings
       Rails.cache.write("settings:#{self.var}", self.value)
     end
     
-    before_destroy { |record| Rails.cache.delete("settings:#{record.var}") }
+    after_destroy { |record| Rails.cache.delete("settings:#{record.var}") }
     
     def self.[](var_name)
-      Rails.cache.fetch("settings:#{var_name}") {
+      obj = Rails.cache.fetch("settings:#{var_name}") {
         super(var_name)
       }
+      obj || @@defaults[var_name.to_s]
     end    
+    
+    def self.save_default(key,value)
+      if self.send(key) == nil
+        self.send("#{key}=",value)
+      end
+    end
   end
 end
