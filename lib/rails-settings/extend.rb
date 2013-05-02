@@ -10,7 +10,7 @@ module RailsSettings
       } 
                              
 
-      scope :with_settings_for, -> (var) { 
+      scope :with_settings_for, ->(var) {
         joins("JOIN settings ON (settings.thing_id = #{self.table_name}.#{self.primary_key} AND
               settings.thing_type = '#{self.base_class.name}') AND settings.var = '#{var}'") 
       }
@@ -20,7 +20,7 @@ module RailsSettings
         .where("settings.id IS NULL")    
       } 
                                      
-      scope :without_settings_for, -> (var) { 
+      scope :without_settings_for, ->(var) {
         where('settings.id IS NULL')
         .joins("LEFT JOIN settings ON (settings.thing_id = #{self.table_name}.#{self.primary_key} AND
                settings.thing_type = '#{self.base_class.name}') AND settings.var = '#{var}'")
