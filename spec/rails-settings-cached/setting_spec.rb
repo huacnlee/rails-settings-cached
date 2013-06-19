@@ -25,7 +25,7 @@ describe RailsSettings do
     
     it "can work with DateTime value" do
       Setting.created_on = @tm
-      Setting.created_on.should == @tm
+      Setting.created_on.to_date.should == @tm.to_date
     end
     
     it "can work with Hash value" do
@@ -52,7 +52,7 @@ describe RailsSettings do
     it "can read old data" do
       Setting.foo.should == @str
       Setting.items.should == @items
-      Setting.created_on.should == @tm
+      Setting.created_on.to_date.should == @tm.to_date
       Setting.hashes.should == @merged_hash
     end
     
@@ -86,6 +86,21 @@ describe RailsSettings do
       Setting.save_default(:test_save_default_key, "3211")
       Setting.test_save_default_key.should == "321"
     end
+
+    it "expires cache" do
+      Delorean.time_travel_to(Date.parse("10/10/2010")) do
+        Setting.set_cache_expiration 2.days
+        Setting.value_to_expire = @str
+        RailsSettings::Settings.value_to_expire = nil
+      end
+      Delorean.time_travel_to(Date.parse("11/10/2010")) do
+        Setting.value_to_expire.should == @str
+      end
+      Delorean.time_travel_to(Date.parse("13/10/2010")) do
+        Setting.value_to_expire.should be_nil
+      end
+    end
+
   end
   
   describe "Implementation by embeds a Model" do
@@ -98,7 +113,7 @@ describe RailsSettings do
     it "can read values" do
       @user.settings.level.should == 30
       @user.settings.locked.should == true
-      @user.settings.last_logined_at.should == @tm
+      @user.settings.last_logined_at.to_date.should == @tm.to_date
     end
   end
 end
