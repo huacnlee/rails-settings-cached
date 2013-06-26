@@ -17,7 +17,7 @@ Edit your Gemfile:
 
 ```ruby
 # Rails 4+
-gem "rails-settings-cached", "0.3.0"
+gem "rails-settings-cached", "0.3.1"
 # Rails 3.x
 gem "rails-settings-cached", "0.2.4"
 ```
