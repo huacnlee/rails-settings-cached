@@ -1,6 +1,6 @@
 source "http://ruby.taobao.org"
 
-gem 'rails', ' 4.0.0.beta1'
+gem 'rails', ' 4.0.0'
 
 group :test do
   gem 'rspec-rails'

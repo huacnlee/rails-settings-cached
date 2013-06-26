@@ -17,6 +17,16 @@ describe RailsSettings do
       Setting.foo.should == @str
     end
     
+    it "can work with Boolean value" do
+      Setting.boolean_foo = true
+      Setting.boolean_foo.should == true
+      
+      Setting.boolean_bar = false
+      # puts "---- #{Setting.all.inspect}"
+      # Setting['boolean_bar'].should == false
+      Setting.boolean_bar.should == false
+    end
+    
     it "can work with Array value" do
       Setting.items = @items
       Setting.items.should == @items
@@ -57,14 +67,14 @@ describe RailsSettings do
     end
     
     it "can list all entries by Setting.all" do 
-      Setting.all.count.should == 6
+      Setting.all.count.should == 8
       Setting.all('config').count.should == 2
     end
     
     it "can destroy a value" do
       Setting.destroy(:foo)
       Setting.foo.should == nil
-      Setting.all.count.should == 5
+      Setting.all.count.should == 7
     end
     
     it "can work with default value" do

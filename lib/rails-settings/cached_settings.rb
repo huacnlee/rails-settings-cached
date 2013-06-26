@@ -9,10 +9,11 @@ module RailsSettings
     after_destroy { |record| Rails.cache.delete("settings:#{record.var}") }
     
     def self.[](var_name)
-      obj = Rails.cache.fetch("settings:#{var_name}") {
+      cache_key = "settings:#{var_name}"
+      obj = Rails.cache.fetch(cache_key) {
         super(var_name)
       }
-      obj || @@defaults[var_name.to_s]
+      obj == nil ? @@defaults[var_name.to_s] : obj
     end    
     
     def self.save_default(key,value)

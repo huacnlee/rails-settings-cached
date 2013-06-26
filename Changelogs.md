@@ -4,6 +4,8 @@
 
 * Fix to work with Rails 4.0.0
 
+
+
 # For Rails 3.x
 
 ## 0.2.4
