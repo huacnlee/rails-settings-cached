@@ -1,5 +1,5 @@
 module RailsSettings
-  class CachedSettings < Settings
+  class CachedSettings < MongoSettings
     after_update :rewrite_cache    
     after_create :rewrite_cache
     def rewrite_cache

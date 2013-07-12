@@ -1,7 +1,6 @@
 module RailsSettings
-  class Settings < ActiveRecord::Base
-
-    self.table_name = 'settings'
+  class MongoSettings
+    include Mongoid::Document
 
     class SettingNotFound < RuntimeError; end
 
@@ -42,9 +41,9 @@ module RailsSettings
 
     #retrieve all settings as a hash (optionally starting with a given namespace)
     def self.all(starting_with = nil)
-      vars = thing_scoped.select("var,value")
+      vars = thing_scoped.only(:var, :value)
       if starting_with
-        vars = vars.where("var LIKE '#{starting_with}%'")
+        vars = vars.where(var: Regexp.new("^#{starting_with}"))
       end
 
       result = {}
@@ -54,9 +53,9 @@ module RailsSettings
       result.with_indifferent_access
     end
     
-    def self.where(sql = nil)
-      if sql
-        vars = thing_scoped.where(sql)
+    def self.where(query = nil)
+      if query
+        vars = thing_scoped.where(query)
       end
       vars
     end
@@ -110,7 +109,8 @@ module RailsSettings
     end
 
     def self.thing_scoped
-      unscoped.where("thing_type is NULL and thing_id is NULL")
+      # unscoped.where("thing_type is NULL and thing_id is NULL")
+      unscoped.and(thing_type: nil, thing_id: nil) 
     end
 
   end
