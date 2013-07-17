@@ -14,6 +14,17 @@ module RailsSettings
         joins("JOIN settings ON (settings.thing_id = #{self.table_name}.#{self.primary_key} AND
               settings.thing_type = '#{self.base_class.name}') AND settings.var = '#{var}'") 
       }
+
+      scope :with_any_of_settings, ->(*options) {
+        names = if options.kind_of?(Array)
+                  options.join(", ")
+                elsif options.size > 0
+                  Array(options).join(", ")
+                end
+        joins("JOIN settings ON (settings.thing_id = #{self.table_name}.#{self.primary_key} AND
+              settings.thing_type = '#{self.base_class.name}') AND settings.var IN (#{names})})") if names
+
+      }
                                                                
       scope :without_settings, -> {
         joins("LEFT JOIN settings ON (settings.thing_id = #{self.table_name}.#{self.primary_key} AND settings.thing_type = '#{self.base_class.name}')")

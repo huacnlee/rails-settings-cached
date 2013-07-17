@@ -148,6 +148,10 @@ User.with_settings
 User.with_settings_for('color') 
 # => returns a scope of users having a 'color' setting
 
+User.with_any_of_settings('color','name')
+# => returns a scope of users having a 'color' or 'name' setting or both of them
+# Array of names could be used e.x. ['color','name']
+
 User.without_settings 
 # returns a scope of users having no setting at all (means user.settings.all == {})
 

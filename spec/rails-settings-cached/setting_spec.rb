@@ -108,7 +108,22 @@ describe RailsSettings do
       Setting.where(:var => "level").count == 1
       Setting.where(:var => "level").first.value == 20
     end
-    
+    describe "scope with_any_of_settings" do
+      before(:all) do
+        @user.settings.level = 30
+        @user.settings.locked = true
+      end
+      it 'values as array' do
+        User.with_any_of_settings([:level,:locked]) == @user
+      end
+      it 'values separated coma' do
+        User.with_any_of_settings(:level,:locked) == @user
+      end
+      it 'single value' do
+        User.with_any_of_settings(:level) == @user
+      end
+    end
+
     it "can read values" do
       @user.settings.level.should == 30
       @user.settings.locked.should == true
