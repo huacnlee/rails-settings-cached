@@ -9,7 +9,8 @@ arrays, or any object. Ported to Rails 3!
 
 ## Status
 
-[![CI Status](https://secure.travis-ci.org/huacnlee/rails-settings-cached.png)](http://travis-ci.org/huacnlee/rails-settings-cached)
+- [![Gem Version](https://badge.fury.io/rb/rails-settings-cached.png)](https://rubygems.org/gems/rails-settings-cached)
+- [![CI Status](https://api.travis-ci.org/huacnlee/rails-settings-cached.png)](http://travis-ci.org/huacnlee/rails-settings-cached)
 
 ## Setup
 
@@ -37,7 +38,7 @@ end
 ```
 
 Now just put that migration in the database with:
-    
+
 ```bash
 rake db:migrate
 ```
@@ -83,8 +84,8 @@ Setting.foo            # returns nil
 Want a list of all the settings?
 
 ```ruby
-Setting.all    
-# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}        
+Setting.all
+# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 ```
 
 You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Setting.all like this:
@@ -93,7 +94,7 @@ You need name spaces and want a list of settings for a give name space? Just cho
 Setting['preferences.color'] = :blue
 Setting['preferences.size'] = :large
 Setting['license.key'] = 'ABC-DEF'
-Setting.all('preferences.')   
+Setting.all('preferences.')
 # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
 ```
 
@@ -105,7 +106,7 @@ with the following:
 Setting.defaults[:some_setting] = 'footastic'
 Setting.where(:var => "some_setting").count
 => 0
-Setting.some_setting   
+Setting.some_setting
 => "footastic"
 ```
 
@@ -115,18 +116,16 @@ Init defualt value in database, this has indifferent with `Setting.defaults[:som
 Setting.save_default(:some_key, "123")
 Setting.where(:var => "some_key").count
 => 1
-Setting.some_key 
+Setting.some_key
 => "123"
 ```
-  
-
 
 Settings may be bound to any existing ActiveRecord object. Define this association like this:
 Notice! is not do caching in this version.
-  
+
 ```ruby
 class User < ActiveRecord::Base
-  include RailsSettings::Extend 
+  include RailsSettings::Extend
 end
 ```
 
@@ -142,16 +141,16 @@ user.settings.all # { "color" => :red }
 I you want to find users having or not having some settings, there are named scopes for this:
 
 ```ruby
-User.with_settings 
+User.with_settings
 # => returns a scope of users having any setting
 
-User.with_settings_for('color') 
+User.with_settings_for('color')
 # => returns a scope of users having a 'color' setting
 
-User.without_settings 
+User.without_settings
 # returns a scope of users having no setting at all (means user.settings.all == {})
 
-User.without_settings('color') 
+User.without_settings('color')
 # returns a scope of users having no 'color' setting (means user.settings.color == nil)
 ```
 
