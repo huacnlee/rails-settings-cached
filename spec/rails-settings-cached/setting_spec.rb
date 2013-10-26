@@ -76,7 +76,13 @@ describe RailsSettings do
       Setting.foo.should == nil
       Setting.all.count.should == 7
     end
-    
+
+    it "can destroy a falsy value" do
+      Setting.falsy_value = false
+      Setting.destroy(:falsy_value)
+      Setting.falsy_value.should == nil
+    end
+
     it "can work with default value" do
       Setting.defaults[:bar] = @bar
       Setting.bar.should == @bar

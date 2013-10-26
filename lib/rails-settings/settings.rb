@@ -32,7 +32,7 @@ module RailsSettings
     #destroy the specified settings record
     def self.destroy(var_name)
       var_name = var_name.to_s
-      if self[var_name]
+      if self.all.key?(var_name)
         object(var_name).destroy
         true
       else
