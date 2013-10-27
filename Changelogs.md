@@ -1,5 +1,10 @@
 # For Rails 4.0 +
 
+## 0.3.2
+
+* Enable destroy-ing a key with falsy data; #32
+* Require Rails 4.0.0+;
+
 ## 0.3.1
 
 * false value can't got back bug has fixed.
@@ -7,8 +12,6 @@
 ## 0.3.0
 
 * Fix to work with Rails 4.0.0
-
-
 
 # For Rails 3.x
 
