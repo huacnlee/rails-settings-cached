@@ -32,8 +32,9 @@ module RailsSettings
     #destroy the specified settings record
     def self.destroy(var_name)
       var_name = var_name.to_s
-      if self.all.key?(var_name)
-        object(var_name).destroy
+      obj = object(var_name)
+      unless obj.nil?
+        obj.destroy
         true
       else
         raise SettingNotFound, "Setting variable \"#{var_name}\" not found"
