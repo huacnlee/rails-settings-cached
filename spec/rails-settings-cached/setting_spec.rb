@@ -146,15 +146,11 @@ describe RailsSettings do
       
       it 'should get items more than 8' do
         Setting.aa = Time.now
-        expect(Setting.unscoped.all.count).to be > 8
+        expect(Setting.unscoped.count).to be > 8
       end
     end
     
-    describe '#find' do
-      before(:all) do
-        Setting.aa = Time.now
-      end
-      
+    describe '#find' do      
       let(:obj) { Setting.unscoped.first }
       let(:id) { obj.id }
       

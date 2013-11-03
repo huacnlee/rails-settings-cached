@@ -164,7 +164,7 @@ If you want create an admin interface to editing the Settings, you can try metho
 class SettingsController < ApplicationController
   def index
     # to get all items for render list
-    @settings = Setting.unscoped.all
+    @settings = Setting.unscoped
   end
   
   def edit
