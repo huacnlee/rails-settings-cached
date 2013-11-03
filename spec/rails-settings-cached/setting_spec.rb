@@ -11,78 +11,94 @@ describe RailsSettings do
     @user = User.create(:login => 'test', :password => 'foobar')
   end
   
-  describe "Implementation" do
-    it "can work with String value" do
-      Setting.foo = @str
-      Setting.foo.should == @str
+  describe "Getter and Setter" do
+    context 'String value' do
+      it "can work with String value" do
+        Setting.foo = @str
+        expect(Setting.foo).to eq @str
+      end
     end
     
-    it "can work with Boolean value" do
-      Setting.boolean_foo = true
-      Setting.boolean_foo.should == true
+    context 'Boolean value' do
+      before(:all) do
+        Setting.boolean_foo = true
+        Setting.boolean_bar = false
+      end
       
-      Setting.boolean_bar = false
-      # puts "---- #{Setting.all.inspect}"
-      # Setting['boolean_bar'].should == false
-      Setting.boolean_bar.should == false
+      it { expect(Setting.boolean_foo).to be_true }
+      it { expect(Setting.boolean_bar).to be_false }
     end
     
-    it "can work with Array value" do
-      Setting.items = @items
-      Setting.items.should == @items
-      Setting.items.class.should == @items.class
+    context 'Array value' do
+      before(:all) do
+        Setting.items = @items
+      end
+      
+      it { expect(Setting.items).to eq @items }
+      it { expect(Setting.items).to be_a(Array) }
     end
     
-    it "can work with DateTime value" do
-      Setting.created_on = @tm
-      Setting.created_on.should == @tm
+    context 'DateTime value' do
+      before(:all) do
+        Setting.created_on = @tm
+      end
+      it { expect(Setting.created_on).to eq @tm }
+      it { expect(Setting.created_on).to be_a(Time) }
     end
     
-    it "can work with Hash value" do
-      Setting.hashes = @hash
-      Setting.hashes.should == @hash
-      Setting.hashes.class.should == @hash.class
+    context 'Hash value' do
+      before(:all) do
+        Setting.hashes = @hash
+      end
+      it { expect(Setting.hashes).to eq @hash }
+      it { expect(Setting.hashes).to be_a(Hash) }
     end
     
-    it "can work with namespace key" do
-      Setting['config.color'] = :red
-      Setting['config.limit'] = 100
+    context 'namespace for key' do
+      before(:all) do
+        Setting['config.color'] = :red
+        Setting['config.limit'] = 100
+      end
+      it { expect(Setting['config.color']).to eq :red }
+      it { expect(Setting['config.limit']).to eq 100 }
     end
     
-    it "can read last give namespace key's value" do
-      Setting['config.color'].should == :red
-      Setting['config.limit'].should == 100
+    context 'Merge hash' do
+      before(:all) do
+        Setting.merge!(:hashes, :id => 32)
+      end
+      it { expect(Setting.hashes).to include(:id => 32) }
+      it { expect(Setting.hashes).to include(@hash) }
+    end
+  end
+  
+  describe '#all' do
+    it "should work" do
+      expect(Setting.all.count).to eq 8
     end
     
-    it "can work with Merge to merge a Hash" do
-      Setting.merge!(:hashes, :id => 32)
-      Setting.hashes.should == @merged_hash
+    it "should all('namespace')" do
+      expect(Setting.all("config").count).to eq 2
     end
-    
-    it "can read old data" do
-      Setting.foo.should == @str
-      Setting.items.should == @items
-      Setting.created_on.should == @tm
-      Setting.hashes.should == @merged_hash
-    end
-    
-    it "can list all entries by Setting.all" do 
-      Setting.all.count.should == 8
-      Setting.all('config').count.should == 2
-    end
-    
-    it "can destroy a value" do
+  end
+  
+  describe '#destroy' do
+    before(:all) do
       Setting.destroy(:foo)
-      Setting.foo.should == nil
-      Setting.all.count.should == 7
     end
-
+    
+    it { expect(Setting.foo).to be_nil }
+    it { expect(Setting.all.count).to eq 7 }
+    
     it "can destroy a falsy value" do
       Setting.falsy_value = false
       Setting.destroy(:falsy_value)
-      Setting.falsy_value.should == nil
+      expect(Setting.falsy_value).to be_nil
     end
-
+  end
+  
+  
+  describe 'Default values' do
     it "can work with default value" do
       Setting.defaults[:bar] = @bar
       Setting.bar.should == @bar
@@ -119,6 +135,32 @@ describe RailsSettings do
       @user.settings.level.should == 30
       @user.settings.locked.should == true
       @user.settings.last_logined_at.should == @tm
+    end
+  end
+  
+  describe 'Query all items' do
+    describe '#unscoped' do
+      it 'should work' do
+        expect(Setting.unscoped).to be_a(ActiveRecord::Relation)
+      end
+      
+      it 'should get items more than 8' do
+        Setting.aa = Time.now
+        expect(Setting.unscoped.all.count).to be > 8
+      end
+    end
+    
+    describe '#find' do
+      before(:all) do
+        Setting.aa = Time.now
+      end
+      
+      let(:obj) { Setting.unscoped.first }
+      let(:id) { obj.id }
+      
+      it 'should work with find' do
+        expect(Setting.unscoped.find(id)).to eq obj
+      end
     end
   end
 end

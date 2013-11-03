@@ -154,4 +154,24 @@ User.without_settings('color')
 # returns a scope of users having no 'color' setting (means user.settings.color == nil)
 ```
 
+-----
+
+## How to create a list, form to manage Settings?
+
+If you want create an admin interface to editing the Settings, you can try methods in follow:
+
+```ruby
+class SettingsController < ApplicationController
+  def index
+    # to get all items for render list
+    @settings = Setting.unscoped.all
+  end
+  
+  def edit
+    @setting = Setting.unscoped.find(params[:id])
+  end
+end
+```
+
+
 That's all there is to it! Enjoy!
