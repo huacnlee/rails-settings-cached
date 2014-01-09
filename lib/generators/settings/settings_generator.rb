@@ -2,16 +2,16 @@ require 'rails/generators/migration'
 
     class SettingsGenerator < Rails::Generators::NamedBase
       include Rails::Generators::Migration
-  
+
       argument :name, :type => :string, :default => "my_settings"
-  
-      source_root File.expand_path('../templates', __FILE__)  
-  
+
+      source_root File.expand_path('../templates', __FILE__)
+
       @@migrations = false
-      
+
       def self.next_migration_number(dirname) #:nodoc:
         if ActiveRecord::Base.timestamped_migrations
-          if @@migrations          
+          if @@migrations
             (current_migration_number(dirname) + 1)
           else
             @@migrations = true
@@ -20,11 +20,13 @@ require 'rails/generators/migration'
         else
           "%.3d" % (current_migration_number(dirname) + 1)
         end
-      end  
+      end
 
-      def settings      
+      def settings
         #generate(:model, name, "--skip-migration")
         template "model.rb", File.join("app/models",class_path,"#{file_name}.rb"), :force => true
         migration_template "migration.rb", "db/migrate/create_settings.rb"
+
+        template "initializer.rb", File.join("config/initializers",class_path,"rails_settings_cached.rb")
       end
     end

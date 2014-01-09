@@ -54,14 +54,14 @@ module RailsSettings
       end
       result.with_indifferent_access
     end
-    
+
     def self.where(sql = nil)
       if sql
         vars = thing_scoped.where(sql)
       end
       vars
     end
-    
+
     #get a setting value by [] notation
     def self.[](var_name)
       if var = object(var_name)
@@ -100,14 +100,14 @@ module RailsSettings
       thing_scoped.where(:var => var_name.to_s).first
     end
 
-    #get the value field, YAML decoded
+    #get the value field, decoded
     def value
-      YAML::load(self[:value])
+      Configuration.serializer::load(self[:value])
     end
 
-    #set the value field, YAML encoded
+    #set the value field, encoded
     def value=(new_value)
-      self[:value] = new_value.to_yaml
+      self[:value] = Configuration.serializer::dump(new_value)
     end
 
     def self.thing_scoped
