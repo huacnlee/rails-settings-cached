@@ -1,5 +1,5 @@
 require 'rubygems'
-require "rspec"
+require 'rspec/autorun'
 require "active_record"
 require 'active_support'
 require 'sqlite3'
@@ -18,7 +18,7 @@ end
 
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.establish_connection(:adapter => "sqlite3", :database => ":memory:")
-ActiveRecord::Base.configurations = true
+# ActiveRecord::Base.configurations = true
 
 ActiveRecord::Schema.verbose = false
 ActiveRecord::Schema.define(:version => 1) do
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(:version => 1) do
 end
 
 RSpec.configure do |config|
+  
   config.before(:all) do
     class ::Setting < RailsSettings::CachedSettings
     end

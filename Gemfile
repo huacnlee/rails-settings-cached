@@ -1,8 +1,8 @@
 source "http://ruby.taobao.org"
 
-gem 'rails', ' 4.0.0'
+gem 'rails', ' 4.1.0.rc1'
 
 group :test do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '2.14.1'
   gem 'sqlite3'
 end

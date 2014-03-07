@@ -78,7 +78,7 @@ describe RailsSettings do
     end
     
     it "should all('namespace')" do
-      expect(Setting.all("config").count).to eq 2
+      expect(Setting.get_all("config").count).to eq 2
     end
   end
   

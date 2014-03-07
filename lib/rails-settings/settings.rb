@@ -42,7 +42,7 @@ module RailsSettings
     end
 
     #retrieve all settings as a hash (optionally starting with a given namespace)
-    def self.all(starting_with = nil)
+    def self.get_all(starting_with = nil)
       vars = thing_scoped.select("var,value")
       if starting_with
         vars = vars.where("var LIKE '#{starting_with}%'")

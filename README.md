@@ -17,6 +17,8 @@ arrays, or any object. Ported to Rails 3!
 Edit your Gemfile:
 
 ```ruby
+# Rails 4.1.x
+gem "rails-settings-cached", "0.4.0"
 # Rails 4+
 gem "rails-settings-cached", "0.3.1"
 # Rails 3.x
@@ -84,17 +86,17 @@ Setting.foo            # returns nil
 Want a list of all the settings?
 
 ```ruby
-Setting.all
+Setting.get_all
 # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 ```
 
-You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Setting.all like this:
+You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Setting.get_all like this:
 
 ```ruby
 Setting['preferences.color'] = :blue
 Setting['preferences.size'] = :large
 Setting['license.key'] = 'ABC-DEF'
-Setting.all('preferences.')
+Setting.get_all('preferences.')
 # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
 ```
 
@@ -135,7 +137,7 @@ Then you can set/get a setting for a given user instance just by doing this:
 user = User.find(123)
 user.settings.color = :red
 user.settings.color # returns :red
-user.settings.all # { "color" => :red }
+user.settings.get_all # { "color" => :red }
 ```
 
 I you want to find users having or not having some settings, there are named scopes for this:
@@ -148,7 +150,7 @@ User.with_settings_for('color')
 # => returns a scope of users having a 'color' setting
 
 User.without_settings
-# returns a scope of users having no setting at all (means user.settings.all == {})
+# returns a scope of users having no setting at all (means user.settings.get_all == {})
 
 User.without_settings('color')
 # returns a scope of users having no 'color' setting (means user.settings.color == nil)
