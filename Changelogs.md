@@ -1,5 +1,9 @@
 # For Rails 4.1 +
 
+## 0.4.1
+
+* ActiveRecord `table_name_prefix` support; #31
+
 ## 0.4.0
 
 * Rails 4.1.0 compatibility.
