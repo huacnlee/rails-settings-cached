@@ -1,1 +1,0 @@
-require 'rails-settings-cached'

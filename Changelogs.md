@@ -1,5 +1,9 @@
 # For Rails 4.1 +
 
+## Master
+
+* Ruby new hash syntax and do not support Ruby 1.9.2 from now.
+
 ## 0.4.1
 
 * ActiveRecord `table_name_prefix` support; #31

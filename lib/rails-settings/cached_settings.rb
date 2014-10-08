@@ -1,25 +1,29 @@
 module RailsSettings
   class CachedSettings < Settings
-    after_update :rewrite_cache    
-    after_create :rewrite_cache
+    after_commit :rewrite_cache, on: [:create, :update]
     def rewrite_cache
       Rails.cache.write("settings:#{self.var}", self.value)
     end
-    
-    after_destroy { |record| Rails.cache.delete("settings:#{record.var}") }
+
+    after_commit :expire_cache, on: [:destroy]
+    def expire_cache
+      Rails.cache.delete("settings:#{self.var}")
+    end
     
     def self.[](var_name)
       cache_key = "settings:#{var_name}"
-      obj = Rails.cache.fetch(cache_key) {
-        super(var_name)
-      }
-      obj == nil ? @@defaults[var_name.to_s] : obj
-    end    
-    
-    def self.save_default(key,value)
-      if self.send(key) == nil
-        self.send("#{key}=",value)
+      obj = Rails.cache.read(cache_key)
+      if obj == nil
+        obj = super(var_name)
       end
+      
+      return @@defaults[var_name.to_s] if obj == nil
+      obj
+    end
+
+    def self.save_default(key,value)
+      return false if self.send(key) != nil
+      self.send("#{key}=",value)
     end
   end
 end

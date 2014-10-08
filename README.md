@@ -168,12 +168,11 @@ class SettingsController < ApplicationController
     # to get all items for render list
     @settings = Setting.unscoped
   end
-  
+
   def edit
     @setting = Setting.unscoped.find(params[:id])
   end
 end
 ```
-
 
 That's all there is to it! Enjoy!
