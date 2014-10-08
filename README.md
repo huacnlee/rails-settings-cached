@@ -175,4 +175,7 @@ class SettingsController < ApplicationController
 end
 ```
 
-That's all there is to it! Enjoy!
+
+Also you may use [rails-settings-ui](https://github.com/accessd/rails-settings-ui) gem
+for building ready to using interface with validations.
+
