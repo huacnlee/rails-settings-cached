@@ -84,19 +84,24 @@ Setting.foo            # returns nil
 ```
 
 Want a list of all the settings?
-
 ```ruby
+# Rails 4.1.x
 Setting.get_all
+# Rails 3.x and 4.0.x
+Setting.all
 # returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 ```
 
-You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Setting.get_all like this:
+You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use `Setting.get_all` (`Settings.all` for # Rails 3.x and 4.0.x) like this:
 
 ```ruby
 Setting['preferences.color'] = :blue
 Setting['preferences.size'] = :large
 Setting['license.key'] = 'ABC-DEF'
+# Rails 4.1.x
 Setting.get_all('preferences.')
+# Rails 3.x and 4.0.x
+Setting.all('preferences.')
 # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
 ```
 
@@ -137,7 +142,11 @@ Then you can set/get a setting for a given user instance just by doing this:
 user = User.find(123)
 user.settings.color = :red
 user.settings.color # returns :red
-user.settings.get_all # { "color" => :red }
+# Rails 4.1.x
+user.settings.get_all
+# Rails 3.x and 4.0.x
+user.settings.all
+# { "color" => :red }
 ```
 
 I you want to find users having or not having some settings, there are named scopes for this:
