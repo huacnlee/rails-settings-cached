@@ -56,7 +56,7 @@ module RailsSettings
       # add defaults to list of results if the key matches the namespace
       @@defaults.each do |key, value|
         # avoid overwriting actual values with defaults
-        continue if key.nil? || result.has_key?(key)
+        next if key.nil? || result.has_key?(key)
         if starting_with.nil? || key.start_with?(starting_with)
           result[key] = value
         end
@@ -86,7 +86,7 @@ module RailsSettings
 
       record = object(var_name) || thing_scoped.new(var: var_name)
       record.value = value
-      record.save!
+      record.save!g
 
       value
     end
