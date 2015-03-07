@@ -54,9 +54,10 @@ module RailsSettings
       end
       
       # add defaults to list of results if the key matches the namespace
-      @@defaults.each |key, value|
-        continue if result.has_key? key # avoid overwriting actual values with defaults
-        results[key] = value if key.start_with? starting_with
+      @@defaults.each do |key, value|
+        # avoid overwriting actual values with defaults
+        continue if key.nil? || result.has_key?(key)
+        result[key] = value if starting_with.nil? || key.start_with?(starting_with)
       end
       result.with_indifferent_access
     end
