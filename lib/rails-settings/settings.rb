@@ -52,6 +52,15 @@ module RailsSettings
       vars.each do |record|
         result[record.var] = record.value
       end
+
+      # add defaults to list of results if the key matches the namespace
+      @@defaults.each do |key, value|
+        # avoid overwriting actual values with defaults
+        next if key.nil? || result.has_key?(key)
+        if starting_with.nil? || key.start_with?(starting_with)
+          result[key] = value
+        end
+      end
       result.with_indifferent_access
     end
 
