@@ -1,19 +1,19 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe RailsSettings do
   before(:all) do
-    @str = "Foo bar"
+    @str = 'Foo bar'
     @tm = Time.now
-    @items = [1,3,5,'as']
-    @hash = {name: @str, items: @items}
-    @merged_hash = {name: @str, items: @items, id: 32}
-    @bar = "Bar foo"
+    @items = [1, 3, 5, 'as']
+    @hash = { name: @str, items: @items }
+    @merged_hash = { name: @str, items: @items, id: 32 }
+    @bar = 'Bar foo'
     @user = User.create(login: 'test', password: 'foobar')
   end
 
-  describe "Getter and Setter" do
+  describe 'Getter and Setter' do
     context 'String value' do
-      it "can work with String value" do
+      it 'can work with String value' do
         Setting.foo = @str
         expect(Setting.foo).to eq @str
       end
@@ -73,12 +73,12 @@ describe RailsSettings do
   end
 
   describe '#all' do
-    it "should work" do
+    it 'should work' do
       expect(Setting.all.count).to eq 8
     end
 
     it "should all('namespace')" do
-      expect(Setting.get_all("config").count).to eq 2
+      expect(Setting.get_all('config').count).to eq 2
     end
   end
 
@@ -90,7 +90,7 @@ describe RailsSettings do
     it { expect(Setting.foo).to be_nil }
     it { expect(Setting.all.count).to eq 7 }
 
-    it "can destroy a falsy value" do
+    it 'can destroy a falsy value' do
       Setting.falsy_value = false
       Setting.destroy(:falsy_value)
       expect(Setting.falsy_value).to be_nil
@@ -98,42 +98,42 @@ describe RailsSettings do
   end
 
   describe 'Default values' do
-    it "can work with default value" do
+    it 'can work with default value' do
       Setting.defaults[:bar] = @bar
-      Setting.bar.should == @bar
+      expect(Setting.bar).to eq @bar
     end
 
-    it "can use default value, when the setting it cached with nil value" do
+    it 'can use default value, when the setting it cached with nil value' do
       Setting.has_cached_nil_key
-      Setting.defaults[:has_cached_nil_key] = "123"
-      Setting.has_cached_nil_key.should == "123"
+      Setting.defaults[:has_cached_nil_key] = '123'
+      expect(Setting.has_cached_nil_key).to eq '123'
     end
 
-    it "#save_default" do
+    it '#save_default' do
       Setting.test_save_default_key
-      Setting.save_default(:test_save_default_key, "321")
-      Setting.where(:var => "test_save_default_key").count.should == 1
-      Setting.test_save_default_key.should == "321"
-      Setting.save_default(:test_save_default_key, "3211")
-      Setting.test_save_default_key.should == "321"
+      Setting.save_default(:test_save_default_key, '321')
+      expect(Setting.where(var: 'test_save_default_key').count).to eq 1
+      expect(Setting.test_save_default_key).to eq '321'
+      Setting.save_default(:test_save_default_key, '3211')
+      expect(Setting.test_save_default_key).to eq '321'
     end
   end
 
-  describe "Implementation by embeds a Model" do
-    it "can set values" do
+  describe 'Implementation by embeds a Model' do
+    it 'can set values' do
       @user.settings.level = 30
       @user.settings.locked = true
       @user.settings.last_logined_at = @tm
       Setting.level = 20
-      Setting.unscoped.where(:var => "level").count == 2
-      Setting.where(:var => "level").count == 1
-      Setting.where(:var => "level").first.value == 20
+      expect(Setting.unscoped.where(var: 'level').count).to eq 2
+      expect(Setting.where(var: 'level').count).to eq 1
+      Setting.where(var: 'level').first.value == 20
     end
 
-    it "can read values" do
-      @user.settings.level.should == 30
-      @user.settings.locked.should == true
-      @user.settings.last_logined_at.should == @tm
+    it 'can read values' do
+      expect(@user.settings.level).to eq 30
+      expect(@user.settings.locked).to eq true
+      expect(@user.settings.last_logined_at).to eq @tm
     end
   end
 
