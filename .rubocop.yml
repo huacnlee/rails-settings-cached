@@ -1,0 +1,21 @@
+AllCops:
+  Exclude:
+    - 'rails-settings-cached.gemspec'
+    - 'vendor/**/*'
+    - 'lib/generators/settings/templates/*'
+
+Documentation:
+  Enabled: false
+
+# don't prefer 'fail' over raise
+SignalException:
+  Enabled: false
+
+LineLength:
+  Max: 115
+
+ClassVars:
+  Enabled: false
+
+FileName:
+  Enabled: false
