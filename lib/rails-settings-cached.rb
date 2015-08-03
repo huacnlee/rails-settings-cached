@@ -1,4 +1,4 @@
-require "rails-settings/settings"
-require "rails-settings/scoped_settings"
-require "rails-settings/cached_settings"
-require "rails-settings/extend"
+require_relative 'rails-settings/settings'
+require_relative 'rails-settings/scoped_settings'
+require_relative 'rails-settings/cached_settings'
+require_relative 'rails-settings/extend'
