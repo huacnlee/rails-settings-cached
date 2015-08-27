@@ -1,8 +1,9 @@
 # For Rails 4.1 +
 
-## Master
+## 0.4.2
 
 * Ruby new hash syntax and do not support Ruby 1.9.2 from now.
+* Cache key has changed with `rails_settings_cached` prefix.
 
 ## 0.4.1
 
