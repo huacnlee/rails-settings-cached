@@ -21,8 +21,8 @@ module RailsSettings
       end
 
       def save_default(key, value)
-        return false unless send(key).nil?
-        send("#{key}=", value)
+        return false unless self[key].nil?
+        self[key] = value
       end
     end
   end
