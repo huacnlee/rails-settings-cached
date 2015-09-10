@@ -5,7 +5,7 @@ require_relative 'rails-settings/extend'
 
 class RailsSettings::Railtie < Rails::Railtie
   initializer "rails_settings.active_record.initialization" do
-    RailsSettings::Settings.after_commit :rewrite_cache, on: %i(create update)
-    RailsSettings::Settings.after_commit :expire_cache, on: %i(destroy)
+    RailsSettings::CachedSettings.after_commit :rewrite_cache, on: %i(create update)
+    RailsSettings::CachedSettings.after_commit :expire_cache, on: %i(destroy)
   end
 end
