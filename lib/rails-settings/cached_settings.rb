@@ -1,11 +1,9 @@
 module RailsSettings
   class CachedSettings < Settings
-    after_commit :rewrite_cache, on: %i(create update)
     def rewrite_cache
       Rails.cache.write("rails_settings_cached:#{var}", value)
     end
 
-    after_commit :expire_cache, on: %i(destroy)
     def expire_cache
       Rails.cache.delete("rails_settings_cached:#{var}")
     end
