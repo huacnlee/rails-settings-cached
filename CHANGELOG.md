@@ -1,10 +1,13 @@
 # For Rails 4.1 +
 
+## 0.4.3
+
+* Fix Rails 4.2.4 `after_rollback`/`after_commit` depreciation warnings. @miks
+
 ## 0.4.2
 
 * Ruby new hash syntax and do not support Ruby 1.9.2 from now.
 * Cache key has changed with `rails_settings_cached` prefix.
-* Fix Rails 4.2.4 `after_rollback`/`after_commit` depreciation warnings. @miks 
 
 ## 0.4.1
 
