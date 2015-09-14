@@ -1,5 +1,9 @@
 # For Rails 4.1 +
 
+## 0.4.4
+
+* Add cached to model scoped settings.
+
 ## 0.4.3
 
 * Fix Rails 4.2.4 `after_rollback`/`after_commit` depreciation warnings. @miks
