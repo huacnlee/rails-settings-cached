@@ -7,6 +7,8 @@ module RailsSettings
     cattr_accessor :defaults
     @@defaults = {}.with_indifferent_access
 
+    belongs_to :thing, polymorphic: true
+
     # Support old plugin
     if defined?(SettingsDefaults::DEFAULTS)
       @@defaults = SettingsDefaults::DEFAULTS.with_indifferent_access

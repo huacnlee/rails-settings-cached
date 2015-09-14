@@ -1,17 +1,26 @@
 module RailsSettings
   class CachedSettings < Settings
     def rewrite_cache
-      Rails.cache.write("rails_settings_cached:#{var}", value)
+      Rails.cache.write(cache_key, value)
     end
 
     def expire_cache
-      Rails.cache.delete("rails_settings_cached:#{var}")
+      Rails.cache.delete(cache_key)
+    end
+
+    def cache_key
+      self.class.cache_key(var, thing)
     end
 
     class << self
+      def cache_key(var_name, scope_object)
+        scope = "rails_settings_cached:"
+        scope << "#{scope_object.class.base_class.to_s}-#{scope_object.id}:" if scope_object
+        scope << "#{var_name}"
+      end
+
       def [](var_name)
-        cache_key = "rails_settings_cached:#{var_name}"
-        obj = Rails.cache.read(cache_key)
+        obj = Rails.cache.read(cache_key(var_name, @object))
         obj = super(var_name) if obj.nil?
 
         return @@defaults[var_name.to_s] if obj.nil?
