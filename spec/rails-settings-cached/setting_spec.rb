@@ -11,6 +11,12 @@ describe RailsSettings do
     @user = User.create(login: 'test', password: 'foobar')
   end
 
+  describe "#thing" do
+    it "has belongs_to relationship to `thing`" do
+      expect(Setting.reflect_on_association(:thing).macro).to eq(:belongs_to)
+    end
+  end
+
   describe 'Getter and Setter' do
     context 'String value' do
       it 'can work with String value' do

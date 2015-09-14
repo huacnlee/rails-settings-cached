@@ -1,5 +1,5 @@
 module RailsSettings
-  class ScopedSettings < Settings
+  class ScopedSettings < CachedSettings
     def self.for_thing(object)
       @object = object
       self
