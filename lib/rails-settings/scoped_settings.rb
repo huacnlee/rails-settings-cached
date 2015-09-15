@@ -6,7 +6,10 @@ module RailsSettings
     end
 
     def self.thing_scoped
-      unscoped.where(thing_type: @object.class.base_class.to_s, thing_id: @object.id)
+      klass = @object.class
+      primary_key = klass.primary_key
+      id = @object.public_send(primary_key)
+      unscoped.where(thing_type: klass.base_class.name, thing_id: id)
     end
   end
 end
