@@ -15,7 +15,12 @@ module RailsSettings
     class << self
       def cache_key(var_name, scope_object)
         scope = "rails_settings_cached:"
-        scope << "#{scope_object.class.base_class.to_s}-#{scope_object.id}:" if scope_object
+        if scope_object
+          klass = scope_object.class
+          primary_key = klass.primary_key
+          id = scope_object.public_send(primary_key)
+          scope << "#{klass.base_class.name}-#{id}:"
+        end
         scope << "#{var_name}"
       end
 
