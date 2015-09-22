@@ -1,5 +1,9 @@
 # For Rails 4.1 +
 
+## 0.4.5
+
+* Cache db values that does not exist within rails cache.
+
 ## 0.4.4
 
 * Add cached to model scoped settings.

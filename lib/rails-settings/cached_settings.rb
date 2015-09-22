@@ -20,11 +20,15 @@ module RailsSettings
       end
 
       def [](var_name)
-        obj = Rails.cache.read(cache_key(var_name, @object))
-        obj = super(var_name) if obj.nil?
+        value = Rails.cache.fetch(cache_key(var_name, @object)) do
+          super(var_name)
+        end
 
-        return @@defaults[var_name.to_s] if obj.nil?
-        obj
+        if value.nil?
+          @@defaults[var_name.to_s] if value.nil?
+        else
+          value
+        end
       end
 
       def save_default(key, value)
