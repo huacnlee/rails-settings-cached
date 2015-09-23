@@ -131,6 +131,7 @@ PLATFORMS
 
 DEPENDENCIES
   rails-settings-cached!
+  rake
   rspec (>= 3.3.0)
   rubocop
   sqlite3 (>= 1.3.10)
