@@ -22,4 +22,17 @@ describe RailsSettings::CachedSettings do
     end
     expect(queries_count).to eq(6)
   end
+
+  it "caches values from db" do
+    described_class["some_random_key"] = "asd"
+    Rails.cache.clear
+
+    queries_count = count_queries do
+      expect(described_class["some_random_key"]).to eq("asd")
+      expect(described_class["some_random_key"]).to eq("asd")
+      expect(described_class["another_random_key"]).to be nil
+      expect(described_class["another_random_key"]).to be nil
+    end
+    expect(queries_count).to eq(2)
+  end
 end
