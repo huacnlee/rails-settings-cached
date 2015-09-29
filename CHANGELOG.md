@@ -1,5 +1,10 @@
 # For Rails 4.1 +
 
+## 0.4.6
+
+* Fix scoped cache key name.
+
+
 ## 0.4.5
 
 * Cache db values that does not exist within rails cache.
