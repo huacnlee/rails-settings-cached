@@ -149,7 +149,7 @@ user.settings.all
 # { "color" => :red }
 ```
 
-I you want to find users having or not having some settings, there are named scopes for this:
+If you want to find users having or not having some settings, there are named scopes for this:
 
 ```ruby
 User.with_settings
