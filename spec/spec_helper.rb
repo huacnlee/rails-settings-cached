@@ -59,6 +59,10 @@ RSpec.configure do |config|
     class Setting < RailsSettings::CachedSettings
     end
 
+    class CustomSetting < RailsSettings::CachedSettings
+      table_name = 'custom_settings'
+    end
+
     class User < ActiveRecord::Base
       include RailsSettings::Extend
     end

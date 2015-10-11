@@ -164,4 +164,12 @@ describe RailsSettings do
       end
     end
   end
+
+  describe 'Custom table name' do
+    it 'should work' do
+      expect(CustomSetting.foo).to eq(nil)
+      CustomSetting.foo = 123
+      expect(CustomSetting.foo).to eq(123)
+    end
+  end
 end
