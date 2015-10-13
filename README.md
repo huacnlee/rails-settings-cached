@@ -165,6 +165,15 @@ User.without_settings('color')
 # returns a scope of users having no 'color' setting (means user.settings.color == nil)
 ```
 
+Settings maybe dynamically scoped. For example, if you're using [apartment gem](https://github.com/influitive/apartment) for multitenancy, you may not want tenants to share settings:
+
+```ruby
+class Settings < RailsSettings::CachedSettings
+  cache_prefix { Apartment::Tenant.current }
+  ...
+end
+```
+
 -----
 
 ## How to create a list, form to manage Settings?

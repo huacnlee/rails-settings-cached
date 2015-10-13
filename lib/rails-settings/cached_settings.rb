@@ -13,8 +13,13 @@ module RailsSettings
     end
 
     class << self
+      def cache_prefix(&block)
+        @cache_prefix = block
+      end
+
       def cache_key(var_name, scope_object)
         scope = "rails_settings_cached:"
+        scope << "#{@cache_prefix.call}:" if @cache_prefix
         scope << "#{scope_object.class.name}-#{scope_object.id}:" if scope_object
         scope << "#{var_name}"
       end

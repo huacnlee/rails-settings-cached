@@ -17,6 +17,13 @@ describe RailsSettings::CachedSettings do
     end
   end
 
+  describe '.cache_prefix' do
+    it 'sets cache key prefix' do
+      described_class.cache_prefix { "stuff" }
+      expect(described_class.cache_key('abc', nil)).to eql("rails_settings_cached:stuff:abc")
+    end
+  end
+
   describe 'Unscoped' do
     it 'should set a key and fetch with one query' do
       expect(Setting.test_cache).to eq(nil)
