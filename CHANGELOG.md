@@ -1,5 +1,9 @@
 # For Rails 4.1 +
 
+## 0.5.0
+
+* Allow setting dynamic cache prefix. So that settings can be arbitrarily scoped based on some context (e.g. current tenant). @artemave
+
 ## 0.4.6
 
 * Fix scoped cache key name.
