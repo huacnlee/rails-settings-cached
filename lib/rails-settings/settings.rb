@@ -60,6 +60,8 @@ module RailsSettings
         vars.each do |record|
           result[record.var] = record.value
         end
+        vars.merge! @@defaults.slice(*(@@defaults.keys - result.keys))
+
         result.with_indifferent_access
       end
 
