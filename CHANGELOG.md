@@ -1,6 +1,6 @@
 # For Rails 4.1 +
 
-## 0.5.1
+## 0.5.2
 
 * Gem spec require Ruby 2.0+; @alexanderadam
 * Include defaults in get_all call; @alexanderadam
