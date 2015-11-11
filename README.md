@@ -117,7 +117,7 @@ Setting.some_setting
 => "footastic"
 ```
 
-Init defualt value in database, this has indifferent with `Setting.defaults[:some_setting]`, this will **save the value into database**:
+Init default value in database, this has indifferent with `Setting.defaults[:some_setting]`, this will **save the value into database**:
 
 ```ruby
 Setting.save_default(:some_key, "123")
