@@ -30,5 +30,9 @@ module RailsSettings
     def settings
       ScopedSettings.for_thing(self)
     end
+
+    def update_settings(args)
+      args.each {|k,v| self.settings[k] = v}
+    end
   end
 end
