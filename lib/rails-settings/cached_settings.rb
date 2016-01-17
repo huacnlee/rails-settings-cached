@@ -36,6 +36,15 @@ module RailsSettings
         end
       end
 
+      # set a setting value by [] notation
+      def []=(var_name, value)
+        super
+
+        Rails.cache.write(cache_key(var_name, @object),value)
+
+        value
+      end
+
       def save_default(key, value)
         return false unless self[key].nil?
         self[key] = value
