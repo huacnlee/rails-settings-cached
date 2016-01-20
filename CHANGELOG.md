@@ -1,5 +1,9 @@
 # For Rails 4.1 +
 
+## 0.5.3
+
+* Fixed mistake, when scoped result contains global defaults which not in scope. (Alexander Merkulov)
+
 ## 0.5.2
 
 * Gem spec require Ruby 2.0+; @alexanderadam
