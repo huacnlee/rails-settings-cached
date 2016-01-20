@@ -60,7 +60,9 @@ module RailsSettings
         vars.each do |record|
           result[record.var] = record.value
         end
-        result.merge! @@defaults.slice(*(@@defaults.keys - result.keys))
+        default_keys = @@defaults.keys
+        default_keys = default_keys.select {|k| k.start_with? starting_with } if starting_with
+        result.merge! @@defaults.slice(*(default_keys - result.keys))
 
         result.with_indifferent_access
       end
