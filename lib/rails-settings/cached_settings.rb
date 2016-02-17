@@ -35,6 +35,11 @@ module RailsSettings
           value
         end
       end
+      
+      def []=(var_name,value)
+      	Rails.cache.write(cache_key(var_name, @object),value)
+      	super(var_name,value)
+      end
 
       def save_default(key, value)
         return false unless self[key].nil?
