@@ -9,8 +9,7 @@ of object. Strings, numbers, arrays, or any object.
 
 ## Status
 
-- [![Gem Version](https://badge.fury.io/rb/rails-settings-cached.png)](https://rubygems.org/gems/rails-settings-cached)
-- [![CI Status](https://api.travis-ci.org/huacnlee/rails-settings-cached.png)](http://travis-ci.org/huacnlee/rails-settings-cached)
+[![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![CI Status](https://api.travis-ci.org/huacnlee/rails-settings-cached.svg)](http://travis-ci.org/huacnlee/rails-settings-cached)
 
 ## Setup
 
