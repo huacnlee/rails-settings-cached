@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe RailsSettings::CachedSettings do
+  before(:each) { Rails.cache.clear }
   describe '.cache_key' do
     it 'should work with instance method' do
       obj = Setting.unscoped.first
@@ -43,11 +44,26 @@ describe RailsSettings::CachedSettings do
     queries_count = count_queries do
       expect(described_class["gender"]).to be nil
       described_class["gender"] = "female"
+
+      # Call 4 times, make sure value is cached by fact number of queries does not go up.
+      expect(described_class["gender"]).to eq("female")
+      expect(described_class["gender"]).to eq("female")
       expect(described_class["gender"]).to eq("female")
       expect(described_class["gender"]).to eq("female")
     end
     expect(queries_count).to eq(5)
   end
+
+  it "caches unscoped settings" do
+    expect(described_class["gender"]).to eq("female")
+    ActiveRecord::Base.transaction do
+      described_class["gender"] = "trans"
+      expect(described_class["gender"]).to eq("trans")
+    end
+
+    expect(described_class["gender"]).to eq("trans")
+  end
+
 
   it "caches scoped settings" do
     user = User.create!(login: 'another_test', password: 'foobar')
@@ -55,6 +71,25 @@ describe RailsSettings::CachedSettings do
     queries_count = count_queries do
       expect(user.settings["gender"]).to be nil
       user.settings["gender"] = "male"
+      expect(user.settings["gender"]).to eq("male")
+      expect(user.settings["gender"]).to eq("male")
+    end
+    expect(queries_count).to eq(6)
+  end
+
+  it "caches scoped settings in transaction" do
+    user = User.create!(login: 'another_test2', password: 'foobar')
+
+    queries_count = count_queries do
+      expect(user.settings["gender"]).to be nil
+      ActiveRecord::Base.transaction do
+        user.settings["gender"] = "male"
+        expect(user.settings["gender"]).to eq("male")
+      end
+
+      # Call 4 times, make sure value is cached by fact number of queries does not go up.
+      expect(user.settings["gender"]).to eq("male")
+      expect(user.settings["gender"]).to eq("male")
       expect(user.settings["gender"]).to eq("male")
       expect(user.settings["gender"]).to eq("male")
     end
