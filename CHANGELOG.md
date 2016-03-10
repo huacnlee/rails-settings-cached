@@ -1,5 +1,11 @@
 # For Rails 4.1 +
 
+## 0.5.4
+
+* Update the cached value for the key when value set.
+* Return nil if value not present;
+
+
 ## 0.5.3
 
 * Fixed mistake, when scoped result contains global defaults which not in scope. (Alexander Merkulov)
