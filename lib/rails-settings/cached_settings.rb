@@ -35,6 +35,11 @@ module RailsSettings
           value
         end
       end
+      
+      def []=(var_name,value)
+      	Rails.cache.write(cache_key(var_name, @object),value)
+      	super(var_name,value)
+      end
 
       # set a setting value by [] notation
       def []=(var_name, value)
