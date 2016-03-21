@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe RailsSettings::CachedSettings do
   before(:each) { Rails.cache.clear }
+
   describe '.cache_key' do
     it 'should work with instance method' do
       obj = Setting.unscoped.first
@@ -9,12 +10,19 @@ describe RailsSettings::CachedSettings do
     end
 
     it 'should work with class method' do
-      expect(Setting.cache_key('abc', nil)).to eql("rails_settings_cached:abc")
+      expect(described_class.cache_key('abc', nil)).to eql("rails_settings_cached:abc")
     end
 
     it 'should work with class method and scoped object' do
       obj = User.first
-      expect(Setting.cache_key('abc', obj)).to eql("rails_settings_cached:User-1:abc")
+      expect(described_class.cache_key('abc', obj)).to eql("rails_settings_cached:User-1:abc")
+    end
+  end
+
+  describe '.expire_cache' do
+    it 'deletes all cached settings scoped caches' do
+      expect(Rails.cache).to receive(:delete_matched).with(/^rails_settings_cached:/)
+      described_class.expire_cache
     end
   end
 
