@@ -27,15 +27,13 @@ gem "rails-settings-cached", "0.2.4"
 Generate your settings:
 
 ```bash
-$ rails g settings <settings_name>
+$ rails g settings:install
 ```
 
-Note: If you migrating from gem `rails-settings` then make sure you have it in your model
+If you want custom model name:
 
-```ruby
-class Settings < RailsSettings::CachedSettings
-  ...
-end
+```bash
+$ rails g settings:install MySetting
 ```
 
 Now just put that migration in the database with:
