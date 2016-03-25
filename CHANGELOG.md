@@ -1,5 +1,9 @@
 # For Rails 4.1 +
 
+## 0.6.0
+
+- Change generator command from `rails g settings` to `rails g settings:install`.
+
 ## 0.5.4
 
 - Update the cached value for the key when value set.
@@ -50,7 +54,7 @@ scoped based on some context (e.g. current tenant). @artemave
 - Rails 4.1.0 compatibility.
 - Setting.all -> Setting.get_all
 
-# For Rails 4.0 +
+# For Rails 4.0.x - 4.1.x
 
 ## 0.3.2
 
