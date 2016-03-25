@@ -1,4 +1,4 @@
-# Settings Gem
+# Rails Settings Cached
 
 This is improved from [rails-settings](https://github.com/ledermann/rails-settings),
 added caching for all settings. Settings is a plugin that makes managing a table of
@@ -16,17 +16,11 @@ of object. Strings, numbers, arrays, or any object.
 Edit your Gemfile:
 
 ```ruby
-gem 'rails-settings-cached', "~> 0.5.6"
-```
-
-Older Rails versions:
-
-```rb
-# 4.1.x
+# Rails 4.1.x
 gem "rails-settings-cached", "~> 0.4.0"
-# 4.0.x
+# Rails 4+
 gem "rails-settings-cached", "0.3.1"
-# 3.x
+# Rails 3.x
 gem "rails-settings-cached", "0.2.4"
 ```
 
@@ -72,13 +66,6 @@ Changing an existing setting is the same as creating a new setting:
 Setting.foo = 'super duper bar'
 ```
 
-For changing an existing setting which is a Hash, you can merge new values with existing ones:
-
-```ruby
-Setting.merge!(:credentials, :password => 'topsecret')
-Setting.credentials    # returns { :username => 'tom', :password => 'topsecret' }
-```
-
 Decide you dont want to track a particular setting anymore?
 
 ```ruby
@@ -88,11 +75,7 @@ Setting.foo            # returns nil
 
 Want a list of all the settings?
 ```ruby
-# Rails 4.1.x
 Setting.get_all
-# Rails 3.x and 4.0.x
-Setting.all
-# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 ```
 
 You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use `Setting.get_all` (`Settings.all` for # Rails 3.x and 4.0.x) like this:
@@ -108,27 +91,7 @@ Setting.all('preferences.')
 # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
 ```
 
-Set defaults for certain settings of your app.  This will cause the defined settings to return with the
-Specified value even if they are **not in the database**.  Make a new file in `config/initializers/default_settings.rb`
-with the following:
-
-```ruby
-Setting.defaults[:some_setting] = 'footastic'
-Setting.where(:var => "some_setting").count
-=> 0
-Setting.some_setting
-=> "footastic"
-```
-
-Init default value in database, this has indifferent with `Setting.defaults[:some_setting]`, this will **save the value into database**:
-
-```ruby
-Setting.save_default(:some_key, "123")
-Setting.where(:var => "some_key").count
-=> 1
-Setting.some_key
-=> "123"
-```
+## Extend a model
 
 Settings may be bound to any existing ActiveRecord object. Define this association like this:
 Notice! is not do caching in this version.
@@ -168,11 +131,45 @@ User.without_settings('color')
 # returns a scope of users having no 'color' setting (means user.settings.color == nil)
 ```
 
-Settings maybe dynamically scoped. For example, if you're using [apartment gem](https://github.com/influitive/apartment) for multitenancy, you may not want tenants to share settings:
+## Default settings
+
+Sometimes you may want define default settings.
+
+RailsSettings has generate a config YAML file in:
+
+```yml
+# config/app.yml
+defaults: &defaults
+  foo:
+    bar: "Foo bar"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
+```
+
+And you can use by `Setting` model:
+
+```
+Setting.foo.bar
+=> "Foo bar"
+Setting.foo.bar = "AAA"
+# Save into database.
+Setting.foo.bar
+# Read from databae / caching.
+=> "AAA"
+```
+
+## Change cache key
 
 ```ruby
-class Settings < RailsSettings::CachedSettings
-  cache_prefix { Apartment::Tenant.current }
+class Setting < RailsSettings::CachedSettings
+  cache_prefix { 'you-prefix' }
   ...
 end
 ```
@@ -199,4 +196,3 @@ end
 
 Also you may use [rails-settings-ui](https://github.com/accessd/rails-settings-ui) gem
 for building ready to using interface with validations.
-

@@ -1,0 +1,7 @@
+defaults: &defaults
+  str: "hello"
+  script: <%= 1 + 2 + 3 %>
+
+test:
+  <<: *defaults
+  str: "hello in test"

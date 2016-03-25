@@ -65,10 +65,10 @@ end
 
 RSpec.configure do |config|
   config.before(:all) do
-    class Setting < RailsSettings::CachedSettings
+    class Setting < RailsSettings::Base
     end
 
-    class CustomSetting < RailsSettings::CachedSettings
+    class CustomSetting < RailsSettings::Base
       table_name = 'custom_settings'
     end
 
