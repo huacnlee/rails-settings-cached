@@ -3,6 +3,7 @@
 ## 0.6.0
 
 - Change generator command from `rails g settings` to `rails g settings:install`.
+- [Deprecated] RailsSettings::Settings, please use RailsSettings::Base.
 
 ## 0.5.4
 
