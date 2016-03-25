@@ -1,2 +1,6 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 gemspec
+
+gem 'rspec'
+gem 'sqlite3'
+gem 'rubocop'
