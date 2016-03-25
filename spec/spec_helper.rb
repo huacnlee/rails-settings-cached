@@ -1,12 +1,21 @@
+$:.push File.expand_path("../lib", __FILE__)
+
 require 'rspec'
 require 'rails/all'
 require 'sqlite3'
-require_relative '../lib/rails-settings/settings.rb'
+
+require 'simplecov'
+if ENV['CI']=='true'
+  require 'codecov'
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+end
+SimpleCov.start
+
+require 'rails-settings-cached'
 
 if RailsSettings::Settings.respond_to? :raise_in_transactional_callbacks=
   RailsSettings::Settings.raise_in_transactional_callbacks = true
 end
-require_relative '../lib/rails-settings-cached'
 
 module Rails
   def self.cache
@@ -29,7 +38,7 @@ def count_queries &block
 end
 
 # run cache initializers
-RailsSettings::Railtie.initializers.each{|initializer| initializer.run }
+RailsSettings::Railtie.initializers.each{ |initializer| initializer.run }
 
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
 ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'

@@ -4,3 +4,4 @@ gemspec
 gem 'rspec'
 gem 'sqlite3'
 gem 'rubocop'
+gem 'simplecov'
