@@ -2,7 +2,7 @@ language: ruby
 sudo: false
 rvm:
   - 2.2.2
-  - ruby-head
+  - 2.3.0
 before_script: bundle install --deployment
 script:
- - bundle exec rake
+ - bundle exec rspec spec
