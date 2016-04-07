@@ -163,6 +163,17 @@ describe RailsSettings do
         expect(Setting.unscoped.find(id)).to eq obj
       end
     end
+
+    describe '#with_settings_for' do
+      it 'should only return items with matching settings' do
+        User.create.settings.color = 'green'
+        User.create.settings.color = 'red'
+        User.create.settings.color = 'green'
+
+        expect(User.with_setting_value('color', 'red').count).to be 1
+        expect(User.with_setting_value('color', 'green').count).to be 2
+      end
+    end
   end
 
   describe 'Custom table name' do
