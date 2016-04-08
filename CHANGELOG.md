@@ -1,8 +1,7 @@
-# For Rails 4.1 +
-
-## 0.6.0
+## 0.5.5
 
 - Change generator command from `rails g settings` to `rails g settings:install`.
+- Change default g
 - [Deprecated] RailsSettings::Settings, please use RailsSettings::Base.
 
 ## 0.5.4
@@ -23,6 +22,8 @@
 
 - Allow setting dynamic cache prefix. So that settings can be arbitrarily
 scoped based on some context (e.g. current tenant). @artemave
+
+# For Rails 4.1.x
 
 ## 0.4.6
 

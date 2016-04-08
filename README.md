@@ -16,6 +16,10 @@ of object. Strings, numbers, arrays, or any object.
 Edit your Gemfile:
 
 ```ruby
+# Rails 5.0.x
+gem 'rails-settings-cached', '~> 0.6.0'
+# Rails 4.2.x
+gem 'rails-settings-cached', "~> 0.5.4"
 # Rails 4.1.x
 gem "rails-settings-cached", "~> 0.4.0"
 # Rails 4+
