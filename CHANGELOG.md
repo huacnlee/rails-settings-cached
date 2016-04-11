@@ -1,3 +1,7 @@
+## 0.5.6
+
+- Fixed inheritance of RailsSettings::CachedSettings to use RailsSettings::Base.
+
 ## 0.5.5
 
 - Change generator command from `rails g settings` to `rails g settings:install`.
