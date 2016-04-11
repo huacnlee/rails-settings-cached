@@ -161,6 +161,9 @@ User.with_settings
 User.with_settings_for('color')
 # => returns a scope of users having a 'color' setting
 
+User.with_setting_value('color', 'red')
+# => returns a scope of users having a 'color' setting with value 'red'
+
 User.without_settings
 # returns a scope of users having no setting at all (means user.settings.get_all == {})
 

@@ -14,6 +14,12 @@ module RailsSettings
                                  settings.thing_type = '#{base_class.name}') AND settings.var = '#{var}'")
       }
 
+      scope :with_setting_value, lambda { |var, value|
+        joins("JOIN settings ON (settings.thing_id = #{table_name}.#{primary_key} AND settings.thing_type = '#{base_class.name}')
+                         AND settings.var = '#{var}'
+                         AND settings.value = #{ActiveRecord::Base.connection.quote(value.to_yaml)}")
+      }
+
       scope :without_settings, lambda {
         joins("LEFT JOIN settings ON (settings.thing_id = #{table_name}.#{primary_key} AND
                                       settings.thing_type = '#{base_class.name}')")
