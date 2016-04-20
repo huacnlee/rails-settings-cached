@@ -7,6 +7,7 @@
 - [Deprecated] Setting.save_default method, use yml file instead.
 - Removed `SettingsDefaults::DEFAULTS` support.
 - Change cache key prefix after restart Rails application server (This for make sure cache will expire, when you update default config in yml file).
+- If the value was set to false, either the default is returned or if there is no default, then nil would be returned. @dangerous
 
 ## 0.5.6
 
