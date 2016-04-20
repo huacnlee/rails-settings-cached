@@ -137,6 +137,8 @@ RailsSettings has generate a config YAML file in:
 ```yml
 # config/app.yml
 defaults: &defaults
+  github_token: "123456"
+  twitter_token: "<%= ENV["TWITTER_TOKEN"] %>"
   foo:
     bar: "Foo bar"
 
@@ -153,13 +155,15 @@ production:
 And you can use by `Setting` model:
 
 ```
-Setting.foo.bar
-=> "Foo bar"
-Setting.foo.bar = "AAA"
+Setting.github_token
+=> "123456"
+Setting.github_token = "654321"
 # Save into database.
-Setting.foo.bar
+Setting.github_token
 # Read from databae / caching.
-=> "AAA"
+=> "654321"
+Setting['foo.bar']
+=> 'Foo bar'
 ```
 
 ## Change cache key

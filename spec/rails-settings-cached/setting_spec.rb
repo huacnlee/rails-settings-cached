@@ -90,6 +90,7 @@ describe RailsSettings do
     end
 
     it "should all('namespace')" do
+      expect(Setting.get_all('config')).to eq({ "config.color" => :red, "config.limit" => 100 })
       expect(Setting.get_all('config').count).to eq 2
     end
   end
@@ -109,18 +110,7 @@ describe RailsSettings do
     end
   end
 
-  describe 'Default values' do
-    it 'can work with default value' do
-      Setting.defaults[:bar] = @bar
-      expect(Setting.bar).to eq @bar
-    end
-
-    it 'can use default value, when the setting it cached with nil value' do
-      Setting.has_cached_nil_key
-      Setting.defaults[:has_cached_nil_key] = '123'
-      expect(Setting.has_cached_nil_key).to eq '123'
-    end
-
+  describe 'Save Default values' do
     it '#save_default' do
       Setting.test_save_default_key
       Setting.save_default(:test_save_default_key, '321')

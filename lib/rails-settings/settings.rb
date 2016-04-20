@@ -4,9 +4,6 @@ module RailsSettings
 
     class SettingNotFound < RuntimeError; end
 
-    cattr_accessor :defaults
-    @@defaults = {}.with_indifferent_access
-
     belongs_to :thing, polymorphic: true
 
     # get the value field, YAML decoded
@@ -55,9 +52,13 @@ module RailsSettings
         vars.each do |record|
           result[record.var] = record.value
         end
-        default_keys = @@defaults.keys
-        default_keys = default_keys.select {|k| k.start_with? starting_with } if starting_with
-        result.merge! @@defaults.slice(*(default_keys - result.keys))
+
+        defaults = {}
+        if Default.enabled?
+          starting_with.nil? ? Default.instance : Default.instance.fetch(starting_with, {})
+        end
+
+        result.merge! defaults
 
         result.with_indifferent_access
       end
@@ -69,7 +70,7 @@ module RailsSettings
 
       # get a setting value by [] notation
       def [](var_name)
-        object(var_name).try(:value) || @@defaults[var_name.to_s]
+        object(var_name).try(:value)
       end
 
       # set a setting value by [] notation
@@ -103,16 +104,8 @@ module RailsSettings
         unscoped.where('thing_type is NULL and thing_id is NULL')
       end
 
-      def endabled_yaml?
-        @endabled_yaml ||= YMLSetting.source.present?
-      end
-
       def source(filename)
-        YMLSetting.source(filename)
-      end
-
-      def namespace(env)
-        YMLSetting.namespace(env)
+        Default.source(filename)
       end
     end
   end

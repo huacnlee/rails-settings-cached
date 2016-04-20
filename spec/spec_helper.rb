@@ -21,6 +21,10 @@ module Rails
   def self.cache
     @cache ||= ActiveSupport::Cache::MemoryStore.new
   end
+
+  def self.env
+    'test'
+  end
 end
 
 def count_queries &block

@@ -28,15 +28,7 @@ module RailsSettings
         val = Rails.cache.fetch(cache_key(key, @object)) do
           super(key)
         end
-
-        val = @@defaults[key] if val.nil?
-        if val.nil? && endabled_yaml?
-          begin
-            val = YMLSetting.send(key)
-          rescue Settingslogic::MissingSetting
-          end
-        end
-
+        val = Default[key] if val.nil? && Default.enabled?
         val
       end
 

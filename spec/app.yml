@@ -1,6 +1,8 @@
 defaults: &defaults
   str: "hello"
   script: <%= 1 + 2 + 3 %>
+  yml_foo:
+    bar: "Foo bar"
 
 test:
   <<: *defaults
