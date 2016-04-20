@@ -18,8 +18,16 @@ if RailsSettings::Settings.respond_to? :raise_in_transactional_callbacks=
 end
 
 module Rails
+  def self.root
+    Pathname.new(File.expand_path("../", __FILE__))
+  end
+
   def self.cache
     @cache ||= ActiveSupport::Cache::MemoryStore.new
+  end
+
+  def self.env
+    'test'
   end
 end
 
@@ -65,10 +73,10 @@ end
 
 RSpec.configure do |config|
   config.before(:all) do
-    class Setting < RailsSettings::CachedSettings
+    class Setting < RailsSettings::Base
     end
 
-    class CustomSetting < RailsSettings::CachedSettings
+    class CustomSetting < RailsSettings::Base
       table_name = 'custom_settings'
     end
 

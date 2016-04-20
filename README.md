@@ -1,4 +1,4 @@
-# Settings Gem
+# Rails Settings Cached
 
 This is improved from [rails-settings](https://github.com/ledermann/rails-settings),
 added caching for all settings. Settings is a plugin that makes managing a table of
@@ -16,18 +16,7 @@ of object. Strings, numbers, arrays, or any object.
 Edit your Gemfile:
 
 ```ruby
-gem 'rails-settings-cached', "~> 0.5.6"
-```
-
-Older Rails versions:
-
-```rb
-# 4.1.x
-gem "rails-settings-cached", "~> 0.4.0"
-# 4.0.x
-gem "rails-settings-cached", "0.3.1"
-# 3.x
-gem "rails-settings-cached", "0.2.4"
+gem "rails-settings-cached"
 ```
 
 Generate your settings:
@@ -39,7 +28,7 @@ $ rails g settings:install
 If you want custom model name:
 
 ```bash
-$ rails g settings:install MySetting
+$ rails g settings:install SiteConfig
 ```
 
 Now just put that migration in the database with:
@@ -72,13 +61,6 @@ Changing an existing setting is the same as creating a new setting:
 Setting.foo = 'super duper bar'
 ```
 
-For changing an existing setting which is a Hash, you can merge new values with existing ones:
-
-```ruby
-Setting.merge!(:credentials, :password => 'topsecret')
-Setting.credentials    # returns { :username => 'tom', :password => 'topsecret' }
-```
-
 Decide you dont want to track a particular setting anymore?
 
 ```ruby
@@ -88,11 +70,7 @@ Setting.foo            # returns nil
 
 Want a list of all the settings?
 ```ruby
-# Rails 4.1.x
 Setting.get_all
-# Rails 3.x and 4.0.x
-Setting.all
-# returns {'admin_password' => 'super_secret', 'date_format' => '%m %d, %Y'}
 ```
 
 You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use `Setting.get_all` (`Settings.all` for # Rails 3.x and 4.0.x) like this:
@@ -108,27 +86,7 @@ Setting.all('preferences.')
 # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
 ```
 
-Set defaults for certain settings of your app.  This will cause the defined settings to return with the
-Specified value even if they are **not in the database**.  Make a new file in `config/initializers/default_settings.rb`
-with the following:
-
-```ruby
-Setting.defaults[:some_setting] = 'footastic'
-Setting.where(:var => "some_setting").count
-=> 0
-Setting.some_setting
-=> "footastic"
-```
-
-Init default value in database, this has indifferent with `Setting.defaults[:some_setting]`, this will **save the value into database**:
-
-```ruby
-Setting.save_default(:some_key, "123")
-Setting.where(:var => "some_key").count
-=> 1
-Setting.some_key
-=> "123"
-```
+## Extend a model
 
 Settings may be bound to any existing ActiveRecord object. Define this association like this:
 Notice! is not do caching in this version.
@@ -145,10 +103,7 @@ Then you can set/get a setting for a given user instance just by doing this:
 user = User.find(123)
 user.settings.color = :red
 user.settings.color # returns :red
-# Rails 4.1.x
 user.settings.get_all
-# Rails 3.x and 4.0.x
-user.settings.all
 # { "color" => :red }
 ```
 
@@ -168,11 +123,64 @@ User.without_settings('color')
 # returns a scope of users having no 'color' setting (means user.settings.color == nil)
 ```
 
-Settings maybe dynamically scoped. For example, if you're using [apartment gem](https://github.com/influitive/apartment) for multitenancy, you may not want tenants to share settings:
+## Default settings
+
+Sometimes you may want define default settings.
+
+RailsSettings has generate a config YAML file in:
+
+```yml
+# config/app.yml
+defaults: &defaults
+  github_token: "123456"
+  twitter_token: "<%= ENV["TWITTER_TOKEN"] %>"
+  foo:
+    bar: "Foo bar"
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
+```
+
+And you can use by `Setting` model:
+
+```
+Setting.github_token
+=> "123456"
+Setting.github_token = "654321"
+# Save into database.
+Setting.github_token
+# Read from databae / caching.
+=> "654321"
+Setting['foo.bar']
+=> 'Foo bar'
+```
+
+NOTE: YAML setting it also under the cache scope, when you restart Rails application, cache will expire,
+      so when you want change default config, you need restart Rails application server.
+
+### Caching flow:
+
+```
+Setting.foo -> Check Cache -> Exist - Write Cache -> Return
+                   |
+                Check DB -> Exist -> Write Cache -> Return
+                   |
+               Check Default -> Exist -> Write Cache -> Return
+                   |
+               Return nil
+```
+
+## Change cache key
 
 ```ruby
-class Settings < RailsSettings::CachedSettings
-  cache_prefix { Apartment::Tenant.current }
+class Setting < RailsSettings::Base
+  cache_prefix { 'you-prefix' }
   ...
 end
 ```
@@ -183,20 +191,73 @@ end
 
 If you want create an admin interface to editing the Settings, you can try methods in follow:
 
-```ruby
-class SettingsController < ApplicationController
-  def index
-    # to get all items for render list
-    @settings = Setting.unscoped
-  end
+config/routes.rb
 
-  def edit
-    @setting = Setting.unscoped.find(params[:id])
-  end
+```rb
+namespace :admin do
+  resources :settings
 end
 ```
 
 
+app/controllers/admin/settings_controller.rb
+
+```rb
+module Admin
+  class SettingsController < ApplicationController
+    before_action :get_setting, only: [:edit, :update]
+
+    def index
+      @settings = Setting.get_all
+    end
+
+    def edit
+    end
+
+    def update
+      if @setting.value != params[:setting][:value]
+        @setting.value = YAML.load(params[:setting][:value])
+        @setting.save
+        redirect_to admin_settings_path, notice: 'Setting has updated.'
+      else
+        redirect_to admin_settings_path
+      end
+    end
+
+    def get_setting
+      @setting = Setting.find_by(var: params[:id]) || Setting.new(var: params[:id])
+      @setting[:value] = Setting[params[:id]]
+    end
+  end
+end
+```
+
+app/views/admin/settings/index.html.erb
+
+```erb
+<table>
+  <tr>
+    <th>Key</th>
+    <th></th>
+  </tr>
+  <% @settings.each_key do |key| %>
+  <tr>
+    <td><%= key %></td>
+    <td><%= link_to 'edit', edit_admin_setting_path(key) %></td>
+  </tr>
+  <% end %>
+</table>
+```
+
+app/views/admin/settings/edit.html.erb
+
+```erb
+<%= form_for(@setting, url: admin_setting_path(@setting.var), method: 'patch') do |f| %>
+  <label><%= @setting.var %></label>
+  <%= f.textarea :value, rows: 10 %>
+  <%= f.submit %>
+<% end %>
+```
+
 Also you may use [rails-settings-ui](https://github.com/accessd/rails-settings-ui) gem
 for building ready to using interface with validations.
-

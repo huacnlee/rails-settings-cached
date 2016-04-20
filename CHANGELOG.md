@@ -1,12 +1,23 @@
+## 0.6.0
+
+- Add `config/app.yml` for write you default settings in file (via settingslogic).
+- Change generator command from `rails g settings` to `rails g settings:install`.
+- [Deprecated] RailsSettings::CachedSettings, please use RailsSettings::Base.
+- [Deprecated] Setting.defaults method, use yml file instead.
+- [Deprecated] Setting.save_default method, use yml file instead.
+- Removed `SettingsDefaults::DEFAULTS` support.
+- Change cache key prefix after restart Rails application server (This for make sure cache will expire, when you update default config in yml file).
+- If the value was set to false, either the default is returned or if there is no default, then nil would be returned. @dangerous
+
 ## 0.5.6
 
 - Fixed inheritance of RailsSettings::CachedSettings to use RailsSettings::Base.
 
 ## 0.5.5
 
-- Change generator command from `rails g settings` to `rails g settings:install`.
 - Change default g
 - [Deprecated] RailsSettings::Settings, please use RailsSettings::Base.
+
 
 ## 0.5.4
 
