@@ -74,7 +74,13 @@ module RailsSettings
 
       # get a setting value by [] notation
       def [](var_name)
-        object(var_name).try(:value) || @@defaults[var_name.to_s]
+        if var = object(var_name)
+          var.value
+        elsif @@defaults[var_name.to_s]
+          @@defaults[var_name.to_s]
+        else
+          nil
+        end
       end
 
       # set a setting value by [] notation

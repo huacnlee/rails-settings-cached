@@ -31,8 +31,14 @@ describe RailsSettings do
         Setting.boolean_bar = false
       end
 
-      it { expect(Setting.boolean_foo).to be_truthy }
-      it { expect(Setting.boolean_bar).to be_falsey }
+      it { expect(Setting.boolean_foo).to be true }
+      it { expect(Setting.boolean_bar).to be false }
+
+      it "returns the same values if the cache is cleared" do
+        Rails.cache.clear
+        expect(Setting.boolean_foo).to be true
+        expect(Setting.boolean_bar).to be false
+      end
     end
 
     context 'Array value' do
