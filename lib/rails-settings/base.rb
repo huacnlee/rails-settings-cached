@@ -13,22 +13,26 @@ module RailsSettings
     end
 
     class << self
+      def cache_prefix_by_startup
+        @cache_prefix_by_startup ||= Time.now.to_f.to_s
+      end
+
       def cache_prefix(&block)
         @cache_prefix = block
       end
 
       def cache_key(var_name, scope_object)
-        scope = "rails_settings_cached:"
-        scope << "#{@cache_prefix.call}:" if @cache_prefix
-        scope << "#{scope_object.class.name}-#{scope_object.id}:" if scope_object
-        scope << "#{var_name}"
+        scope = ["rails_settings_cached", cache_prefix_by_startup]
+        scope << @cache_prefix.call if @cache_prefix
+        scope << "#{scope_object.class.name}-#{scope_object.id}" if scope_object
+        scope << var_name.to_s
+        scope.join('/')
       end
 
       def [](key)
         val = Rails.cache.fetch(cache_key(key, @object)) do
           super(key)
         end
-        val = Default[key] if val.nil? && Default.enabled?
         val
       end
 

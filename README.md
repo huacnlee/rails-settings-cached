@@ -166,6 +166,21 @@ Setting['foo.bar']
 => 'Foo bar'
 ```
 
+NOTE: YAML setting it also under the cache scope, when you restart Rails application, cache will expire,
+      so when you want change default config, you need restart Rails application server.
+
+### Caching flow:
+
+```
+Setting.foo -> Check Cache -> Exist - Write Cache -> Return
+                   |
+                Check DB -> Exist -> Write Cache -> Return
+                   |
+               Check Default -> Exist -> Write Cache -> Return
+                   |
+               Return nil
+```
+
 ## Change cache key
 
 ```ruby

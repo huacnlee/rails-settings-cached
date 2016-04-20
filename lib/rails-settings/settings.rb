@@ -70,7 +70,11 @@ module RailsSettings
 
       # get a setting value by [] notation
       def [](var_name)
-        object(var_name).try(:value)
+        val = object(var_name).try(:value)
+        if Default.enabled?
+          val = Default[var_name] if val.nil?
+        end
+        val
       end
 
       # set a setting value by [] notation
