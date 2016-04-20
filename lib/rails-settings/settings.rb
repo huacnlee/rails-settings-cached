@@ -104,7 +104,7 @@ module RailsSettings
       end
 
       def object(var_name)
-        thing_scoped.where(var: var_name.to_s).first
+        table_exists? && thing_scoped.where(var: var_name.to_s).first
       end
 
       def thing_scoped

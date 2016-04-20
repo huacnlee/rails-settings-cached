@@ -4,9 +4,20 @@ describe RailsSettings::Default do
   class SettingWithYML < RailsSettings::Base
   end
 
+  class OtherSettingWithYML < RailsSettings::Base
+    self.table_name = "other_settings"
+  end
+
   describe 'YMLSetting config' do
     it { expect(RailsSettings::Default.enabled?).to eq true }
     it { expect(RailsSettings::Default.source_path.to_s).to eq File.expand_path("../../config/app.yml", __FILE__) }
+  end
+
+  describe 'It can work without tables' do
+    it "should work" do
+      expect(OtherSettingWithYML.str).to eq 'hello in test'
+      expect(OtherSettingWithYML.script).to eq 6
+    end
   end
 
   describe 'Base test' do
