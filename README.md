@@ -108,10 +108,7 @@ Then you can set/get a setting for a given user instance just by doing this:
 user = User.find(123)
 user.settings.color = :red
 user.settings.color # returns :red
-# Rails 4.1.x
 user.settings.get_all
-# Rails 3.x and 4.0.x
-user.settings.all
 # { "color" => :red }
 ```
 
@@ -168,7 +165,7 @@ Setting.foo.bar
 ## Change cache key
 
 ```ruby
-class Setting < RailsSettings::CachedSettings
+class Setting < RailsSettings::Base
   cache_prefix { 'you-prefix' }
   ...
 end

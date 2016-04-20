@@ -9,11 +9,6 @@ module RailsSettings
 
     belongs_to :thing, polymorphic: true
 
-    # Support old plugin
-    if defined?(SettingsDefaults::DEFAULTS)
-      @@defaults = SettingsDefaults::DEFAULTS.with_indifferent_access
-    end
-
     # get the value field, YAML decoded
     def value
       YAML.load(self[:value]) if self[:value].present?

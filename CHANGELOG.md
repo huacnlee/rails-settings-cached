@@ -5,6 +5,7 @@
 - [Deprecated] RailsSettings::CachedSettings, please use RailsSettings::Base.
 - [Deprecated] Setting.defaults method, use yml file instead.
 - [Deprecated] Setting.save_default method, use yml file instead.
+- Removed `SettingsDefaults::DEFAULTS` support.
 
 ## 0.5.6
 

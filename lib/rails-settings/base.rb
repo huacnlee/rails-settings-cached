@@ -1,5 +1,5 @@
 module RailsSettings
-  class Base < RailsSettings::Settings
+  class Base < Settings
     def rewrite_cache
       Rails.cache.write(cache_key, value)
     end
@@ -50,6 +50,8 @@ module RailsSettings
       end
 
       def save_default(key, value)
+        Kernel.warn 'DEPRECATION WARNING: RailsSettings save_default is deprecated and it will removed in 0.7.0. ' <<
+                    'Please use YAML file for default setting.'
         return false unless self[key].nil?
         self[key] = value
       end
