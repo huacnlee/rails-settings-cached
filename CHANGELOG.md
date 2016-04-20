@@ -6,7 +6,7 @@
 - [Deprecated] Setting.defaults method, use yml file instead.
 - [Deprecated] Setting.save_default method, use yml file instead.
 - Removed `SettingsDefaults::DEFAULTS` support.
-- Change cache key prefix after restart Rails application server(This for make sure cache will expire, when you update default config in yml file).
+- Change cache key prefix after restart Rails application server (This for make sure cache will expire, when you update default config in yml file).
 
 ## 0.5.6
 
