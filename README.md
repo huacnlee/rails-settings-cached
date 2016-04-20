@@ -16,12 +16,7 @@ of object. Strings, numbers, arrays, or any object.
 Edit your Gemfile:
 
 ```ruby
-# Rails 4.1.x
-gem "rails-settings-cached", "~> 0.4.0"
-# Rails 4+
-gem "rails-settings-cached", "0.3.1"
-# Rails 3.x
-gem "rails-settings-cached", "0.2.4"
+gem "rails-settings-cached"
 ```
 
 Generate your settings:
@@ -33,7 +28,7 @@ $ rails g settings:install
 If you want custom model name:
 
 ```bash
-$ rails g settings:install MySetting
+$ rails g settings:install SiteConfig
 ```
 
 Now just put that migration in the database with:
@@ -196,19 +191,73 @@ end
 
 If you want create an admin interface to editing the Settings, you can try methods in follow:
 
-```ruby
-class SettingsController < ApplicationController
-  def index
-    # to get all items for render list
-    @settings = Setting.unscoped
-  end
+config/routes.rb
 
-  def edit
-    @setting = Setting.unscoped.find(params[:id])
+```rb
+namespace :admin do
+  resources :settings
+end
+```
+
+
+app/controllers/admin/settings_controller.rb
+
+```rb
+module Admin
+  class SettingsController < ApplicationController
+    before_action :get_setting, only: [:edit, :update]
+
+    def index
+      @settings = Setting.get_all
+    end
+
+    def edit
+    end
+
+    def update
+      if @setting.value != params[:setting][:value]
+        @setting.value = YAML.load(params[:setting][:value])
+        @setting.save
+        redirect_to admin_settings_path, notice: 'Setting has updated.'
+      else
+        redirect_to admin_settings_path
+      end
+    end
+
+    def get_setting
+      @setting = Setting.find_by(var: params[:id]) || Setting.new(var: params[:id])
+      @setting[:value] = Setting[params[:id]]
+    end
   end
 end
 ```
 
+app/views/admin/settings/index.html.erb
+
+```erb
+<table>
+  <tr>
+    <th>Key</th>
+    <th></th>
+  </tr>
+  <% @settings.each_key do |key| %>
+  <tr>
+    <td><%= key %></td>
+    <td><%= link_to 'edit', edit_admin_setting_path(key) %></td>
+  </tr>
+  <% end %>
+</table>
+```
+
+app/views/admin/settings/edit.html.erb
+
+```erb
+<%= form_for(@setting, url: admin_setting_path(@setting.var), method: 'patch') do |f| %>
+  <label><%= @setting.var %></label>
+  <%= f.textarea :value, rows: 10 %>
+  <%= f.submit %>
+<% end %>
+```
 
 Also you may use [rails-settings-ui](https://github.com/accessd/rails-settings-ui) gem
 for building ready to using interface with validations.
