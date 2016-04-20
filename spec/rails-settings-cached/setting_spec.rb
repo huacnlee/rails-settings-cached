@@ -88,6 +88,13 @@ describe RailsSettings do
     it 'should work' do
       expect(Setting.all.count).to eq 8
     end
+  end
+
+  describe '#get_all' do
+    it "should include defaults" do
+      expect(RailsSettings::Default).to receive(:instance).and_return({ default1: 1, default2: '2' })
+      expect(Setting.get_all).to include(:default1, :default2)
+    end
 
     it "should all('namespace')" do
       expect(Setting.get_all('config')).to eq({ "config.color" => :red, "config.limit" => 100 })

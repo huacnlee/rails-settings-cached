@@ -55,7 +55,7 @@ module RailsSettings
 
         defaults = {}
         if Default.enabled?
-          starting_with.nil? ? Default.instance : Default.instance.fetch(starting_with, {})
+          defaults = starting_with.nil? ? Default.instance : Default.instance.fetch(starting_with, {})
         end
 
         result.merge! defaults
