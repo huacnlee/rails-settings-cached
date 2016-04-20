@@ -30,6 +30,7 @@ module RailsSettings
       end
 
       def [](key)
+        return super(key) unless rails_initialized?
         val = Rails.cache.fetch(cache_key(key, @object)) do
           super(key)
         end

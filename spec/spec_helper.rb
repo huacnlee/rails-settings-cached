@@ -17,6 +17,9 @@ if RailsSettings::Settings.respond_to? :raise_in_transactional_callbacks=
   RailsSettings::Settings.raise_in_transactional_callbacks = true
 end
 
+class TestApplication < Rails::Application
+end
+
 module Rails
   def self.root
     Pathname.new(File.expand_path("../", __FILE__))
@@ -30,6 +33,7 @@ module Rails
     'test'
   end
 end
+
 
 def count_queries &block
   count = 0
@@ -92,3 +96,5 @@ RSpec.configure do |config|
     Object.send(:remove_const, :Setting)
   end
 end
+
+Rails.application.instance_variable_set("@initialized", true)

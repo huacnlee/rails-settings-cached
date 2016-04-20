@@ -104,7 +104,9 @@ module RailsSettings
       end
 
       def object(var_name)
-        table_exists? && thing_scoped.where(var: var_name.to_s).first
+        return nil unless rails_initialized?
+        return nil unless table_exists?
+        thing_scoped.where(var: var_name.to_s).first
       end
 
       def thing_scoped
@@ -113,6 +115,10 @@ module RailsSettings
 
       def source(filename)
         Default.source(filename)
+      end
+
+      def rails_initialized?
+        Rails.application && Rails.application.initialized?
       end
     end
   end

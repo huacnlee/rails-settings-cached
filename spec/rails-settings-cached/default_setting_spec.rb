@@ -18,6 +18,12 @@ describe RailsSettings::Default do
       expect(OtherSettingWithYML.str).to eq 'hello in test'
       expect(OtherSettingWithYML.script).to eq 6
     end
+
+    it 'should work when Rails.cache not initialized' do
+      allow(Rails).to receive(:cached).and_return(nil)
+      allow(Rails).to receive(:initialized?).and_return(false)
+      expect(OtherSettingWithYML.str).to eq 'hello in test'
+    end
   end
 
   describe 'Base test' do

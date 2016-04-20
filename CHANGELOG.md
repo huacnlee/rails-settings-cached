@@ -1,3 +1,7 @@
+## 0.6.2
+
+- Make sure YAML default settings can work when Rails not initialized (in Rails initializes or environments/*.rb)
+
 ## 0.6.1
 
 - Make sure YAML default settings can work when settings table does not exist (For example in Rails initializes).
