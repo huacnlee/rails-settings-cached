@@ -18,6 +18,10 @@ if RailsSettings::Settings.respond_to? :raise_in_transactional_callbacks=
 end
 
 module Rails
+  def self.root
+    Pathname.new(File.expand_path("../", __FILE__))
+  end
+
   def self.cache
     @cache ||= ActiveSupport::Cache::MemoryStore.new
   end

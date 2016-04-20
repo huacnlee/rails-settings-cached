@@ -1,16 +1,18 @@
-require 'settingslogic'
-
 module RailsSettings
   class Default < ::Hash
     class MissingKey < StandardError; end
 
     class << self
       def enabled?
-        @source && File.exists?(@source)
+        source_path && File.exists?(source_path)
       end
 
       def source(value = nil)
         @source ||= value
+      end
+
+      def source_path
+        @source || Rails.root.join('config/app.yml')
       end
 
       def [](key)
@@ -26,13 +28,13 @@ module RailsSettings
 
       def instance
         return @instance if defined? @instance
-        @instance = new(@source)
+        @instance = new
         @instance
       end
     end
 
-    def initialize(source)
-      content = open(source).read
+    def initialize
+      content = open(self.class.source_path).read
       hash = content.empty? ? {} : YAML.load(ERB.new(content).result).to_hash
       hash = hash[Rails.env] || {}
       self.replace hash
