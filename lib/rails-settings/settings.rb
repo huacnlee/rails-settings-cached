@@ -58,7 +58,7 @@ module RailsSettings
           defaults = starting_with.nil? ? Default.instance : Default.instance.fetch(starting_with, {})
         end
 
-        result.merge! defaults
+        result.reverse_merge! defaults
 
         result.with_indifferent_access
       end

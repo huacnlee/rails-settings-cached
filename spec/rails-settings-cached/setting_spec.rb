@@ -100,6 +100,11 @@ describe RailsSettings do
       expect(Setting.get_all('config')).to eq({ "config.color" => :red, "config.limit" => 100 })
       expect(Setting.get_all('config').count).to eq 2
     end
+
+    it 'overwrites default values' do
+      Setting.str = 'abc'
+      expect(Setting.get_all['str']).to eq('abc')
+    end
   end
 
   describe '#destroy' do
@@ -108,7 +113,7 @@ describe RailsSettings do
     end
 
     it { expect(Setting.foo).to be_nil }
-    it { expect(Setting.all.count).to eq 7 }
+    it { expect(Setting.all.count).to eq 8 }
 
     it 'can destroy a falsy value' do
       Setting.falsy_value = false
