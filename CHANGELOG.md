@@ -1,3 +1,7 @@
+## 0.6.3
+
+- Ensure defaults not overwrite persisted settings (#98) (Kevin Sjöberg)
+
 ## 0.6.2
 
 - Make sure YAML default settings can work when Rails not initialized (in Rails initializes or environments/*.rb)
