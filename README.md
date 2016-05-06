@@ -261,3 +261,7 @@ app/views/admin/settings/edit.html.erb
 
 Also you may use [rails-settings-ui](https://github.com/accessd/rails-settings-ui) gem
 for building ready to using interface with validations.
+
+## Use case:
+
+- [ruby-china/ruby-china](https://github.com/ruby-china/ruby-china)
