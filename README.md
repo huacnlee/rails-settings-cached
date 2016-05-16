@@ -216,7 +216,7 @@ module Admin
 
     def update
       if @setting.value != params[:setting][:value]
-        @setting.value = YAML.load(params[:setting][:value])
+        @setting.value = params[:setting][:value]
         @setting.save
         redirect_to admin_settings_path, notice: 'Setting has updated.'
       else
@@ -226,7 +226,6 @@ module Admin
 
     def get_setting
       @setting = Setting.find_by(var: params[:id]) || Setting.new(var: params[:id])
-      @setting[:value] = Setting[params[:id]]
     end
   end
 end
