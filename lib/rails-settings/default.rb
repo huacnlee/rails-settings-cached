@@ -6,7 +6,7 @@ module RailsSettings
 
     class << self
       def enabled?
-        source_path && File.exists?(source_path)
+        source_path && File.exist?(source_path)
       end
 
       def source(value = nil)

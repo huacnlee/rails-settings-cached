@@ -9,7 +9,7 @@ module RailsSettings
           .select("DISTINCT #{table_name}.*")
       }
 
-      scope :with_settings_for, lambda  { |var|
+      scope :with_settings_for, lambda { |var|
         joins("JOIN settings ON (settings.thing_id = #{table_name}.#{primary_key} AND
                                  settings.thing_type = '#{base_class.name}') AND settings.var = '#{var}'")
       }
@@ -20,7 +20,7 @@ module RailsSettings
           .where('settings.id IS NULL')
       }
 
-      scope :without_settings_for, lambda  { |var|
+      scope :without_settings_for, lambda { |var|
         where('settings.id IS NULL')
           .joins("LEFT JOIN settings ON (settings.thing_id = #{table_name}.#{primary_key} AND
                                        settings.thing_type = '#{base_class.name}') AND settings.var = '#{var}'")
