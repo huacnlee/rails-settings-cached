@@ -14,7 +14,9 @@ module RailsSettings
 
     class << self
       def cache_prefix_by_startup
-        @cache_prefix_by_startup ||= Time.now.to_f.to_s
+        return @cache_prefix_by_startup if defined? @cache_prefix_by_startup
+        return '' unless Default.enabled?
+        @cache_prefix_by_startup = Digest::MD5.hexdigest(Default.instance.to_s)
       end
 
       def cache_prefix(&block)
@@ -22,7 +24,7 @@ module RailsSettings
       end
 
       def cache_key(var_name, scope_object)
-        scope = ["rails_settings_cached", cache_prefix_by_startup]
+        scope = ['rails_settings_cached', cache_prefix_by_startup]
         scope << @cache_prefix.call if @cache_prefix
         scope << "#{scope_object.class.name}-#{scope_object.id}" if scope_object
         scope << var_name.to_s

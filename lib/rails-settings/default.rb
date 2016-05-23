@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 module RailsSettings
   class Default < ::Hash
     class MissingKey < StandardError; end

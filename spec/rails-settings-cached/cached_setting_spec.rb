@@ -23,6 +23,13 @@ describe RailsSettings::CachedSettings do
     end
   end
 
+  describe '.cache_prefix_by_startup' do
+    it 'should work' do
+      digest = Digest::MD5.hexdigest(RailsSettings::Default.instance.to_s)
+      expect(described_class.cache_prefix_by_startup).to eq(digest)
+    end
+  end
+
   describe '.cache_prefix' do
     before do
       allow(described_class).to receive(:cache_prefix_by_startup).and_return('t123456')

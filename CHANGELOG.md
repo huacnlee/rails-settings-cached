@@ -1,3 +1,7 @@
+## 0.6.4
+
+- Fix cache key but with multiple processes.
+
 ## 0.6.3
 
 - Ensure defaults not overwrite persisted settings (#98) (Kevin Sjöberg)

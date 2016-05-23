@@ -5,16 +5,16 @@ describe RailsSettings::Default do
   end
 
   class OtherSettingWithYML < RailsSettings::Base
-    self.table_name = "other_settings"
+    self.table_name = 'other_settings'
   end
 
   describe 'YMLSetting config' do
     it { expect(RailsSettings::Default.enabled?).to eq true }
-    it { expect(RailsSettings::Default.source_path.to_s).to eq File.expand_path("../../config/app.yml", __FILE__) }
+    it { expect(RailsSettings::Default.source_path.to_s).to eq File.expand_path('../../config/app.yml', __FILE__) }
   end
 
   describe 'It can work without tables' do
-    it "should work" do
+    it 'should work' do
       expect(OtherSettingWithYML.str).to eq 'hello in test'
       expect(OtherSettingWithYML.script).to eq 6
     end
@@ -27,7 +27,8 @@ describe RailsSettings::Default do
   end
 
   describe 'Base test' do
-    it "should not hit SQL" do
+    it 'should not hit SQL' do
+      Rails.cache.clear
       queries_count = count_queries do
         SettingWithYML.str
         SettingWithYML.str
@@ -51,12 +52,12 @@ describe RailsSettings::Default do
     end
 
     it 'should allow set value into db' do
-      SettingWithYML.str = "AAA"
-      expect(SettingWithYML.str).to eq "AAA"
+      SettingWithYML.str = 'AAA'
+      expect(SettingWithYML.str).to eq 'AAA'
       SettingWithYML.str = 123
       expect(SettingWithYML.str).to eq 123
-      SettingWithYML['yml_foo.bar'] = "AAA1"
-      expect(SettingWithYML['yml_foo.bar']).to eq "AAA1"
+      SettingWithYML['yml_foo.bar'] = 'AAA1'
+      expect(SettingWithYML['yml_foo.bar']).to eq 'AAA1'
     end
   end
 end
