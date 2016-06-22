@@ -96,6 +96,11 @@ describe RailsSettings do
       expect(Setting.get_all).to include(:default1, :default2)
     end
 
+    it "should include namespace defaults" do
+      expect(RailsSettings::Default).to receive(:instance).and_return({ "test.default1" => 1, "test.default2" => '2', demo: 3 })
+      expect(Setting.get_all('test.')).to include(:'test.default1', :'test.default2')
+    end
+
     it "should all('namespace')" do
       expect(Setting.get_all('config')).to eq({ "config.color" => :red, "config.limit" => 100 })
       expect(Setting.get_all('config').count).to eq 2
