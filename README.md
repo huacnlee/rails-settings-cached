@@ -259,7 +259,8 @@ app/views/admin/settings/edit.html.erb
 ```
 
 Also you may use [rails-settings-ui](https://github.com/accessd/rails-settings-ui) gem
-for building ready to using interface with validations.
+for building ready to using interface with validations,
+or [activeadmin_settings_cached](https://github.com/artofhuman/activeadmin_settings_cached) gem if you use [activeadmin](https://github.com/activeadmin/activeadmin).
 
 ## Use case:
 
