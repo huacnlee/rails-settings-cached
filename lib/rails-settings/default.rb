@@ -19,6 +19,7 @@ module RailsSettings
 
       def [](key)
         # foo.bar.dar Nested fetch value
+        return instance[key] if instance.has_key?(key)
         keys = key.to_s.split('.')
         val = instance
         keys.each do |k|

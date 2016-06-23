@@ -75,6 +75,15 @@ describe RailsSettings do
       it { expect(Setting['config.limit']).to eq 100 }
     end
 
+    context 'defaults within namespace for key' do
+      before do
+        allow(RailsSettings::Default).to receive(:instance).and_return({ "config.dcolor" => :blue, "config.dlimit" => 200 })
+      end
+
+      it { expect(Setting['config.dcolor']).to eq :blue }
+      it { expect(Setting['config.dlimit']).to eq 200 }
+    end
+
     context 'Merge hash' do
       before(:all) do
         Setting.merge!(:hashes, id: 32)
