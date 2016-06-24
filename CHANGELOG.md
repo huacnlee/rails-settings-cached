@@ -1,6 +1,12 @@
+## 0.6.5
+
+- Return direct value first for existing default keys. (#111)
+- Fix defaults merge when get_all. (#110)
+- Fix deprecated syntax in the model generator (#107)
+
 ## 0.6.4
 
-- Fix cache key but with multiple processes.
+- Fix cache key with multiple processes.
 
 ## 0.6.3
 
