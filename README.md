@@ -253,7 +253,7 @@ app/views/admin/settings/edit.html.erb
 ```erb
 <%= form_for(@setting, url: admin_setting_path(@setting.var), method: 'patch') do |f| %>
   <label><%= @setting.var %></label>
-  <%= f.textarea :value, rows: 10 %>
+  <%= f.text_area :value, rows: 10 %>
   <%= f.submit %>
 <% end %>
 ```
