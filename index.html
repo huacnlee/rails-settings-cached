@@ -1,163 +1,273 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta charset="UTF-8">
     <title>rails-settings-cached by huacnlee</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>rails-settings-cached</h1>
-        <p>This is imporved from rails-settings, added caching for all settings</p>
+    <section class="page-header">
+      <h1 class="project-name">rails-settings-cached</h1>
+      <h2 class="project-tagline">This is imporved from rails-settings, added caching for all settings</h2>
+      <a href="https://github.com/huacnlee/rails-settings-cached" class="btn">View on GitHub</a>
+      <a href="https://github.com/huacnlee/rails-settings-cached/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/huacnlee/rails-settings-cached/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-        <p class="view"><a href="https://github.com/huacnlee/rails-settings-cached">View the Project on GitHub <small>huacnlee/rails-settings-cached</small></a></p>
+    <section class="main-content">
+      <h1>
+<a id="rails-settings-cached" class="anchor" href="#rails-settings-cached" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rails Settings Cached</h1>
 
+<p>This is improved from <a href="https://github.com/ledermann/rails-settings">rails-settings</a>,
+added caching for all settings. Settings is a plugin that makes managing a table of
+global key, value pairs easy. Think of it like a global Hash stored in your database,
+that uses simple ActiveRecord like methods for manipulation. Keep track of any global
+setting that you dont want to hard code into your rails app. You can store any kind
+of object. Strings, numbers, arrays, or any object.</p>
 
-        <ul>
-          <li><a href="https://github.com/huacnlee/rails-settings-cached/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/huacnlee/rails-settings-cached/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/huacnlee/rails-settings-cached">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>Settings Gem</h1>
+<h2>
+<a id="status" class="anchor" href="#status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Status</h2>
 
-<p>This is improved from rails-settings, added caching for all settings.
-Settings is a plugin that makes managing a table of global key, value pairs easy.
-Think of it like a global Hash stored in you database, that uses simple ActiveRecord
-like methods for manipulation.  Keep track of any global setting that you dont want
-to hard code into your rails app.  You can store any kind of object.  Strings, numbers,
-arrays, or any object. Ported to Rails 3!</p>
+<p><a href="https://rubygems.org/gems/rails-settings-cached"><img src="https://badge.fury.io/rb/rails-settings-cached.svg" alt="Gem Version"></a> <a href="http://travis-ci.org/huacnlee/rails-settings-cached"><img src="https://travis-ci.org/huacnlee/rails-settings-cached.svg" alt="CI Status"></a> <a href="https://codeclimate.com/github/huacnlee/rails-settings-cached"><img src="https://codeclimate.com/github/huacnlee/rails-settings-cached/badges/gpa.svg" alt="Code Climate"></a> <a href="https://codecov.io/github/huacnlee/rails-settings-cached?branch=master"><img src="https://codecov.io/github/huacnlee/rails-settings-cached/coverage.svg?branch=master" alt="codecov.io"></a></p>
 
-<h2>Status</h2>
-
-<p><a href="http://travis-ci.org/huacnlee/rails-settings-cached"><img src="https://secure.travis-ci.org/huacnlee/rails-settings-cached.png" alt="CI Status"></a></p>
-
-<h2>Setup</h2>
+<h2>
+<a id="setup" class="anchor" href="#setup" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Setup</h2>
 
 <p>Edit your Gemfile:</p>
 
-<div class="highlight"><pre><span class="n">gem</span> <span class="s2">"rails-settings-cached"</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">gem</span> <span class="pl-s"><span class="pl-pds">"</span>rails-settings-cached<span class="pl-pds">"</span></span></pre></div>
 
 <p>Generate your settings:</p>
 
-<div class="highlight"><pre><span class="nv">$ </span>rails g settings &lt;settings_name&gt;
-</pre></div>
+<div class="highlight highlight-source-shell"><pre>$ rails g settings:install</pre></div>
+
+<p>If you want custom model name:</p>
+
+<div class="highlight highlight-source-shell"><pre>$ rails g settings:install SiteConfig</pre></div>
 
 <p>Now just put that migration in the database with:</p>
 
-<div class="highlight"><pre>rake db:migrate
-</pre></div>
+<div class="highlight highlight-source-shell"><pre>rake db:migrate</pre></div>
 
-<h2>Usage</h2>
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Usage</h2>
 
 <p>The syntax is easy.  First, lets create some settings to keep track of:</p>
 
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">admin_password</span> <span class="o">=</span> <span class="s1">'supersecret'</span>
-<span class="no">Setting</span><span class="o">.</span><span class="n">date_format</span>    <span class="o">=</span> <span class="s1">'%m %d, %Y'</span>
-<span class="no">Setting</span><span class="o">.</span><span class="n">cocktails</span>      <span class="o">=</span> <span class="o">[</span><span class="s1">'Martini'</span><span class="p">,</span> <span class="s1">'Screwdriver'</span><span class="p">,</span> <span class="s1">'White Russian'</span><span class="o">]</span>
-<span class="no">Setting</span><span class="o">.</span><span class="n">foo</span>            <span class="o">=</span> <span class="mi">123</span>
-<span class="no">Setting</span><span class="o">.</span><span class="n">credentials</span>    <span class="o">=</span> <span class="p">{</span> <span class="ss">:username</span> <span class="o">=&gt;</span> <span class="s1">'tom'</span><span class="p">,</span> <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="s1">'secret'</span> <span class="p">}</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Setting</span>.admin_password <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>supersecret<span class="pl-pds">'</span></span>
+<span class="pl-c1">Setting</span>.date_format    <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>%m %d, %Y<span class="pl-pds">'</span></span>
+<span class="pl-c1">Setting</span>.cocktails      <span class="pl-k">=</span> [<span class="pl-s"><span class="pl-pds">'</span>Martini<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>Screwdriver<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>White Russian<span class="pl-pds">'</span></span>]
+<span class="pl-c1">Setting</span>.foo            <span class="pl-k">=</span> <span class="pl-c1">123</span>
+<span class="pl-c1">Setting</span>.credentials    <span class="pl-k">=</span> { <span class="pl-c1">:username</span> =&gt; <span class="pl-s"><span class="pl-pds">'</span>tom<span class="pl-pds">'</span></span>, <span class="pl-c1">:password</span> =&gt; <span class="pl-s"><span class="pl-pds">'</span>secret<span class="pl-pds">'</span></span> }</pre></div>
 
 <p>Now lets read them back:</p>
 
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">foo</span>            <span class="c1"># returns 123</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Setting</span>.foo            <span class="pl-c"># returns 123</span></pre></div>
 
 <p>Changing an existing setting is the same as creating a new setting:</p>
 
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">foo</span> <span class="o">=</span> <span class="s1">'super duper bar'</span>
-</pre></div>
-
-<p>For changing an existing setting which is a Hash, you can merge new values with existing ones:</p>
-
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">merge!</span><span class="p">(</span><span class="ss">:credentials</span><span class="p">,</span> <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="s1">'topsecret'</span><span class="p">)</span>
-<span class="no">Setting</span><span class="o">.</span><span class="n">credentials</span>    <span class="c1"># returns { :username =&gt; 'tom', :password =&gt; 'topsecret' }</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Setting</span>.foo <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>super duper bar<span class="pl-pds">'</span></span></pre></div>
 
 <p>Decide you dont want to track a particular setting anymore?</p>
 
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">destroy</span> <span class="ss">:foo</span>
-<span class="no">Setting</span><span class="o">.</span><span class="n">foo</span>            <span class="c1"># returns nil</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Setting</span>.destroy <span class="pl-c1">:foo</span>
+<span class="pl-c1">Setting</span>.foo            <span class="pl-c"># returns nil</span></pre></div>
 
 <p>Want a list of all the settings?</p>
 
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">all</span>    
-<span class="c1"># returns {'admin_password' =&gt; 'super_secret', 'date_format' =&gt; '%m %d, %Y'}        </span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Setting</span>.get_all</pre></div>
 
-<p>You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use Setting.all like this:</p>
+<p>You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use <code>Setting.get_all</code> (<code>Settings.all</code> for # Rails 3.x and 4.0.x) like this:</p>
 
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">[</span><span class="s1">'preferences.color'</span><span class="o">]</span> <span class="o">=</span> <span class="ss">:blue</span>
-<span class="no">Setting</span><span class="o">[</span><span class="s1">'preferences.size'</span><span class="o">]</span> <span class="o">=</span> <span class="ss">:large</span>
-<span class="no">Setting</span><span class="o">[</span><span class="s1">'license.key'</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'ABC-DEF'</span>
-<span class="no">Setting</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="s1">'preferences.'</span><span class="p">)</span>   
-<span class="c1"># returns { 'preferences.color' =&gt; :blue, 'preferences.size' =&gt; :large }</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">Setting</span>[<span class="pl-s"><span class="pl-pds">'</span>preferences.color<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> <span class="pl-c1">:blue</span>
+<span class="pl-c1">Setting</span>[<span class="pl-s"><span class="pl-pds">'</span>preferences.size<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> <span class="pl-c1">:large</span>
+<span class="pl-c1">Setting</span>[<span class="pl-s"><span class="pl-pds">'</span>license.key<span class="pl-pds">'</span></span>] <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>ABC-DEF<span class="pl-pds">'</span></span>
+<span class="pl-c"># Rails 4.1.x</span>
+<span class="pl-c1">Setting</span>.get_all(<span class="pl-s"><span class="pl-pds">'</span>preferences.<span class="pl-pds">'</span></span>)
+<span class="pl-c"># Rails 3.x and 4.0.x</span>
+<span class="pl-c1">Setting</span>.all(<span class="pl-s"><span class="pl-pds">'</span>preferences.<span class="pl-pds">'</span></span>)
+<span class="pl-c"># returns { 'preferences.color' =&gt; :blue, 'preferences.size' =&gt; :large }</span></pre></div>
 
-<p>Set defaults for certain settings of your app.  This will cause the defined settings to return with the
-Specified value even if they are not in the database.  Make a new file in <code>config/initializers/default_settings.rb</code>
-with the following:</p>
-
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">defaults</span><span class="o">[</span><span class="ss">:some_setting</span><span class="o">]</span> <span class="o">=</span> <span class="s1">'footastic'</span>
-</pre></div>
-
-<p>Now even if the database is completely empty, you app will have some intelligent defaults:</p>
-
-<div class="highlight"><pre><span class="no">Setting</span><span class="o">.</span><span class="n">some_setting</span>   <span class="c1"># returns 'footastic'</span>
-</pre></div>
+<h2>
+<a id="extend-a-model" class="anchor" href="#extend-a-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Extend a model</h2>
 
 <p>Settings may be bound to any existing ActiveRecord object. Define this association like this:
 Notice! is not do caching in this version.</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
-  <span class="kp">include</span> <span class="no">RailsSettings</span><span class="o">::</span><span class="no">Extend</span> 
-<span class="k">end</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">class</span> <span class="pl-en">User<span class="pl-e"> &lt; ActiveRecord::Base</span></span>
+  <span class="pl-k">include</span> <span class="pl-c1">RailsSettings</span>::<span class="pl-c1">Extend</span>
+<span class="pl-k">end</span></pre></div>
 
 <p>Then you can set/get a setting for a given user instance just by doing this:</p>
 
-<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
-<span class="n">user</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="ss">:red</span>
-<span class="n">user</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">color</span> <span class="c1"># returns :red</span>
-<span class="n">user</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">all</span> <span class="c1"># { "color" =&gt; :red }</span>
-</pre></div>
+<div class="highlight highlight-source-ruby"><pre>user <span class="pl-k">=</span> <span class="pl-c1">User</span>.find(<span class="pl-c1">123</span>)
+user.settings.color <span class="pl-k">=</span> <span class="pl-c1">:red</span>
+user.settings.color <span class="pl-c"># returns :red</span>
+user.settings.get_all
+<span class="pl-c"># { "color" =&gt; :red }</span></pre></div>
 
-<p>I you want to find users having or not having some settings, there are named scopes for this:</p>
+<p>If you want to find users having or not having some settings, there are named scopes for this:</p>
 
-<div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">with_settings</span> 
-<span class="c1"># =&gt; returns a scope of users having any setting</span>
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">User</span>.with_settings
+<span class="pl-c"># =&gt; returns a scope of users having any setting</span>
 
-<span class="no">User</span><span class="o">.</span><span class="n">with_settings_for</span><span class="p">(</span><span class="s1">'color'</span><span class="p">)</span> 
-<span class="c1"># =&gt; returns a scope of users having a 'color' setting</span>
+<span class="pl-c1">User</span>.with_settings_for(<span class="pl-s"><span class="pl-pds">'</span>color<span class="pl-pds">'</span></span>)
+<span class="pl-c"># =&gt; returns a scope of users having a 'color' setting</span>
 
-<span class="no">User</span><span class="o">.</span><span class="n">without_settings</span> 
-<span class="c1"># returns a scope of users having no setting at all (means user.settings.all == {})</span>
+<span class="pl-c1">User</span>.without_settings
+<span class="pl-c"># returns a scope of users having no setting at all (means user.settings.get_all == {})</span>
 
-<span class="no">User</span><span class="o">.</span><span class="n">without_settings</span><span class="p">(</span><span class="s1">'color'</span><span class="p">)</span> 
-<span class="c1"># returns a scope of users having no 'color' setting (means user.settings.color == nil)</span>
-</pre></div>
+<span class="pl-c1">User</span>.without_settings(<span class="pl-s"><span class="pl-pds">'</span>color<span class="pl-pds">'</span></span>)
+<span class="pl-c"># returns a scope of users having no 'color' setting (means user.settings.color == nil)</span></pre></div>
 
-<p>That's all there is to it! Enjoy!</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/huacnlee">huacnlee</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+<h2>
+<a id="default-settings" class="anchor" href="#default-settings" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Default settings</h2>
+
+<p>Sometimes you may want define default settings.</p>
+
+<p>RailsSettings has generate a config YAML file in:</p>
+
+<div class="highlight highlight-source-yaml"><pre><span class="pl-c"># config/app.yml</span>
+<span class="pl-s"><span class="pl-ent">defaults:</span> <span class="pl-s">&amp;defaults</span></span>
+  <span class="pl-s"><span class="pl-ent">github_token:</span> <span class="pl-s"><span class="pl-pds">"</span>123456<span class="pl-pds">"</span></span></span>
+  <span class="pl-s"><span class="pl-ent">twitter_token:</span> <span class="pl-s"><span class="pl-pds">"</span>&lt;%=<span class="pl-s1"> ENV["TWITTER_TOKEN"] </span><span class="pl-s1">%</span>&gt;<span class="pl-pds">"</span></span></span>
+  <span class="pl-s"><span class="pl-ent">foo:</span></span>
+    <span class="pl-s"><span class="pl-ent">bar:</span> <span class="pl-s"><span class="pl-pds">"</span>Foo bar<span class="pl-pds">"</span></span></span>
+
+<span class="pl-s"><span class="pl-ent">development:</span></span>
+  <span class="pl-s"><span class="pl-ent">&lt;&lt;:</span> <span class="pl-s">*defaults</span></span>
+
+<span class="pl-s"><span class="pl-ent">test:</span></span>
+  <span class="pl-s"><span class="pl-ent">&lt;&lt;:</span> <span class="pl-s">*defaults</span></span>
+
+<span class="pl-s"><span class="pl-ent">production:</span></span>
+  <span class="pl-s"><span class="pl-ent">&lt;&lt;:</span> <span class="pl-s">*defaults</span></span></pre></div>
+
+<p>And you can use by <code>Setting</code> model:</p>
+
+<pre><code>Setting.github_token
+=&gt; "123456"
+Setting.github_token = "654321"
+# Save into database.
+Setting.github_token
+# Read from databae / caching.
+=&gt; "654321"
+Setting['foo.bar']
+=&gt; 'Foo bar'
+</code></pre>
+
+<p>NOTE: YAML setting it also under the cache scope, when you restart Rails application, cache will expire,
+      so when you want change default config, you need restart Rails application server.</p>
+
+<h3>
+<a id="caching-flow" class="anchor" href="#caching-flow" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Caching flow:</h3>
+
+<pre><code>Setting.foo -&gt; Check Cache -&gt; Exist - Write Cache -&gt; Return
+                   |
+                Check DB -&gt; Exist -&gt; Write Cache -&gt; Return
+                   |
+               Check Default -&gt; Exist -&gt; Write Cache -&gt; Return
+                   |
+               Return nil
+</code></pre>
+
+<h2>
+<a id="change-cache-key" class="anchor" href="#change-cache-key" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Change cache key</h2>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">class</span> <span class="pl-en">Setting<span class="pl-e"> &lt; RailsSettings::Base</span></span>
+  cache_prefix { <span class="pl-s"><span class="pl-pds">'</span>you-prefix<span class="pl-pds">'</span></span> }
+  ...
+<span class="pl-k">end</span></pre></div>
+
+<hr>
+
+<h2>
+<a id="how-to-create-a-list-form-to-manage-settings" class="anchor" href="#how-to-create-a-list-form-to-manage-settings" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to create a list, form to manage Settings?</h2>
+
+<p>If you want create an admin interface to editing the Settings, you can try methods in follow:</p>
+
+<p>config/routes.rb</p>
+
+<div class="highlight highlight-source-ruby"><pre>namespace <span class="pl-c1">:admin</span> <span class="pl-k">do</span>
+  resources <span class="pl-c1">:settings</span>
+<span class="pl-k">end</span></pre></div>
+
+<p>app/controllers/admin/settings_controller.rb</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">module</span> <span class="pl-en">Admin</span>
+  <span class="pl-k">class</span> <span class="pl-en">SettingsController<span class="pl-e"> &lt; ApplicationController</span></span>
+    before_action <span class="pl-c1">:get_setting</span>, <span class="pl-c1">only:</span> [<span class="pl-c1">:edit</span>, <span class="pl-c1">:update</span>]
+
+    <span class="pl-k">def</span> <span class="pl-en">index</span>
+      <span class="pl-smi">@settings</span> <span class="pl-k">=</span> <span class="pl-c1">Setting</span>.get_all
+    <span class="pl-k">end</span>
+
+    <span class="pl-k">def</span> <span class="pl-en">edit</span>
+    <span class="pl-k">end</span>
+
+    <span class="pl-k">def</span> <span class="pl-en">update</span>
+      <span class="pl-k">if</span> <span class="pl-smi">@setting</span>.value <span class="pl-k">!=</span> params[<span class="pl-c1">:setting</span>][<span class="pl-c1">:value</span>]
+        <span class="pl-smi">@setting</span>.value <span class="pl-k">=</span> params[<span class="pl-c1">:setting</span>][<span class="pl-c1">:value</span>]
+        <span class="pl-smi">@setting</span>.save
+        redirect_to admin_settings_path, <span class="pl-c1">notice:</span> <span class="pl-s"><span class="pl-pds">'</span>Setting has updated.<span class="pl-pds">'</span></span>
+      <span class="pl-k">else</span>
+        redirect_to admin_settings_path
+      <span class="pl-k">end</span>
+    <span class="pl-k">end</span>
+
+    <span class="pl-k">def</span> <span class="pl-en">get_setting</span>
+      <span class="pl-smi">@setting</span> <span class="pl-k">=</span> <span class="pl-c1">Setting</span>.find_by(<span class="pl-c1">var:</span> params[<span class="pl-c1">:id</span>]) <span class="pl-k">||</span> <span class="pl-c1">Setting</span>.<span class="pl-k">new</span>(<span class="pl-c1">var:</span> params[<span class="pl-c1">:id</span>])
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<p>app/views/admin/settings/index.html.erb</p>
+
+<div class="highlight highlight-text-html-erb"><pre>&lt;<span class="pl-ent">table</span>&gt;
+  &lt;<span class="pl-ent">tr</span>&gt;
+    &lt;<span class="pl-ent">th</span>&gt;Key&lt;/<span class="pl-ent">th</span>&gt;
+    &lt;<span class="pl-ent">th</span>&gt;&lt;/<span class="pl-ent">th</span>&gt;
+  &lt;/<span class="pl-ent">tr</span>&gt;
+  <span class="pl-pse">&lt;%</span><span class="pl-s1"> <span class="pl-smi">@settings</span>.each_key <span class="pl-k">do </span>|<span class="pl-smi">key</span>| </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>
+  &lt;<span class="pl-ent">tr</span>&gt;
+    &lt;<span class="pl-ent">td</span>&gt;<span class="pl-pse">&lt;%=</span><span class="pl-s1"> key </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>&lt;/<span class="pl-ent">td</span>&gt;
+    &lt;<span class="pl-ent">td</span>&gt;<span class="pl-pse">&lt;%=</span><span class="pl-s1"> link_to <span class="pl-s"><span class="pl-pds">'</span>edit<span class="pl-pds">'</span></span>, edit_admin_setting_path(key) </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>&lt;/<span class="pl-ent">td</span>&gt;
+  &lt;/<span class="pl-ent">tr</span>&gt;
+  <span class="pl-pse">&lt;%</span><span class="pl-s1"> <span class="pl-k">end</span> </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>
+&lt;/<span class="pl-ent">table</span>&gt;</pre></div>
+
+<p>app/views/admin/settings/edit.html.erb</p>
+
+<div class="highlight highlight-text-html-erb"><pre><span class="pl-pse">&lt;%=</span><span class="pl-s1"> form_for(<span class="pl-smi">@setting</span>, <span class="pl-c1">url:</span> admin_setting_path(<span class="pl-smi">@setting</span>.var), <span class="pl-c1">method:</span> <span class="pl-s"><span class="pl-pds">'</span>patch<span class="pl-pds">'</span></span>) <span class="pl-k">do </span>|<span class="pl-smi">f</span>| </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>
+  &lt;<span class="pl-ent">label</span>&gt;<span class="pl-pse">&lt;%=</span><span class="pl-s1"> <span class="pl-smi">@setting</span>.var </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>&lt;/<span class="pl-ent">label</span>&gt;
+  <span class="pl-pse">&lt;%=</span><span class="pl-s1"> f.text_area <span class="pl-c1">:value</span>, <span class="pl-c1">rows:</span> <span class="pl-c1">10</span> </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>
+  <span class="pl-pse">&lt;%=</span><span class="pl-s1"> f.submit </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span>
+<span class="pl-pse">&lt;%</span><span class="pl-s1"> <span class="pl-k">end</span> </span><span class="pl-pse"><span class="pl-s1">%</span>&gt;</span></pre></div>
+
+<p>Also you may use <a href="https://github.com/accessd/rails-settings-ui">rails-settings-ui</a> gem
+for building ready to using interface with validations,
+or <a href="https://github.com/artofhuman/activeadmin_settings_cached">activeadmin_settings_cached</a> gem if you use <a href="https://github.com/activeadmin/activeadmin">activeadmin</a>.</p>
+
+<h2>
+<a id="use-case" class="anchor" href="#use-case" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Use case:</h2>
+
+<ul>
+<li><a href="https://github.com/ruby-china/ruby-china">ruby-china/ruby-china</a></li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/huacnlee/rails-settings-cached">rails-settings-cached</a> is maintained by <a href="https://github.com/huacnlee">huacnlee</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
-    </div>
-    <script src="javascripts/scale.fix.js"></script>
-              <script type="text/javascript">
+
+    </section>
+
+            <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
