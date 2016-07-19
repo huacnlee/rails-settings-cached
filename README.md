@@ -37,6 +37,12 @@ Now just put that migration in the database with:
 rake db:migrate
 ```
 
+If you are having issues with cached values being shared between test runs and/or the dev enviroment add the following to development.rb and test.rb:
+
+```rb
+  config.cache_store = :memory_store
+```
+
 ## Usage
 
 The syntax is easy.  First, lets create some settings to keep track of:
