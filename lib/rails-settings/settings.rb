@@ -46,7 +46,7 @@ module RailsSettings
       # retrieve all settings as a hash (optionally starting with a given namespace)
       def get_all(starting_with = nil)
         vars = thing_scoped.select('var, value')
-        vars = vars.where("var LIKE '#{starting_with}%'") if starting_with
+        vars = vars.where("var #{like_operator} '#{starting_with}%'") if starting_with
 
         result = {}
         vars.each do |record|
@@ -61,6 +61,11 @@ module RailsSettings
         result.reverse_merge! defaults
 
         result.with_indifferent_access
+      end
+
+      def like_operator
+        using_postgres = connection && connection.adapter_name == 'PostgreSQL'
+        using_postgres ? 'ILIKE' : 'LIKE'
       end
 
       def where(sql = nil)
