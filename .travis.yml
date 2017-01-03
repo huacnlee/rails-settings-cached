@@ -6,3 +6,4 @@ rvm:
 before_script: bundle install --deployment
 script:
  - bundle exec rspec spec
+ - bundle exec rubocop

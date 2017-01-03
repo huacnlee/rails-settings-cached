@@ -57,6 +57,7 @@
 
 ## 0.5.0
 
+- Drop Rails 4.1 support.
 - Allow setting dynamic cache prefix. So that settings can be arbitrarily
 scoped based on some context (e.g. current tenant). @artemave
 

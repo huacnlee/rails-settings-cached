@@ -19,7 +19,7 @@ module RailsSettings
 
       def [](key)
         # foo.bar.dar Nested fetch value
-        return instance[key] if instance.has_key?(key)
+        return instance[key] if instance.key?(key)
         keys = key.to_s.split('.')
         val = instance
         keys.each do |k|
@@ -40,7 +40,7 @@ module RailsSettings
       content = open(self.class.source_path).read
       hash = content.empty? ? {} : YAML.load(ERB.new(content).result).to_hash
       hash = hash[Rails.env] || {}
-      self.replace hash
+      replace hash
     end
   end
 end

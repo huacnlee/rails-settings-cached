@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 gemspec
 
+gem 'codecov'
 gem 'rspec'
-gem 'sqlite3'
 gem 'rubocop'
 gem 'simplecov'
-gem 'codecov'
+gem 'sqlite3'

@@ -18,6 +18,7 @@ module RailsSettings
 
     class << self
       # get or set a variable with the variable as the called method
+      # rubocop:disable Style/MethodMissing
       def method_missing(method, *args)
         method_name = method.to_s
         super(method, *args)
@@ -47,19 +48,9 @@ module RailsSettings
       def get_all(starting_with = nil)
         vars = thing_scoped.select('var, value')
         vars = vars.where("var LIKE '#{starting_with}%'") if starting_with
-
         result = {}
-        vars.each do |record|
-          result[record.var] = record.value
-        end
-
-        defaults = {}
-        if Default.enabled?
-          defaults = starting_with.nil? ? Default.instance : Default.instance.select { |key, _| key.to_s.start_with?(starting_with) }
-        end
-
-        result.reverse_merge! defaults
-
+        vars.each { |record| result[record.var] = record.value }
+        result.reverse_merge!(default_settings(starting_with))
         result.with_indifferent_access
       end
 
@@ -70,14 +61,9 @@ module RailsSettings
 
       # get a setting value by [] notation
       def [](var_name)
-        if var = object(var_name)
-          val = var.value
-        elsif Default.enabled?
-          val = Default[var_name]
-        else
-          val = nil
-        end
-        val
+        val = object(var_name)
+        return val.value if val
+        return Default[var_name] if Default.enabled?
       end
 
       # set a setting value by [] notation
@@ -119,6 +105,14 @@ module RailsSettings
 
       def rails_initialized?
         Rails.application && Rails.application.initialized?
+      end
+
+      private
+
+      def default_settings(starting_with = nil)
+        return {} unless Default.enabled?
+        return Default.instance if starting_with.nil?
+        Default.instance.select { |key, _| key.to_s.start_with?(starting_with) }
       end
     end
   end

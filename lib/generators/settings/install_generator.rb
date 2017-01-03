@@ -3,7 +3,7 @@ require 'rails/generators/migration'
 
 module Settings
   class InstallGenerator < Rails::Generators::NamedBase
-    desc "Generate RailsSettings files."
+    desc 'Generate RailsSettings files.'
     include Rails::Generators::Migration
 
     argument :name, type: :string, default: 'setting'
@@ -27,7 +27,7 @@ module Settings
 
     def install_setting
       template 'model.rb', File.join('app/models', class_path, "#{file_name}.rb")
-      template 'app.yml', File.join('config', "app.yml")
+      template 'app.yml', File.join('config', 'app.yml')
       migration_template 'migration.rb', 'db/migrate/create_settings.rb'
     end
   end

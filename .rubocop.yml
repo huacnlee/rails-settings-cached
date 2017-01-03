@@ -12,7 +12,7 @@ SignalException:
   Enabled: false
 
 LineLength:
-  Max: 115
+  Max: 300
 
 ClassVars:
   Enabled: false

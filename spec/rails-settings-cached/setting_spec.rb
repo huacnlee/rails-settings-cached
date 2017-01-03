@@ -11,8 +11,8 @@ describe RailsSettings do
     @user = User.create(login: 'test', password: 'foobar')
   end
 
-  describe "#thing" do
-    it "has belongs_to relationship to `thing`" do
+  describe '#thing' do
+    it 'has belongs_to relationship to `thing`' do
       expect(Setting.reflect_on_association(:thing).macro).to eq(:belongs_to)
     end
   end
@@ -34,7 +34,7 @@ describe RailsSettings do
       it { expect(Setting.boolean_foo).to be true }
       it { expect(Setting.boolean_bar).to be false }
 
-      it "returns the same values if the cache is cleared" do
+      it 'returns the same values if the cache is cleared' do
         Rails.cache.clear
         expect(Setting.boolean_foo).to be true
         expect(Setting.boolean_bar).to be false
@@ -77,7 +77,7 @@ describe RailsSettings do
 
     context 'defaults within namespace for key' do
       before do
-        allow(RailsSettings::Default).to receive(:instance).and_return({ "config.dcolor" => :blue, "config.dlimit" => 200 })
+        allow(RailsSettings::Default).to receive(:instance).and_return('config.dcolor' => :blue, 'config.dlimit' => 200)
       end
 
       it { expect(Setting['config.dcolor']).to eq :blue }
@@ -100,18 +100,18 @@ describe RailsSettings do
   end
 
   describe '#get_all' do
-    it "should include defaults" do
-      expect(RailsSettings::Default).to receive(:instance).and_return({ default1: 1, default2: '2' })
+    it 'should include defaults' do
+      expect(RailsSettings::Default).to receive(:instance).and_return(default1: 1, default2: '2')
       expect(Setting.get_all).to include(:default1, :default2)
     end
 
-    it "should include namespace defaults" do
-      expect(RailsSettings::Default).to receive(:instance).and_return({ "test.default1" => 1, "test.default2" => '2', demo: 3 })
+    it 'should include namespace defaults' do
+      expect(RailsSettings::Default).to receive(:instance).and_return('test.default1' => 1, 'test.default2' => '2', demo: 3)
       expect(Setting.get_all('test.')).to include(:'test.default1', :'test.default2')
     end
 
     it "should all('namespace')" do
-      expect(Setting.get_all('config')).to eq({ "config.color" => :red, "config.limit" => 100 })
+      expect(Setting.get_all('config')).to eq('config.color' => :red, 'config.limit' => 100)
       expect(Setting.get_all('config').count).to eq 2
     end
 
