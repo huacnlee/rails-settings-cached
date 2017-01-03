@@ -13,4 +13,7 @@ script:
  - bundle exec rubocop
 matrix:
   allow_failures:
-    - rvm: 2.1.8
+    - gemfile: gemfiles/Gemfile-4-2
+      rvm: 2.4.0
+    - gemfile: Gemfile
+      rvm: 2.1.8
