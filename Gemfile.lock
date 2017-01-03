@@ -151,6 +151,7 @@ PLATFORMS
 
 DEPENDENCIES
   codecov
+  rails (= 5.0.1)
   rails-settings-cached!
   rspec
   rubocop

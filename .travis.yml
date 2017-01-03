@@ -3,7 +3,13 @@ rvm:
   - 2.1.8
   - 2.2.2
   - 2.3.0
-before_script: bundle install --deployment
+  - 2.4.0
+gemfile:
+  - gemfiles/Gemfile-4-2
+before_script: bundle install
 script:
  - bundle exec rspec spec
  - bundle exec rubocop
+matrix:
+  allow_failures:
+    - rvm: 2.1.8
