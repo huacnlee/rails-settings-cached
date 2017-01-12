@@ -72,7 +72,7 @@ module RailsSettings
 
         record = object(var_name) || thing_scoped.new(var: var_name)
         record.value = value
-        record.save!
+        record.save
 
         value
       end
