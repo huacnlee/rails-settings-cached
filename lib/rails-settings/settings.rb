@@ -60,20 +60,20 @@ module RailsSettings
       end
 
       # get a setting value by [] notation
-      def [](var_name)
-        val = object(var_name)
-        return val.value if val
-        return Default[var_name] if Default.enabled?
+      def [](key)
+        return super(key) unless rails_initialized?
+        object = Thread.current[:curren_object_for_rails_settings]
+        val = Rails.cache.fetch(cache_key(key, object)) do
+          super(key)
+        end
+        val
       end
 
       # set a setting value by [] notation
       def []=(var_name, value)
-        var_name = var_name.to_s
-
-        record = object(var_name) || thing_scoped.new(var: var_name)
-        record.value = value
-        record.save!
-
+        super
+        object = Thread.current[:curren_object_for_rails_settings]
+        Rails.cache.write(cache_key(var_name, object), value)
         value
       end
 
