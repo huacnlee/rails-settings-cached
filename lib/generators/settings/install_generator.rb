@@ -30,5 +30,11 @@ module Settings
       template 'app.yml', File.join('config', 'app.yml')
       migration_template 'migration.rb', 'db/migrate/create_settings.rb'
     end
+    
+    def migration_version
+      if rails5?
+        "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]"
+      end
+    end
   end
 end
