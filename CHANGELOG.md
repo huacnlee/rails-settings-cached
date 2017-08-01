@@ -1,3 +1,7 @@
+## 0.6.0
+
+- Update migration for Rails migration version support. (#128)
+
 ## 0.6.5
 
 - Return direct value first for existing default keys. (#111)
