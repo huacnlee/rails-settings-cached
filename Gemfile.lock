@@ -154,7 +154,7 @@ DEPENDENCIES
   rails (= 5.0.1)
   rails-settings-cached!
   rspec
-  rubocop
+  rubocop (= 0.46.0)
   simplecov
   sqlite3
 
