@@ -1,4 +1,4 @@
-class CreateSettings < ActiveRecord::Migration
+class CreateSettings < ActiveRecord::Migration<%= migration_version %>
   def self.up
     create_table :settings do |t|
       t.string  :var,        null: false
