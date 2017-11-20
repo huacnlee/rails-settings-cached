@@ -37,6 +37,17 @@ Now just put that migration in the database with:
 rake db:migrate
 ```
 
+You need to set cache_store directly
+config/initializers/rails_settings.rb
+```ruby
+  RailsSettings::Settings.config do |config|
+    # setup new cache store
+    # config.cache_store = ActiveSupport::Cache::MemoryStore.new
+    # or use it from Rails
+    config.cache_store = Rails.cache
+  end
+```
+
 ## Usage
 
 The syntax is easy.  First, lets create some settings to keep track of:
