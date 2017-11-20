@@ -1,7 +1,13 @@
 require 'spec_helper'
 
 describe RailsSettings::CachedSettings do
-  before(:each) { Rails.cache.clear }
+  before(:each) do
+    RailsSettings::Settings.config do |config|
+      # setup cache store from Rails.cache
+      config.cache_store = Rails.cache
+    end
+    Rails.cache.clear
+  end
 
   describe '.cache_key' do
     before do

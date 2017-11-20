@@ -1,11 +1,11 @@
 module RailsSettings
   class Base < Settings
     def rewrite_cache
-      Rails.cache.write(cache_key, value)
+      self.class.cache_store.write(cache_key, value) unless self.class.no_cache_store?
     end
 
     def expire_cache
-      Rails.cache.delete(cache_key)
+      self.class.cache_store.delete(cache_key) unless self.class.no_cache_store?
     end
 
     def cache_key
@@ -13,6 +13,10 @@ module RailsSettings
     end
 
     class << self
+      def cache_store
+        Settings.cache_store
+      end
+
       def cache_prefix_by_startup
         return @cache_prefix_by_startup if defined? @cache_prefix_by_startup
         return '' unless Default.enabled?
@@ -32,17 +36,16 @@ module RailsSettings
       end
 
       def [](key)
-        return super(key) unless rails_initialized?
-        val = Rails.cache.fetch(cache_key(key, @object)) do
+        return super(key) if no_cache_store?
+        cache_store.fetch(cache_key(key, @object)) do
           super(key)
         end
-        val
       end
 
       # set a setting value by [] notation
       def []=(var_name, value)
         super
-        Rails.cache.write(cache_key(var_name, @object), value)
+        cache_store.write(cache_key(var_name, @object), value) unless no_cache_store?
         value
       end
 
