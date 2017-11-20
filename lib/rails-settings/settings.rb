@@ -17,6 +17,15 @@ module RailsSettings
     end
 
     class << self
+      attr_accessor :cache_store
+
+      # cache_store must be instance of
+      # ActiveSupport::Cache::Store
+
+      def config
+        yield self if block_given?
+      end
+
       # get or set a variable with the variable as the called method
       # rubocop:disable Style/MethodMissing
       def method_missing(method, *args)
@@ -103,8 +112,15 @@ module RailsSettings
         Default.source(filename)
       end
 
+      def no_cache_store?
+        cache_store.nil?
+      end
+
       def rails_initialized?
-        Rails.application && Rails.application.initialized?
+        Kernel.warn 'DEPRECATION WARNING: Settings rails_initialized? is deprecated ' \
+                    'and it will removed in 0.7.0. ' \
+                    'Please use no_cache_store? for detect cache presence.'
+        true
       end
 
       private

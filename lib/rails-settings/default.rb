@@ -14,7 +14,7 @@ module RailsSettings
       end
 
       def source_path
-        @source || Rails.root.join('config/app.yml')
+        @source || (Rails.root.join('config/app.yml') if defined?(Rails))
       end
 
       def [](key)
@@ -39,7 +39,8 @@ module RailsSettings
     def initialize
       content = open(self.class.source_path).read
       hash = content.empty? ? {} : YAML.load(ERB.new(content).result).to_hash
-      hash = hash[Rails.env] || {}
+      hash = hash[Rails.env] if defined?(Rails)
+      hash ||= {}
       replace hash
     end
   end
