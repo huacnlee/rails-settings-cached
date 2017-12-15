@@ -1,0 +1,4 @@
+str: "hello in development"
+script: <%= 1 + 2 + 3 %>
+yml_foo:
+  bar: "Foo bar"

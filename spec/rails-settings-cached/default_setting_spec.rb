@@ -10,7 +10,14 @@ describe RailsSettings::Default do
 
   describe 'YMLSetting config' do
     it { expect(RailsSettings::Default.enabled?).to eq true }
-    it { expect(RailsSettings::Default.source_path.to_s).to eq File.expand_path('../../config/app.yml', __FILE__) }
+    it { expect(RailsSettings::Default.source_path.to_s).to eq File.expand_path('../../config/rails_settings/test.yml', __FILE__) }
+
+    it 'works in different enviroment' do
+      string_inquirer = ActiveSupport::StringInquirer.new('production')
+      allow(Rails).to receive(:env).and_return(string_inquirer)
+
+      expect(RailsSettings::Default.source_path.to_s).to eq File.expand_path('../../config/rails_settings/production.yml', __FILE__)
+    end
   end
 
   describe 'It can work without tables' do

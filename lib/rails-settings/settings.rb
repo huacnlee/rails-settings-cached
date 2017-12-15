@@ -99,10 +99,6 @@ module RailsSettings
         unscoped.where('thing_type is NULL and thing_id is NULL')
       end
 
-      def source(filename)
-        Default.source(filename)
-      end
-
       def rails_initialized?
         Rails.application && Rails.application.initialized?
       end
