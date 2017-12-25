@@ -27,7 +27,6 @@ module RailsSettings
       def instance
         return @instance if defined? @instance
         @instance = new
-        @instance
       end
     end
 
