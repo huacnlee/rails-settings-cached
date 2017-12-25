@@ -38,7 +38,7 @@ def count_queries(&block)
   count = 0
 
   counter_f = lambda do |_name, _started, _finished, _unique_id, payload|
-    count += 1 unless payload[:name].in? %w(CACHE SCHEMA)
+    count += 1 unless payload[:name].in? %w[CACHE SCHEMA]
   end
 
   ActiveSupport::Notifications.subscribed(counter_f, 'sql.active_record', &block)
