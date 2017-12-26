@@ -21,18 +21,12 @@ module RailsSettings
         # foo.bar.dar Nested fetch value
         return instance[key] if instance.key?(key)
         keys = key.to_s.split('.')
-        val = instance
-        keys.each do |k|
-          val = val.fetch(k.to_s, nil)
-          break if val.nil?
-        end
-        val
+        instance.dig(*keys)
       end
 
       def instance
         return @instance if defined? @instance
         @instance = new
-        @instance
       end
     end
 

@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/huacnlee/rails-settings-cached'
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '>= 2.1'
+  s.required_ruby_version = '>= 2.3'
   s.summary = "Settings plugin for Rails that makes managing a table of global keys."
   s.description = """
   This is improved from rails-settings, added caching.
