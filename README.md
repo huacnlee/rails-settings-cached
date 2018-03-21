@@ -86,6 +86,16 @@ Setting.all('preferences.')
 # returns { 'preferences.color' => :blue, 'preferences.size' => :large }
 ```
 
+Want to store settings in custom file or in separate files?
+```ruby
+class Setting < RailsSettings::Base
+  source Rails.root.join("config/site_config.yml")
+  # or use array
+  source Rails.root.join("config/app.yml"), Rails.root.join("config/settings/*.yml")
+end
+```
+
+
 ## Extend a model
 
 Settings may be bound to any existing ActiveRecord object. Define this association like this:
