@@ -10,7 +10,7 @@ describe RailsSettings::Default do
 
   describe 'YMLSetting config' do
     it { expect(RailsSettings::Default.enabled?).to eq true }
-    it { expect(RailsSettings::Default.source_path.to_s).to eq File.expand_path('../../config/app.yml', __FILE__) }
+    it { expect(RailsSettings::Default.source_paths.map(&:to_s)).to eq [File.expand_path('../../config/app.yml', __FILE__)] }
   end
 
   describe 'It can work without tables' do

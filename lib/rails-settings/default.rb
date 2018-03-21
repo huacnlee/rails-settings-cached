@@ -6,15 +6,16 @@ module RailsSettings
 
     class << self
       def enabled?
-        source_path && File.exist?(source_path)
+        source_paths.any? &&
+        source_paths.detect{ |source_path| File.exist?(source_path) }
       end
 
-      def source(value = nil)
-        @source ||= value
+      def source(*paths)
+        @source = Dir.glob(paths)
       end
 
-      def source_path
-        @source || Rails.root.join('config/app.yml')
+      def source_paths
+        @source || [Rails.root.join('config/app.yml')]
       end
 
       def [](key)
@@ -31,7 +32,10 @@ module RailsSettings
     end
 
     def initialize
-      content = open(self.class.source_path).read
+      content =
+        self.class.source_paths.map do |path|
+          open(path).read
+        end.join("\n")
       hash = content.empty? ? {} : YAML.load(ERB.new(content).result).to_hash
       hash = hash[Rails.env] || {}
       replace hash
