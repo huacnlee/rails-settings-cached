@@ -1,3 +1,19 @@
+## 0.7.0
+
+- [Removed] `RailsSettings::CachedSettings`, please use `RailsSettings::Base`.
+- [Removed] `Setting.save_default` method, use YAML file instead.
+- Remove the "cache prefix by startup" behavior, for fix cache reading in multiple startup applications.
+  Please use `cache_prefix { 'v1' }` to change cache prefix when your yml config has updated.
+  For example:
+
+  ```rb
+  class Setting < RailsSettings::Base
+    # when config/app.yml has changed, you need change this prefix to v2, v3 ...
+    cache_prefix { "v1" }
+    source Rails.root.join("config/app.yml")
+  end
+  ```
+
 ## 0.6.6
 
 - Update migration for Rails migration version support. (#128)

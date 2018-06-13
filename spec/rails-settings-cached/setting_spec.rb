@@ -136,17 +136,6 @@ describe RailsSettings do
     end
   end
 
-  describe 'Save Default values' do
-    it '#save_default' do
-      Setting.test_save_default_key
-      Setting.save_default(:test_save_default_key, '321')
-      expect(Setting.where(var: 'test_save_default_key').count).to eq 1
-      expect(Setting.test_save_default_key).to eq '321'
-      Setting.save_default(:test_save_default_key, '3211')
-      expect(Setting.test_save_default_key).to eq '321'
-    end
-  end
-
   describe 'Implementation by embeds a Model' do
     it 'can set values' do
       @user.settings.level = 30

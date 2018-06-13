@@ -28,7 +28,22 @@ $ rails g settings:install
 If you want custom model name:
 
 ```bash
+$ rails g settings:install
+```
+
+Or use a custom name:
+
+```bash
 $ rails g settings:install SiteConfig
+```
+
+You will get `app/models/setting.rb`
+
+```rb
+class Setting < RailsSettings::Base
+  source Rails.root.join("config/app.yml")
+  # cache_prefix { "v1" }
+end
 ```
 
 Now just put that migration in the database with:
@@ -177,6 +192,8 @@ Setting.foo -> Check Cache -> Exist - Write Cache -> Return
 ```
 
 ## Change cache key
+
+When `config/app.yml` has changed, you may need change the cache prefix to expires caches.
 
 ```ruby
 class Setting < RailsSettings::Base

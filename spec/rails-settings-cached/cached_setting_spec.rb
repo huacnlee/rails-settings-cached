@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-describe RailsSettings::CachedSettings do
+describe RailsSettings::Base do
   before(:each) { Rails.cache.clear }
 
   describe '.cache_key' do
     before do
-      allow(Setting).to receive(:cache_prefix_by_startup).and_return('t123456')
+      Setting.cache_prefix { 't123456' }
     end
 
     it 'should work with instance method' do
@@ -23,21 +23,10 @@ describe RailsSettings::CachedSettings do
     end
   end
 
-  describe '.cache_prefix_by_startup' do
-    it 'should work' do
-      digest = Digest::MD5.hexdigest(RailsSettings::Default.instance.to_s)
-      expect(described_class.cache_prefix_by_startup).to eq(digest)
-    end
-  end
-
   describe '.cache_prefix' do
-    before do
-      allow(described_class).to receive(:cache_prefix_by_startup).and_return('t123456')
-    end
-
     it 'sets cache key prefix' do
       described_class.cache_prefix { 'stuff' }
-      expect(described_class.cache_key('abc', nil)).to eql('rails_settings_cached/t123456/stuff/abc')
+      expect(described_class.cache_key('abc', nil)).to eql('rails_settings_cached/stuff/abc')
     end
   end
 
