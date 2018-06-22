@@ -1,4 +1,4 @@
-require 'digest/md5'
+require "digest/md5"
 
 module RailsSettings
   class Default < ::Hash
@@ -14,13 +14,13 @@ module RailsSettings
       end
 
       def source_path
-        @source || Rails.root.join('config/app.yml')
+        @source || Rails.root.join("config/app.yml")
       end
 
       def [](key)
         # foo.bar.dar Nested fetch value
         return instance[key] if instance.key?(key)
-        keys = key.to_s.split('.')
+        keys = key.to_s.split(".")
         instance.dig(*keys)
       end
 

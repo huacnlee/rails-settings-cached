@@ -1,17 +1,17 @@
-$LOAD_PATH.push File.expand_path('../lib', __FILE__)
+$LOAD_PATH.push File.expand_path("../lib", __FILE__)
 
-require 'rspec'
-require 'rails/all'
-require 'sqlite3'
+require "rspec"
+require "rails/all"
+require "sqlite3"
 
-require 'simplecov'
-if ENV['CI'] == 'true'
-  require 'codecov'
+require "simplecov"
+if ENV["CI"] == "true"
+  require "codecov"
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
 end
 SimpleCov.start
 
-require 'rails-settings-cached'
+require "rails-settings-cached"
 
 if RailsSettings::Settings.respond_to? :raise_in_transactional_callbacks=
   RailsSettings::Settings.raise_in_transactional_callbacks = true
@@ -22,7 +22,7 @@ end
 
 module Rails
   def self.root
-    Pathname.new(File.expand_path('../', __FILE__))
+    Pathname.new(File.expand_path("../", __FILE__))
   end
 
   def self.cache
@@ -30,7 +30,7 @@ module Rails
   end
 
   def self.env
-    'test'
+    "test"
   end
 end
 
@@ -41,7 +41,7 @@ def count_queries(&block)
     count += 1 unless payload[:name].in? %w(CACHE SCHEMA)
   end
 
-  ActiveSupport::Notifications.subscribed(counter_f, 'sql.active_record', &block)
+  ActiveSupport::Notifications.subscribed(counter_f, "sql.active_record", &block)
 
   count
 end
@@ -50,7 +50,7 @@ end
 RailsSettings::Railtie.initializers.each(&:run)
 
 # ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: ':memory:'
+ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
 # ActiveRecord::Base.configurations = true
 
 ActiveRecord::Schema.verbose = false
@@ -84,7 +84,7 @@ RSpec.configure do |config|
       include RailsSettings::Extend
     end
 
-    ActiveRecord::Base.connection.execute('delete from settings')
+    ActiveRecord::Base.connection.execute("delete from settings")
     Rails.cache.clear
   end
 
@@ -93,4 +93,4 @@ RSpec.configure do |config|
   end
 end
 
-Rails.application.instance_variable_set('@initialized', true)
+Rails.application.instance_variable_set("@initialized", true)

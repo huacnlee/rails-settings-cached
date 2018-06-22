@@ -20,5 +20,6 @@ ClassVars:
 FileName:
   Enabled: false
 
-Style/StringLiteralsInInterpolation:
+Style/StringLiterals:
+  Enabled: true
   EnforcedStyle: double_quotes
