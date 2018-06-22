@@ -22,7 +22,7 @@ module RailsSettings
         scope << @cache_prefix.call if @cache_prefix
         scope << "#{scope_object.class.name}-#{scope_object.id}" if scope_object
         scope << var_name.to_s
-        scope.join('/')
+        scope.join("/")
       end
 
       def [](key)

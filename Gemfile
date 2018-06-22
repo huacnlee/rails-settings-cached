@@ -1,4 +1,4 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 gemspec
 
-gem 'rails', '5.0.1'
+gem "rails", "5.0.1"
