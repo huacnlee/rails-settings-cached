@@ -1,3 +1,7 @@
+## 0.7.1
+
+- Fix value load from database on Rails initialize; (#144)
+
 ## 0.7.0
 
 - [Removed] `RailsSettings::CachedSettings`, please use `RailsSettings::Base`.

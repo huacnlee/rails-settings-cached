@@ -1,4 +1,5 @@
 log
+.lock
 *.gem
 .idea
 .ruby-version
