@@ -61,6 +61,8 @@ module RailsSettings
 
       # get a setting value by [] notation
       def [](var_name)
+        return Default[var_name] unless rails_initialized?
+
         val = object(var_name)
         return val.value if val
         return Default[var_name] if Default.enabled?
