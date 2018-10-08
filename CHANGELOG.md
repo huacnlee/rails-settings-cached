@@ -1,3 +1,7 @@
+## 0.7.2
+
+- Fix load default values from yml when using before Rails initialize; (#147)
+
 ## 0.7.1
 
 - Fix value load from database on Rails initialize; (#144)
