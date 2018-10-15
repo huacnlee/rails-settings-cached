@@ -14,8 +14,7 @@ module RailsSettings
       end
 
       def source_path
-        default_file = "config/app.yml"
-        @source || Rails.root.join(default_file) if File.exist?(default_file)
+        @source || Rails.root.join("config/app.yml")
       end
 
       def [](key)
