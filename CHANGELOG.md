@@ -1,3 +1,7 @@
+## 0.7.3
+
+- Only load default config file if it exists (#149)
+
 ## 0.7.2
 
 - Fix load default values from yml when using before Rails initialize; (#147)
