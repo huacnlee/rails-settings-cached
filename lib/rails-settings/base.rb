@@ -27,10 +27,19 @@ module RailsSettings
         scope.join("/")
       end
 
+
+      def preload!(starting_with = nil)
+        settings = get_all(starting_with)
+        settings.each do |key, val|
+          RailsSettings.request_cache.write(cache_key(key, @object), val)
+        end
+      end
+
       def [](key)
         return super(key) unless rails_initialized?
-        val = RailsSettings.request_cache.fetch(cache_key(key, @object)) do
-          Rails.cache.fetch(cache_key(key, @object)) do
+        full_cache_key = cache_key(key, @object)
+        val = RailsSettings.request_cache.fetch(full_cache_key) do
+          Rails.cache.fetch(full_cache_key) do
             super(key)
           end
         end

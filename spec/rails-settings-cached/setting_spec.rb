@@ -183,4 +183,22 @@ describe RailsSettings do
       expect(CustomSetting.foo).to eq(123)
     end
   end
+
+  describe "Preload" do
+    it "should work" do
+      Setting.max_prune_time = 100
+      Setting.min_prune_time = 5
+
+      Rails.cache.clear
+      RailsSettings.request_cache.clear
+
+      Setting.preload!
+      allow(Rails.cache).to receive(:fetch).and_raise("Invalid fetch cache")
+      queries_count = count_queries do
+        expect(Setting.max_prune_time).to eq(100)
+        expect(Setting.min_prune_time).to eq(5)
+      end
+      expect(queries_count).to eq(0)
+    end
+  end
 end
