@@ -103,6 +103,7 @@ describe RailsSettings::Base do
   it "caches values from db" do
     described_class["some_random_key"] = "asd"
     Rails.cache.clear
+    RailsSettings.request_cache.clear
 
     queries_count = count_queries do
       expect(described_class["some_random_key"]).to eq("asd")

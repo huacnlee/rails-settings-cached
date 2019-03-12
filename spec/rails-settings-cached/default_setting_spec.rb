@@ -29,6 +29,8 @@ describe RailsSettings::Default do
   describe "Base test" do
     it "should not hit SQL" do
       Rails.cache.clear
+      RailsSettings.request_cache.clear
+
       queries_count = count_queries do
         SettingWithYML.str
         SettingWithYML.str
