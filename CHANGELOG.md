@@ -1,3 +1,39 @@
+## 0.8.0
+
+- Add `Setting.preload!` for reload all keys into Request Cache (Save in Thread.current),
+  For avoid hit cache/db many times.
+
+  > NOTE: `preload!` will load all setting keys from database, this method not recommand to use when you have a lot of keys.
+
+```rb
+Setting.foo = "Foo"
+Setting.bar = "Bar"
+Setting.preload!
+=> select * from settings
+Setting.foo
+=> "Foo"
+Setting.bar
+=> "Bar"
+Setting.foo = "New Foo"
+Setting.foo
+=> "Foo" <- no hit db/cache
+```
+
+- Avoid hit cache when key has been used once in same request.
+
+```rb
+Setting.foo
+=> "Foo" <- fetch from cache
+Setting.foo
+=> "Foo" <- no cache hit
+Setting.foo
+=> "Foo" <- no cache hit
+
+In other request lifecycle
+Settin.foo
+=> "Foo" <- fetch from cache
+```
+
 ## 0.7.3
 
 - Only load default config file if it exists (#149)

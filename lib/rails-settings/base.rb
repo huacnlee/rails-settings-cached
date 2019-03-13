@@ -27,7 +27,13 @@ module RailsSettings
         scope.join("/")
       end
 
-
+      # Preload all or some key with prefix in Thread.current
+      # for avoid multiple hit db/cache in same request
+      #
+      # Setting.preload!
+      # => Fetch all keys from db and save to request cache
+      # Setting.foo
+      # Setting.bar
       def preload!(starting_with = nil)
         settings = get_all(starting_with)
         settings.each do |key, val|

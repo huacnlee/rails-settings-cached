@@ -28,26 +28,24 @@ module RailsSettings
 
     protected
 
-      def read_entry(key, options) # :nodoc:
-        data[key]
-      end
+    def read_entry(key, _options) # :nodoc:
+      data[key]
+    end
 
-      def write_entry(key, entry, options) # :nodoc:
-        entry.dup_value!
-        synchronize do
-          old_entry = data[key]
-          return false if data.key?(key) && options[:unless_exist]
-          data[key] = entry
-          true
-        end
+    def write_entry(key, entry, options) # :nodoc:
+      entry.dup_value!
+      synchronize do
+        return false if data.key?(key) && options[:unless_exist]
+        data[key] = entry
+        true
       end
+    end
 
-      def delete_entry(key, options) # :nodoc:
-        synchronize do
-          entry = data.delete(key)
-          !!entry
-        end
+    def delete_entry(key, _options) # :nodoc:
+      synchronize do
+        data.delete(key)
+        true
       end
-
+    end
   end
 end

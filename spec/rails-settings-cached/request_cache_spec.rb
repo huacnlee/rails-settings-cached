@@ -22,7 +22,7 @@ describe RailsSettings::RequestCache do
       expect(cache.data).to eq(Thread.current[:rails_settings_request_cache])
 
       # write object
-      cache.write("bar", { age: 1, nick: "aaa" })
+      cache.write("bar", age: 1, nick: "aaa")
       obj = cache.read("bar")
       expect(obj[:age]).to eq(1)
       expect(obj[:nick]).to eq("aaa")
