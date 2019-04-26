@@ -59,7 +59,7 @@ end
 
 class ActiveSupport::TestCase
   teardown do
-    Setting.clear_cache
+    Setting.destroy_all
   end
 
   def assert_number_of_queries(count, &block)
