@@ -42,6 +42,10 @@ class BaseTest < ActiveSupport::TestCase
   test "readonly field" do
     assert_equal 100, Setting.readonly_item
     assert_raise(NoMethodError) { Setting.readonly_item = 1  }
+    assert_kind_of Hash, Setting.omniauth_google_options
+    assert_equal "the-client-id", Setting.omniauth_google_options[:client_id]
+    assert_equal "the-client-secret", Setting.omniauth_google_options[:client_secret]
+    assert_raise(NoMethodError) { Setting.omniauth_google_options = { foo: 1 }  }
   end
 
   test "value serialize" do

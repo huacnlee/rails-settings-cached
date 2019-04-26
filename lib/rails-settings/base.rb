@@ -39,22 +39,26 @@ module RailsSettings
 
       private
         def _define_field(key, default: nil, type: :string, readonly: false)
-          self.class.define_method(key) do
-            val = self.send(:_value_of, key)
-            result = nil
-            if !val.nil?
-              result = val
-            else
-              result = default
-              result = default.call if default.is_a?(Proc)
+          if readonly
+            self.class.define_method(key) do
+              self.send(:_covert_string_to_typeof_value, type, default)
+            end
+          else
+            self.class.define_method(key) do
+              val = self.send(:_value_of, key)
+              result = nil
+              if !val.nil?
+                result = val
+              else
+                result = default
+                result = default.call if default.is_a?(Proc)
+              end
+
+              result = self.send(:_covert_string_to_typeof_value, type, result)
+
+              result
             end
 
-            result = self.send(:_covert_string_to_typeof_value, type, result)
-
-            result
-          end
-
-          unless readonly
             self.class.define_method("#{key}=") do |value|
               var_name = key.to_s
 

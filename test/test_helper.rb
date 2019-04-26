@@ -16,6 +16,11 @@ SimpleCov.start
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
+require_relative "./models/setting"
+
+# Hit readonly field before Rails initialize
+Setting.readonly_item
+Setting.omniauth_google_options
 
 class TestApplication < Rails::Application
 end
@@ -51,8 +56,6 @@ ActiveRecord::Schema.define(version: 1) do
     t.datetime :updated_at
   end
 end
-
-require_relative "./models/setting"
 
 class ActiveSupport::TestCase
   teardown do

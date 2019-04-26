@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails-settings-cached (2.0.0)
+    rails-settings-cached (2.0.1)
       rails (>= 4.2.0)
 
 GEM
