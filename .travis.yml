@@ -1,18 +1,10 @@
 language: ruby
 rvm:
-  - 2.3.0
-  - 2.4.0
-  - 2.4.3
+  - 2.5.2
 gemfile:
   - Gemfile
-  - gemfiles/Gemfile-4-2
+  - gemfiles/Gemfile-5-0
+  - gemfiles/Gemfile-5-2
 before_script: bundle install
 script:
- - bundle exec rspec spec
- - bundle exec rubocop
-matrix:
-  allow_failures:
-    - gemfile: gemfiles/Gemfile-4-2
-      rvm: 2.4.0
-    - gemfile: Gemfile
-      rvm: 2.1.8
+ - bundle exec rake test

@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 $:.push File.expand_path("../lib", __FILE__)
 require "rails-settings/version"
 
 Gem::Specification.new do |s|
-  s.name          = 'rails-settings-cached'
+  s.name          = "rails-settings-cached"
   s.version       = RailsSettings.version
-  s.authors       = ['Jason Lee', 'Squeegy', 'Georg Ledermann', '100hz']
-  s.email         = 'huacnlee@gmail.com'
-  s.files         = Dir.glob('lib/**/*') + %w(README.md)
-  s.homepage      = 'https://github.com/huacnlee/rails-settings-cached'
-  s.require_paths = ['lib']
+  s.authors       = ["Jason Lee"]
+  s.email         = "huacnlee@gmail.com"
+  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  s.homepage      = "https://github.com/huacnlee/rails-settings-cached"
+  s.require_paths = ["lib"]
 
-  s.required_ruby_version = '>= 2.3'
+  s.required_ruby_version = ">= 2.5"
   s.summary = "Settings plugin for Rails that makes managing a table of global keys."
   s.description = """
   This is improved from rails-settings, added caching.
@@ -22,11 +24,11 @@ Gem::Specification.new do |s|
   You can store any kind of object.  Strings, numbers, arrays, or any object.
   """
 
-  s.add_dependency 'rails', '>= 4.2.0'
+  s.add_dependency "rails", ">= 4.2.0"
 
-  s.add_development_dependency 'sqlite3'
-  s.add_development_dependency 'rubocop', '0.46.0'
-  s.add_development_dependency 'simplecov'
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'codecov'
+  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "rubocop"
+  s.add_development_dependency "simplecov"
+  s.add_development_dependency "minitest"
+  s.add_development_dependency "codecov"
 end
