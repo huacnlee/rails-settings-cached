@@ -1,158 +1,36 @@
-## 0.7.3
+## 2.0.0
 
-- Only load default config file if it exists (#149)
+> 🚨 BREAK CHANGES WARNING:
+> rails-settings-cached 2.x has redesign the API, the new version will compatible with the stored setting values by older version.
+> But you must read the README.md again, and follow guides to change your Setting model.
 
-## 0.7.2
+- New design release.
+- No more `scope` support (RailsSettings::Extend has removed);
+- No more YAML file.
+- Requuire Ruby 2.5+, Rails 5.0+
+- You must use `field` method to statement the setting keys before use.
 
-- Fix load default values from yml when using before Rails initialize; (#147)
-
-## 0.7.1
-
-- Fix value load from database on Rails initialize; (#144)
-
-## 0.7.0
-
-- [Removed] `RailsSettings::CachedSettings`, please use `RailsSettings::Base`.
-- [Removed] `Setting.save_default` method, use YAML file instead.
-- Remove the "cache prefix by startup" behavior, for fix cache reading in multiple startup applications.
-  Please use `cache_prefix { 'v1' }` to change cache prefix when your yml config has updated.
   For example:
 
   ```rb
   class Setting < RailsSettings::Base
-    # when config/app.yml has changed, you need change this prefix to v2, v3 ...
-    cache_prefix { "v1" }
-    source Rails.root.join("config/app.yml")
-  end
+	  field :host, default: "http://example.com"
+	  field :readonly_item, type: :integer, default: 100, readonly: true
+	  field :user_limits, type: :integer, default: 1
+	  field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
+	  field :captcha_enable, type: :boolean, default: 1
+	  field :smtp_settings, type: :hash, default: {
+	    host: "foo.com",
+	    username: "foo@bar.com",
+	    password: "123456"
+	  }
+	end
   ```
 
-## 0.6.6
-
-- Update migration for Rails migration version support. (#128)
-
-## 0.6.5
-
-- Return direct value first for existing default keys. (#111)
-- Fix defaults merge when get_all. (#110)
-- Fix deprecated syntax in the model generator (#107)
-
-## 0.6.4
-
-- Fix cache key with multiple processes.
-
-## 0.6.3
-
-- Ensure defaults not overwrite persisted settings (#98) (Kevin Sjöberg)
-
-## 0.6.2
-
-- Make sure YAML default settings can work when Rails not initialized (in Rails initializes or environments/*.rb)
-
-## 0.6.1
-
-- Make sure YAML default settings can work when settings table does not exist (For example in Rails initializes).
-
-## 0.6.0
-
-- Add `config/app.yml` for write you default settings in file.
-- Change generator command from `rails g settings` to `rails g settings:install`.
-- [Deprecated] RailsSettings::CachedSettings, please use RailsSettings::Base.
-- [Deprecated] Setting.defaults method, use YAML file instead.
-- [Deprecated] Setting.save_default method, use YAML file instead.
-- Removed `SettingsDefaults::DEFAULTS` support.
-- Change cache key prefix after restart Rails application server (This for make sure cache will expire, when you update default config in YAML file).
-- If the value was set to false, either the default is returned or if there is no default, then nil would be returned. @dangerous
-
-## 0.5.6
-
-- Fixed inheritance of RailsSettings::CachedSettings to use RailsSettings::Base.
-
-## 0.5.5
-
-- Change default g
-- [Deprecated] RailsSettings::Settings, please use RailsSettings::Base.
+- One SQL or Cache hit in each request, even you has multiple of keys call in a page.
+  > NOTE: This design will load all settings from db/cache in memory, so I recommend that you do not design a lot of Setting keys (bellow 1000 keys), and do not save a large value in setting.
 
 
-## 0.5.4
+## Changes logs for 0.x
 
-- Update the cached value for the key when value set.
-- Return nil if value not present;
-
-## 0.5.3
-
-- Fixed mistake, when scoped result contains global defaults which not in scope. (Alexander Merkulov)
-
-## 0.5.2
-
-- Gem spec require Ruby 2.0+; @alexanderadam
-- Include defaults in get_all call; @alexanderadam
-
-## 0.5.0
-
-- Drop Rails 4.1 support.
-- Allow setting dynamic cache prefix. So that settings can be arbitrarily
-scoped based on some context (e.g. current tenant). @artemave
-
-# For Rails 4.1.x
-
-## 0.4.6
-
-- Fix scoped cache key name.
-
-
-## 0.4.5
-
-- Cache db values that does not exist within rails cache.
-
-## 0.4.4
-
-- Add cached to model scoped settings.
-
-## 0.4.3
-
-- Fix Rails 4.2.4 `after_rollback`/`after_commit` depreciation warnings. @miks
-
-## 0.4.2
-
-- Ruby new hash syntax and do not support Ruby 1.9.2 from now.
-- Cache key has changed with `rails_settings_cached` prefix.
-
-## 0.4.1
-
-- ActiveRecord `table_name_prefix` support; #31
-
-## 0.4.0
-
-- Rails 4.1.0 compatibility.
-- Setting.all -> Setting.get_all
-
-# For Rails 4.0.x - 4.1.x
-
-## 0.3.2
-
-- Enable destroy-ing a key with falsy data; #32
-- Require Rails 4.0.0+;
-
-## 0.3.1
-
-- false value can't got back bug has fixed.
-
-## 0.3.0
-
-- Fix to work with Rails 4.0.0
-
-# For Rails 3.x
-
-## 0.2.4
-
-- Setting.save_default method to direct write default value in database.
-- fix mass-update bug.
-
-## 0.2.3
-
-- Fix bug with when key has cached a nil value, and then set a default value for that key,
-the default value can't right return.
-
-## 0.2.2
-
-- Add auto cache feature to all key visit.
+https://github.com/huacnlee/rails-settings-cached/blob/0.x/CHANGELOG.md

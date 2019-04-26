@@ -1,11 +1,14 @@
 # Rails Settings Cached
 
-This is improved from [rails-settings](https://github.com/ledermann/rails-settings),
-added caching for all settings. Settings is a plugin that makes managing a table of
+This a plugin that makes managing a table of
 global key, value pairs easy. Think of it like a global Hash stored in your database,
 that uses simple ActiveRecord like methods for manipulation. Keep track of any global
 setting that you dont want to hard code into your rails app. You can store any kind
 of object. Strings, numbers, arrays, or any object.
+
+> 🚨 BREAK CHANGES WARNING:
+> rails-settings-cached 2.x has redesign the API, the new version will compatible with the stored setting values by older version.
+> When you wants to upgrade 2.x, you must read the README again, and follow guides to change your Setting model.
 
 ## Status
 
@@ -41,10 +44,22 @@ You will get `app/models/setting.rb`
 
 ```rb
 class Setting < RailsSettings::Base
-  source Rails.root.join("config/app.yml")
   # cache_prefix { "v1" }
+
+  field :host, default: "http://example.com"
+  field :readonly_item, type: :integer, default: 100, readonly: true
+  field :user_limits, type: :integer, default: 20
+  field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
+  field :captcha_enable, type: :boolean, default: 1
+  field :notification_options, type: :hash, default: {
+    send_all: true,
+    logging: true,
+    sender_email: "foo@bar.com"
+  }
 end
 ```
+
+You must use `field` method to statement the setting keys, otherwice you can't use it.
 
 Now just put that migration in the database with:
 
@@ -57,154 +72,92 @@ rake db:migrate
 The syntax is easy.  First, lets create some settings to keep track of:
 
 ```ruby
-Setting.admin_password = 'supersecret'
-Setting.date_format    = '%m %d, %Y'
-Setting.cocktails      = ['Martini', 'Screwdriver', 'White Russian']
-Setting.foo            = 123
-Setting.credentials    = { :username => 'tom', :password => 'secret' }
+irb > Setting.host
+"http://example.com"
+irb > Setting.host = "https://your-host.com"
+irb > Setting.host
+"https://your-host.com"
+
+irb > Setting.user_limits
+20
+irb > Setting.user_limits = "30"
+irb > Setting.user_limits
+30
+irb > Setting.user_limits = 45
+irb > Setting.user_limits
+45
+
+irb > Setting.captcha_enable
+1
+irb > Setting.captcha_enable?
+true
+irb > Setting.captcha_enable = "0"
+irb > Setting.captcha_enable
+false
+irb > Setting.captcha_enable = "1"
+irb > Setting.captcha_enable
+true
+irb > Setting.captcha_enable = "false"
+irb > Setting.captcha_enable
+false
+irb > Setting.captcha_enable = "true"
+irb > Setting.captcha_enable
+true
+irb > Setting.captcha_enable?
+true
+
+irb > Setting.admin_emails
+["admin@rubyonrails.org"]
+irb > Setting.admin_emails = %w[foo@bar.com bar@dar.com]
+irb > Setting.admin_emails
+["foo@bar.com", "bar@dar.com"]
+irb > Setting.admin_emails = "huacnlee@gmail.com,admin@admin.com\nadmin@rubyonrails.org"
+irb > Setting.admin_emails
+["huacnlee@gmail.com", "admin@admin.com", "admin@rubyonrails.org"]
+
+irb > Setting.notification_options
+{
+  send_all: true,
+  logging: true,
+  sender_email: "foo@bar.com"
+}
+irb > Setting.notification_options = {
+  sender_email: "notice@rubyonrails.org"
+}
+irb > Setting.notification_options
+{
+  sender_email: "notice@rubyonrails.org"
+}
 ```
-
-Now lets read them back:
-
-```ruby
-Setting.foo            # returns 123
-```
-
-Changing an existing setting is the same as creating a new setting:
-
-```ruby
-Setting.foo = 'super duper bar'
-```
-
-Decide you dont want to track a particular setting anymore?
-
-```ruby
-Setting.destroy :foo
-Setting.foo            # returns nil
-```
-
-Want a list of all the settings?
-```ruby
-Setting.get_all
-```
-
-You need name spaces and want a list of settings for a give name space? Just choose your prefered named space delimiter and use `Setting.get_all` (`Settings.all` for # Rails 3.x and 4.0.x) like this:
-
-```ruby
-Setting['preferences.color'] = :blue
-Setting['preferences.size'] = :large
-Setting['license.key'] = 'ABC-DEF'
-# Rails 4.1.x
-Setting.get_all('preferences.')
-# Rails 3.x and 4.0.x
-Setting.all('preferences.')
-# returns { 'preferences.color' => :blue, 'preferences.size' => :large }
-```
-
-## Extend a model
-
-Settings may be bound to any existing ActiveRecord object. Define this association like this:
-Notice! is not do caching in this version.
-
-```ruby
-class User < ActiveRecord::Base
-  include RailsSettings::Extend
-end
-```
-
-Then you can set/get a setting for a given user instance just by doing this:
-
-```ruby
-user = User.find(123)
-user.settings.color = :red
-user.settings.color # returns :red
-user.settings.get_all
-# { "color" => :red }
-```
-
-If you want to find users having or not having some settings, there are named scopes for this:
-
-```ruby
-User.with_settings
-# => returns a scope of users having any setting
-
-User.with_settings_for('color')
-# => returns a scope of users having a 'color' setting
-
-User.without_settings
-# returns a scope of users having no setting at all (means user.settings.get_all == {})
-
-User.without_settings('color')
-# returns a scope of users having no 'color' setting (means user.settings.color == nil)
-```
-
-## Default settings
-
-Sometimes you may want define default settings.
-
-RailsSettings has generate a config YAML file in:
-
-```yml
-# config/app.yml
-defaults: &defaults
-  github_token: "123456"
-  twitter_token: "<%= ENV["TWITTER_TOKEN"] %>"
-  foo:
-    bar: "Foo bar"
-
-development:
-  <<: *defaults
-
-test:
-  <<: *defaults
-
-production:
-  <<: *defaults
-```
-
-And you can use by `Setting` model:
-
-```
-Setting.github_token
-=> "123456"
-Setting.github_token = "654321"
-# Save into database.
-Setting.github_token
-# Read from databae / caching.
-=> "654321"
-Setting['foo.bar']
-=> 'Foo bar'
-```
-
-NOTE: YAML setting it also under the cache scope, when you restart Rails application, cache will expire,
-      so when you want change default config, you need restart Rails application server.
 
 ### Caching flow:
 
 ```
-Setting.foo -> Check Cache -> Exist - Write Cache -> Return
+Setting.host -> Check Cache -> Exist - Get value of key for cache -> Return
                    |
-                Check DB -> Exist -> Write Cache -> Return
+                Fetch all key and values from DB -> Write Cache -> Get value of key for cache -> return
                    |
-               Check Default -> Exist -> Write Cache -> Return
-                   |
-               Return nil
+                Return default value or nil
 ```
+
+In each Setting keys call, we will load the cache/db and save in Thread.current for avoid hit cache/db.
+
+Each key update will expires the cache, so do not add some frequent update key.
 
 ## Change cache key
 
-When `config/app.yml` has changed, you may need change the cache prefix to expires caches.
+Some times you may need to force update cache, now you can use `cache_prefix`
 
 ```ruby
 class Setting < RailsSettings::Base
-  cache_prefix { 'you-prefix' }
+  cache_prefix { "you-prefix" }
   ...
 end
 ```
 
 -----
 
-## How to create a list, form to manage Settings?
+## How to manage Settings in admin interface?
 
 If you want create an admin interface to editing the Settings, you can try methods in follow:
 
@@ -224,60 +177,56 @@ module Admin
   class SettingsController < ApplicationController
     before_action :get_setting, only: [:edit, :update]
 
-    def index
-      @settings = Setting.get_all
+    def show
     end
 
-    def edit
-    end
-
-    def update
-      if @setting.value != params[:setting][:value]
-        @setting.value = params[:setting][:value]
-        @setting.save
-        redirect_to admin_settings_path, notice: 'Setting has updated.'
-      else
-        redirect_to admin_settings_path
+    def create
+      setting_params.keys.each do |key|
+        next if key.to_s == "site_logo"
+        Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
       end
+      redirect_to admin_settings_path(notice: "Setting was successfully updated.")
     end
 
-    def get_setting
-      @setting = Setting.find_by(var: params[:id]) || Setting.new(var: params[:id])
-    end
+
+    private
+      def setting_params
+        params.require(:setting).permit(:host, :user_limits, :admin_emails,
+          :captcha_enable, :notification_options)
+      end
   end
 end
 ```
 
-app/views/admin/settings/index.html.erb
+app/views/admin/settings/show.html.erb
 
 ```erb
-<table>
-  <tr>
-    <th>Key</th>
-    <th></th>
-  </tr>
-  <% @settings.each_key do |key| %>
-  <tr>
-    <td><%= key %></td>
-    <td><%= link_to 'edit', edit_admin_setting_path(key) %></td>
-  </tr>
-  <% end %>
-</table>
-```
+<%= form_for(Setting.new, url: admin_settings_path) do |f| %>
+  <div class="form-group">
+    <label class="control-label">Host</label>
+    <%= f.text_field :host, value: Setting.host, class: "form-control", placeholder: "http://localhost"  %>
+  </div>
 
-app/views/admin/settings/edit.html.erb
+  <div class="form-group form-checkbox">
+    <label>
+      <%= f.check_box :captcha_enable, checked: Setting.captcha_enable? %>
+      Enable/Disable Captcha
+    </label>
+  </div>
 
-```erb
-<%= form_for(@setting, url: admin_setting_path(@setting.var), method: 'patch') do |f| %>
-  <label><%= @setting.var %></label>
-  <%= f.text_area :value, rows: 10 %>
-  <%= f.submit %>
+  <div class="form-group">
+    <label class="control-label">Admin Emails</label>
+    <%= f.text_area :admin_emails, value: Setting.admin_emails.join("\n"), class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <label class="control-label">Notification options</label>
+    <%= f.text_area :notification_options, value: YAML.dump(Setting.notification_options), class: "form-control", style: "height: 180px;"  %>
+    <div class="form-text">
+      Use YAML format to config the SMTP_html
+    </details>
 <% end %>
 ```
-
-Also you may use [rails-settings-ui](https://github.com/accessd/rails-settings-ui) gem
-for building ready to using interface with validations,
-or [activeadmin_settings_cached](https://github.com/artofhuman/activeadmin_settings_cached) gem if you use [activeadmin](https://github.com/activeadmin/activeadmin).
 
 ## Use case:
 

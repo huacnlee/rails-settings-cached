@@ -1,4 +1,6 @@
+# frozen_string_literal: true
+
 source "https://rubygems.org"
 gemspec
 
-gem "rails", "5.0.1"
+gem "rails", "6.0.0.rc1"
