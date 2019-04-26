@@ -59,8 +59,7 @@ end
 
 class ActiveSupport::TestCase
   teardown do
-    Setting.unscoped.destroy_all
-    Rails.cache.clear
+    Setting.clear_cache
   end
 
   def assert_number_of_queries(count, &block)

@@ -115,6 +115,35 @@ class BaseTest < ActiveSupport::TestCase
     assert_record_value :smtp_settings, new_value
   end
 
+  test "boolean field" do
+    assert_equal true, Setting.captcha_enable
+    assert_no_record :captcha_enable
+    Setting.captcha_enable = "0"
+    assert_equal false, Setting.captcha_enable
+    assert_equal false, Setting.captcha_enable?
+    Setting.captcha_enable = "1"
+    assert_equal true, Setting.captcha_enable
+    assert_equal true, Setting.captcha_enable?
+    Setting.captcha_enable = "false"
+    assert_equal false, Setting.captcha_enable
+    assert_equal false, Setting.captcha_enable?
+    Setting.captcha_enable = "true"
+    assert_equal true, Setting.captcha_enable
+    assert_equal true, Setting.captcha_enable?
+    Setting.captcha_enable = 0
+    assert_equal false, Setting.captcha_enable
+    assert_equal false, Setting.captcha_enable?
+    Setting.captcha_enable = 1
+    assert_equal true, Setting.captcha_enable
+    assert_equal true, Setting.captcha_enable?
+    Setting.captcha_enable = false
+    assert_equal false, Setting.captcha_enable
+    assert_equal false, Setting.captcha_enable?
+    Setting.captcha_enable = true
+    assert_equal true, Setting.captcha_enable
+    assert_equal true, Setting.captcha_enable?
+  end
+
   test "string value in db compatible" do
     # array
     direct_update_record(:admin_emails, "foo@gmail.com,bar@dar.com\naaa@bbb.com")

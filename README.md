@@ -1,4 +1,4 @@
-# Rails Settings Cached
+## Rails Settings Cached
 
 This a plugin that makes managing a table of
 global key, value pairs easy. Think of it like a global Hash stored in your database,
@@ -130,6 +130,28 @@ irb > Setting.notification_options
 }
 ```
 
+## Readonly field
+
+Some times you may need use Setting before Rails initialize, for example `config/devise.rb`
+
+```rb
+Devise.setup do |config|
+  if Setting.omniauth_google_client_id.present?
+    config.omniauth :google_oauth2, Setting.omniauth_google_client_id, Setting.omniauth_google_client_secret
+  end
+end
+```
+
+In this case, you must define the `readonly` field:
+
+```rb
+class Setting < RailsSettings::Base
+  # cache_prefix { "v1" }
+  field :omniauth_google_client_id, default: ENV["OMNIAUTH_GOOGLE_CLIENT_ID"], readonly: true
+  field :omniauth_google_client_secret, default: ENV["OMNIAUTH_GOOGLE_CLIENT_SECRET"], readonly: true
+end
+```
+
 ### Caching flow:
 
 ```
@@ -152,6 +174,16 @@ Some times you may need to force update cache, now you can use `cache_prefix`
 class Setting < RailsSettings::Base
   cache_prefix { "you-prefix" }
   ...
+end
+```
+
+In testing, you need add `Setting.clear_cache` for each Test case:
+
+```rb
+class ActiveSupport::TestCase
+  teardown do
+    Setting.clear_cache
+  end
 end
 ```
 

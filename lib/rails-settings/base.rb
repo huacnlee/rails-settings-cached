@@ -17,12 +17,16 @@ module RailsSettings
       self[:value] = new_value.to_yaml
     end
 
-    def expire_cache
-      Thread.current[:rails_settings_all_settings] = nil
-      Rails.cache.delete(self.class.cache_key)
+    def clear_cache
+      self.class.clear_cache
     end
 
     class << self
+      def clear_cache
+        Thread.current[:rails_settings_all_settings] = nil
+        Rails.cache.delete(self.cache_key)
+      end
+
       def field(key, **opts)
         _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly])
       end
@@ -74,8 +78,7 @@ module RailsSettings
 
           if type == :boolean
             self.class.define_method("#{key}?") do
-              val = self.send(:_value_of, key)
-              val == "true" || val == "1"
+              self.send(key)
             end
           end
         end

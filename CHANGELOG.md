@@ -1,7 +1,3 @@
-## 2.0.1
-
-- Allow use readonly field before Rails initailze, for example, use Setting.omniauth_google_client_id in `config/initializer/devise.rb`;
-
 ## 2.0.0
 
 > 🚨 BREAK CHANGES WARNING:
