@@ -1,14 +1,14 @@
 ## Rails Settings Cached
 
 This a plugin that makes managing a table of
-global key, value pairs easy. Think of it like a global Hash stored in your database,
+а global key, value pairs easy. Think of it like a global Hash stored in your database,
 that uses simple ActiveRecord like methods for manipulation. Keep track of any global
-setting that you dont want to hard code into your rails app. You can store any kind
+setting that you don't want to hard code into your rails app. You can store any kind
 of object. Strings, numbers, arrays, or any object.
 
 > 🚨 BREAK CHANGES WARNING:
-> rails-settings-cached 2.x has redesign the API, the new version will compatible with the stored setting values by older version.
-> When you wants to upgrade 2.x, you must read the README again, and follow guides to change your Setting model.
+> rails-settings-cached 2.x has redesigned the API, the new version will compatible with the stored setting values by an older version.
+> When you want to upgrade 2.x, you must read the README again, and follow guides to change your Setting model.
 
 ## Status
 
@@ -59,7 +59,7 @@ class Setting < RailsSettings::Base
 end
 ```
 
-You must use `field` method to statement the setting keys, otherwice you can't use it.
+You must use `field` method to statement the setting keys, otherwise you can't use it.
 
 Now just put that migration in the database with:
 
@@ -69,7 +69,7 @@ rake db:migrate
 
 ## Usage
 
-The syntax is easy.  First, lets create some settings to keep track of:
+The syntax is easy.  First, let's create some settings to keep track of:
 
 ```ruby
 irb > Setting.host
@@ -162,9 +162,9 @@ Setting.host -> Check Cache -> Exist - Get value of key for cache -> Return
                 Return default value or nil
 ```
 
-In each Setting keys call, we will load the cache/db and save in Thread.current for avoid hit cache/db.
+In each Setting keys call, we will load the cache/db and save in `Thread.current` to avoid hit cache/db.
 
-Each key update will expires the cache, so do not add some frequent update key.
+Each key update will expire the cache, so do not add some frequent update key.
 
 ## Change cache key
 
@@ -189,9 +189,9 @@ end
 
 -----
 
-## How to manage Settings in admin interface?
+## How to manage Settings in the admin interface?
 
-If you want create an admin interface to editing the Settings, you can try methods in follow:
+If you want to create an admin interface to editing the Settings, you can try methods in following:
 
 config/routes.rb
 
