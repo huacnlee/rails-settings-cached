@@ -261,6 +261,10 @@ app/views/admin/settings/show.html.erb
 <% end %>
 ```
 
-## Use case:
+## Use cases:
 
 - [ruby-china/ruby-china](https://github.com/ruby-china/ruby-china)
+- [thebluedoc/bluedoc](https://github.com/thebluedoc/bluedoc/blob/master/app/models/setting.rb)
+- [tootsuite/mastodon](https://github.com/tootsuite/mastodon)
+- [helpyio/helpy](https://github.com/helpyio/helpy)
+
