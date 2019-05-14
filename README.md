@@ -9,6 +9,7 @@ of object. Strings, numbers, arrays, or any object.
 > 🚨 BREAK CHANGES WARNING:
 > rails-settings-cached 2.x has redesigned the API, the new version will compatible with the stored setting values by an older version.
 > When you want to upgrade 2.x, you must read the README again, and follow guides to change your Setting model.
+> 0.x stable branch: https://github.com/huacnlee/rails-settings-cached/tree/0.x
 
 ## Status
 
