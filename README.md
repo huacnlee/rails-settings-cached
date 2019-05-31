@@ -20,7 +20,7 @@ of object. Strings, numbers, arrays, or any object.
 Edit your Gemfile:
 
 ```ruby
-gem "rails-settings-cached"
+gem "rails-settings-cached", "~> 2.0"
 ```
 
 Generate your settings:
