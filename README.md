@@ -133,7 +133,7 @@ irb > Setting.notification_options
 
 ## Readonly field
 
-Some times you may need use Setting before Rails initialize, for example `config/devise.rb`
+Sometimes you may need to use Setting before Rails is initialized, for example `config/devise.rb`
 
 ```rb
 Devise.setup do |config|

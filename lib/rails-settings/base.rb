@@ -115,7 +115,7 @@ module RailsSettings
         end
 
         def _all_settings
-          raise "You can use settings before Rails initialize." unless rails_initialized?
+          raise "You cannot use settings before Rails initialize." unless rails_initialized?
           RequestStore.store[:rails_settings_all_settings] ||= begin
             Rails.cache.fetch(self.cache_key, expires_in: 1.week) do
               vars = unscoped.select("var, value")
