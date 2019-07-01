@@ -261,6 +261,72 @@ app/views/admin/settings/show.html.erb
 <% end %>
 ```
 
+##  Backward compatible to support 0.x scoped settings
+
+You may used the scoped setting feature in 0.x version. Before you upgrade rails-settings-cached 2.x, you must follow this guide to backward compatible it.
+
+For example:
+
+```rb
+class User < ApplicationRecord
+  include RailsSettings::Extend
+end
+
+@user.settings.color = "red"
+@user.settings.foo = 123
+```
+
+create `app/models/concerns/scoped_setting.rb`
+
+```rb
+module ScopedSetting
+  extend ActiveSupport::Concern
+
+  included do
+    has_many :settings, as: :thing
+  end
+
+  class_methods do
+    def scoped_field(name, default: nil)
+      define_method(name) do
+        obj = settings.where(var: name).take || settings.new(var: name, value: default)
+        obj.value
+      end
+
+      define_method("#{name}=") do |val|
+        record = settings.where(var: name).take || settings.new(var: name)
+        record.value = val
+        record.save!
+
+        val
+      end
+    end
+  end
+end
+```
+
+Now include it for your model:
+
+```rb
+class User < ApplicationRecord
+  include ScopedSetting
+
+  scoped_field :color, default: ""
+  scoped_field :foo, default: 0
+end
+```
+
+Now you must to find project with ".setting." for replace with:
+
+Same values will fetch from the `settings` table.
+
+```rb
+@user.color = "red"
+@user.color # => "red"
+@user.foo = 123
+@user.foo # =>
+```
+
 ## Use cases:
 
 - [ruby-china/ruby-china](https://github.com/ruby-china/ruby-china)
