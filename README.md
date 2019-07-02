@@ -163,7 +163,7 @@ Setting.host -> Check Cache -> Exist - Get value of key for cache -> Return
                 Return default value or nil
 ```
 
-In each Setting keys call, we will load the cache/db and save in `Thread.current` to avoid hit cache/db.
+In each Setting keys call, we will load the cache/db and save in [RequestStore](https://github.com/steveklabnik/request_store) to avoid hit cache/db.
 
 Each key update will expire the cache, so do not add some frequent update key.
 
