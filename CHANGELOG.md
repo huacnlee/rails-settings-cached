@@ -1,3 +1,7 @@
+## 2.0.4
+
+- Fix #166 avoid define method to super class.
+
 ## 2.0.0
 
 > 🚨 BREAK CHANGES WARNING:
