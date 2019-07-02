@@ -46,11 +46,11 @@ module RailsSettings
       private
         def _define_field(key, default: nil, type: :string, readonly: false)
           if readonly
-            self.class.define_method(key) do
+            define_singleton_method(key) do
               self.send(:_covert_string_to_typeof_value, type, default)
             end
           else
-            self.class.define_method(key) do
+            define_singleton_method(key) do
               val = self.send(:_value_of, key)
               result = nil
               if !val.nil?
@@ -65,7 +65,7 @@ module RailsSettings
               result
             end
 
-            self.class.define_method("#{key}=") do |value|
+            define_singleton_method("#{key}=") do |value|
               var_name = key.to_s
 
               record = find_by(var: var_name) || new(var: var_name)
@@ -79,7 +79,7 @@ module RailsSettings
           end
 
           if type == :boolean
-            self.class.define_method("#{key}?") do
+            define_singleton_method("#{key}?") do
               self.send(key)
             end
           end
