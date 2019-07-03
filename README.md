@@ -51,6 +51,8 @@ class Setting < RailsSettings::Base
   field :readonly_item, type: :integer, default: 100, readonly: true
   field :user_limits, type: :integer, default: 20
   field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
+  # Override array separator, default: /[\n,]/ split with \n or comma.
+  field :tips, type: :array, separator: /[\n]+/
   field :captcha_enable, type: :boolean, default: 1
   field :notification_options, type: :hash, default: {
     send_all: true,

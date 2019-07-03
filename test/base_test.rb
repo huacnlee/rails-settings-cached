@@ -9,7 +9,7 @@ class BaseTest < ActiveSupport::TestCase
 
   def direct_update_record(var, value)
     record = find_value(var) || Setting.new(var: var)
-    record[:value] = value.to_s
+    record[:value] = YAML.dump(value)
     record.save!
   end
 
@@ -147,6 +147,7 @@ class BaseTest < ActiveSupport::TestCase
   test "string value in db compatible" do
     # array
     direct_update_record(:admin_emails, "foo@gmail.com,bar@dar.com\naaa@bbb.com")
+    puts Setting.admin_emails.inspect
     assert_equal 3, Setting.admin_emails.length
     assert_kind_of Array, Setting.admin_emails
     assert_equal %w[foo@gmail.com bar@dar.com aaa@bbb.com], Setting.admin_emails
@@ -165,5 +166,21 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal true, Setting.captcha_enable
     direct_update_record(:captcha_enable, "1")
     assert_equal true, Setting.captcha_enable
+  end
+
+  test "array with separator" do
+    value = <<~TIP
+    Hello this is first line, and have comma.
+    This is second line.
+    TIP
+    direct_update_record(:tips, value)
+
+    assert_equal 2, Setting.tips.length
+    assert_equal "Hello this is first line, and have comma.", Setting.tips[0]
+    assert_equal "This is second line.", Setting.tips[1]
+
+    value = "Ruby Rails,GitHub"
+    direct_update_record(:default_tags, value)
+    assert_equal %w[Ruby Rails GitHub], Setting.default_tags
   end
 end

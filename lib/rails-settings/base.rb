@@ -6,7 +6,7 @@ module RailsSettings
   class Base < ActiveRecord::Base
     class SettingNotFound < RuntimeError; end
 
-    SEPARATOR_REGEXP = /[\s,]/
+    SEPARATOR_REGEXP = /[\n,]+/
     self.table_name = table_name_prefix + "settings"
 
     # get the value field, YAML decoded
@@ -30,7 +30,7 @@ module RailsSettings
       end
 
       def field(key, **opts)
-        _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly])
+        _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator])
       end
 
       def cache_prefix(&block)
@@ -44,10 +44,10 @@ module RailsSettings
       end
 
       private
-        def _define_field(key, default: nil, type: :string, readonly: false)
+        def _define_field(key, default: nil, type: :string, readonly: false, separator: nil)
           if readonly
             define_singleton_method(key) do
-              self.send(:_covert_string_to_typeof_value, type, default)
+              self.send(:_covert_string_to_typeof_value, type, default, separator: separator)
             end
           else
             define_singleton_method(key) do
@@ -60,7 +60,7 @@ module RailsSettings
                 result = default.call if default.is_a?(Proc)
               end
 
-              result = self.send(:_covert_string_to_typeof_value, type, result)
+              result = self.send(:_covert_string_to_typeof_value, type, result, separator: separator)
 
               result
             end
@@ -69,7 +69,7 @@ module RailsSettings
               var_name = key.to_s
 
               record = find_by(var: var_name) || new(var: var_name)
-              value = self.send(:_covert_string_to_typeof_value, type, value)
+              value = self.send(:_covert_string_to_typeof_value, type, value, separator: separator)
 
               record.value = value
               record.save!
@@ -85,14 +85,14 @@ module RailsSettings
           end
         end
 
-        def _covert_string_to_typeof_value(type, value)
+        def _covert_string_to_typeof_value(type, value, separator: nil)
           return value unless value.is_a?(String) || value.is_a?(Integer)
 
           case type
           when :boolean
             return value == "true" || value == "1" || value == 1 || value == true
           when :array
-            return value.split(SEPARATOR_REGEXP).reject { |str| str.empty? }
+            return value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }
           when :hash
             value = YAML.load(value).to_hash rescue {}
             value.deep_stringify_keys!
