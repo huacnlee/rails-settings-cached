@@ -147,7 +147,7 @@ class BaseTest < ActiveSupport::TestCase
   test "string value in db compatible" do
     # array
     direct_update_record(:admin_emails, "foo@gmail.com,bar@dar.com\naaa@bbb.com")
-    puts Setting.admin_emails.inspect
+
     assert_equal 3, Setting.admin_emails.length
     assert_kind_of Array, Setting.admin_emails
     assert_equal %w[foo@gmail.com bar@dar.com aaa@bbb.com], Setting.admin_emails

@@ -1,3 +1,17 @@
+## 2.1.0
+
+- Fix default array separator, remove "space", now only: `\n` and `,`.
+- Add `separator` option for speical the separator for Array type.
+
+  For example:
+
+  ```rb
+  class Setting < RailsSettings::Base
+    field :tips, type: :array, separator: /[\n]+/
+    field :keywords, type: :array, separator: ","
+  end
+  ```
+
 ## 2.0.4
 
 - Fix #166 avoid define method to super class.
