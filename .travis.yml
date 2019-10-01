@@ -1,10 +1,12 @@
 language: ruby
 rvm:
   - 2.5.2
+  - 2.6.5
 gemfile:
   - Gemfile
   - gemfiles/Gemfile-5-0
   - gemfiles/Gemfile-5-2
+  - gemfiles/Gemfile-6-0
 before_script: bundle install
 script:
  - bundle exec rake test
