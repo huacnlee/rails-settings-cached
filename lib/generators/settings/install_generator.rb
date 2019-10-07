@@ -32,12 +32,16 @@ module Settings
       migration_template "migration.rb", "db/migrate/create_settings.rb", migration_version: migration_version
     end
 
-    def rails5?
-      Rails.version.start_with? "5"
+    def rails_version_major
+      Rails::VERSION::MAJOR
+    end
+
+    def rails_version_minor
+      Rails::VERSION::MINOR
     end
 
     def migration_version
-      "[#{Rails::VERSION::MAJOR}.#{Rails::VERSION::MINOR}]" if rails5?
+      "[#{rails_version_major}.#{rails_version_minor}]" if rails_version_major >= 5
     end
   end
 end
