@@ -212,17 +212,12 @@ module Admin
   class SettingsController < ApplicationController
     before_action :get_setting, only: [:edit, :update]
 
-    def show
-    end
-
     def create
       setting_params.keys.each do |key|
-        next if key.to_s == "site_logo"
         Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
       end
-      redirect_to admin_settings_path(notice: "Setting was successfully updated.")
+      redirect_to settings_path, notice: "Setting was successfully updated."
     end
-
 
     private
       def setting_params
@@ -259,7 +254,8 @@ app/views/admin/settings/show.html.erb
     <%= f.text_area :notification_options, value: YAML.dump(Setting.notification_options), class: "form-control", style: "height: 180px;"  %>
     <div class="form-text">
       Use YAML format to config the SMTP_html
-    </details>
+    </div>
+  </div>
 <% end %>
 ```
 
