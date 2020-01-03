@@ -90,15 +90,15 @@ module RailsSettings
 
           case type
           when :boolean
-            return value == "true" || value == "1" || value == 1 || value == true
+            value == "true" || value == "1" || value == 1 || value == true
           when :array
-            return value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }
+            value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }
           when :hash
             value = YAML.load(value).to_hash rescue {}
             value.deep_stringify_keys!
-            return value
+            value
           when :integer
-            return value.to_i
+            value.to_i
           else
             value
           end
