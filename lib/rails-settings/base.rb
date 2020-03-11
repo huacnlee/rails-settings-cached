@@ -6,8 +6,10 @@ module RailsSettings
   class Base < ActiveRecord::Base
     class SettingNotFound < RuntimeError; end
 
-    SEPARATOR_REGEXP = /[\n,]+/
+    SEPARATOR_REGEXP = /[\n,;]+/
     self.table_name = table_name_prefix + "settings"
+
+    @@setting_names = []
 
     # get the value field, YAML decoded
     def value
@@ -30,6 +32,7 @@ module RailsSettings
       end
 
       def field(key, **opts)
+        @@setting_names << key.to_s
         _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator])
       end
 
@@ -43,7 +46,12 @@ module RailsSettings
         scope.join("/")
       end
 
+      def setting_names
+        @@setting_names
+      end
+
       private
+
         def _define_field(key, default: nil, type: :string, readonly: false, separator: nil)
           if readonly
             define_singleton_method(key) do
@@ -86,19 +94,23 @@ module RailsSettings
         end
 
         def _covert_string_to_typeof_value(type, value, separator: nil)
-          return value unless value.is_a?(String) || value.is_a?(Integer)
+          return value unless [String, Integer, Float, BigDecimal].include?(value.class)
 
           case type
           when :boolean
             value == "true" || value == "1" || value == 1 || value == true
           when :array
-            value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }
+            value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }.map(&:strip)
           when :hash
-            value = YAML.load(value).to_hash rescue {}
+            value = YAML.load(value).to_h rescue eval(value).to_h rescue {}
             value.deep_stringify_keys!
             value
           when :integer
             value.to_i
+          when :float
+            value.to_f
+          when :big_decimal
+            value.to_d
           else
             value
           end
