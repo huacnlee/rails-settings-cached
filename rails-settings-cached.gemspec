@@ -32,4 +32,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "simplecov"
   s.add_development_dependency "minitest"
   s.add_development_dependency "codecov"
+  s.add_development_dependency "byebug"
 end

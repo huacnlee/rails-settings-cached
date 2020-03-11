@@ -65,6 +65,7 @@ GEM
       zeitwerk (~> 2.1, >= 2.1.4)
     ast (2.4.0)
     builder (3.2.3)
+    byebug (11.1.1)
     codecov (0.1.9)
       json
       simplecov
@@ -168,6 +169,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  byebug
   codecov
   minitest
   rails (= 6.0.0.rc1)
@@ -177,4 +179,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
