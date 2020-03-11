@@ -332,3 +332,10 @@ Same values will fetch from the `settings` table.
 - [tootsuite/mastodon](https://github.com/tootsuite/mastodon)
 - [helpyio/helpy](https://github.com/helpyio/helpy)
 
+
+## Run minitest:
+
+```cmd
+bundle
+rake test
+```
