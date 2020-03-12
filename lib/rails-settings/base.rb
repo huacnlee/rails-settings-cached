@@ -9,8 +9,6 @@ module RailsSettings
     SEPARATOR_REGEXP = /[\n,;]+/
     self.table_name = table_name_prefix + "settings"
 
-    @@setting_names = []
-
     # get the value field, YAML decoded
     def value
       YAML.load(self[:value]) if self[:value].present?
@@ -32,7 +30,8 @@ module RailsSettings
       end
 
       def field(key, **opts)
-        @@setting_names << key.to_s
+        @keys ||= []
+        @keys << key.to_s
         _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator])
       end
 
@@ -46,8 +45,8 @@ module RailsSettings
         scope.join("/")
       end
 
-      def setting_names
-        @@setting_names
+      def keys
+        @keys
       end
 
       private

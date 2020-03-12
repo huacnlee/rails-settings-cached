@@ -36,11 +36,11 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 11, Setting.setting_names.size
-    assert_includes(Setting.setting_names, "host")
-    assert_includes(Setting.setting_names, "readonly_item")
-    assert_includes(Setting.setting_names, "default_tags")
-    assert_includes(Setting.setting_names, "omniauth_google_options")
+    assert_equal 11, Setting.keys.size
+    assert_includes(Setting.keys, "host")
+    assert_includes(Setting.keys, "readonly_item")
+    assert_includes(Setting.keys, "default_tags")
+    assert_includes(Setting.keys, "omniauth_google_options")
   end
 
   test "not exist field" do
