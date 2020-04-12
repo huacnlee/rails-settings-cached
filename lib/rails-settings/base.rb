@@ -47,7 +47,7 @@ module RailsSettings
         def _define_field(key, default: nil, type: :string, readonly: false, separator: nil)
           if readonly
             define_singleton_method(key) do
-              self.send(:_covert_string_to_typeof_value, type, default, separator: separator)
+              self.send(:_convert_string_to_typeof_value, type, default, separator: separator)
             end
           else
             define_singleton_method(key) do
@@ -60,7 +60,7 @@ module RailsSettings
                 result = default.call if default.is_a?(Proc)
               end
 
-              result = self.send(:_covert_string_to_typeof_value, type, result, separator: separator)
+              result = self.send(:_convert_string_to_typeof_value, type, result, separator: separator)
 
               result
             end
@@ -69,7 +69,7 @@ module RailsSettings
               var_name = key.to_s
 
               record = find_by(var: var_name) || new(var: var_name)
-              value = self.send(:_covert_string_to_typeof_value, type, value, separator: separator)
+              value = self.send(:_convert_string_to_typeof_value, type, value, separator: separator)
 
               record.value = value
               record.save!
@@ -85,7 +85,7 @@ module RailsSettings
           end
         end
 
-        def _covert_string_to_typeof_value(type, value, separator: nil)
+        def _convert_string_to_typeof_value(type, value, separator: nil)
           return value unless value.is_a?(String) || value.is_a?(Integer)
 
           case type
