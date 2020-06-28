@@ -19,4 +19,6 @@ class Setting < RailsSettings::Base
     client_id: "the-client-id",
     client_secret: "the-client-secret",
   }, type: :string, readonly: true
+  field :float_item, type: :float, default: 7
+  field :big_decimal_item, type: :big_decimal, default: 9
 end
