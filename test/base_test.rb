@@ -35,6 +35,14 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal({}, Setting.send(:_all_settings))
   end
 
+  test "setting_keys" do
+    assert_equal 11, Setting.keys.size
+    assert_includes(Setting.keys, "host")
+    assert_includes(Setting.keys, "readonly_item")
+    assert_includes(Setting.keys, "default_tags")
+    assert_includes(Setting.keys, "omniauth_google_options")
+  end
+
   test "not exist field" do
     assert_raise(NoMethodError) { Setting.not_exist_method  }
   end
@@ -65,16 +73,89 @@ class BaseTest < ActiveSupport::TestCase
 
   test "integer field" do
     assert_equal 1, Setting.user_limits
+    assert_instance_of Integer, Setting.user_limits
+    assert_no_record :user_limits
+
     Setting.user_limits = 12
     assert_equal 12, Setting.user_limits
+    assert_instance_of Integer, Setting.user_limits
     assert_record_value :user_limits, 12
+
+    Setting.user_limits = "27"
+    assert_equal 27, Setting.user_limits
+    assert_instance_of Integer, Setting.user_limits
+    assert_record_value :user_limits, 27
+
+    Setting.user_limits = 2.7
+    assert_equal 2, Setting.user_limits
+    assert_instance_of Integer, Setting.user_limits
+    assert_record_value :user_limits, 2
+  end
+
+  test "float field" do
+    assert_equal 7, Setting.float_item
+    assert_instance_of Float, Setting.float_item
+    assert_no_record :float_item
+
+    Setting.float_item = 9
+    assert_equal 9, Setting.float_item
+    assert_instance_of Float, Setting.float_item
+    assert_record_value :float_item, 9.to_f
+
+    Setting.float_item = 2.9
+    assert_equal 2.9, Setting.float_item
+    assert_instance_of Float, Setting.float_item
+    assert_record_value :float_item, 2.9
+
+    Setting.float_item = "2.9"
+    assert_equal 2.9, Setting.float_item
+    assert_instance_of Float, Setting.float_item
+    assert_record_value :float_item, "2.9".to_f
+  end
+
+  test "big decimal field" do
+    assert_equal 9, Setting.big_decimal_item
+    assert_instance_of BigDecimal, Setting.big_decimal_item
+    assert_no_record :big_decimal_item
+
+    Setting.big_decimal_item = 7
+    assert_equal 7, Setting.big_decimal_item
+    assert_instance_of BigDecimal, Setting.big_decimal_item
+    assert_record_value :big_decimal_item, 7.to_d
+
+    Setting.big_decimal_item = 2.9
+    assert_equal 2.9, Setting.big_decimal_item
+    assert_instance_of BigDecimal, Setting.big_decimal_item
+    assert_record_value :big_decimal_item, 2.9.to_d
+
+    Setting.big_decimal_item = "2.9"
+    assert_equal 2.9, Setting.big_decimal_item
+    assert_instance_of BigDecimal, Setting.big_decimal_item
+    assert_record_value :big_decimal_item, "2.9".to_d
   end
 
   test "array field" do
     assert_equal %w[admin@rubyonrails.org], Setting.admin_emails
     assert_no_record :admin_emails
+
     new_emails = %w[admin@rubyonrails.org huacnlee@gmail.com]
+    Setting.admin_emails = new_emails
+    assert_equal new_emails, Setting.admin_emails
+    assert_record_value :admin_emails, new_emails
+
     Setting.admin_emails = new_emails.join("\n")
+    assert_equal new_emails, Setting.admin_emails
+    assert_record_value :admin_emails, new_emails
+
+    Setting.admin_emails = new_emails.join(",")
+    assert_equal new_emails, Setting.admin_emails
+    assert_record_value :admin_emails, new_emails
+
+    Setting.admin_emails = new_emails.join(";")
+    assert_equal new_emails, Setting.admin_emails
+    assert_record_value :admin_emails, new_emails
+
+    Setting.admin_emails = new_emails.join(" , ")
     assert_equal new_emails, Setting.admin_emails
     assert_record_value :admin_emails, new_emails
   end
@@ -112,6 +193,32 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal 32, Setting.smtp_settings["age"]
     assert_equal "Jason Lee", Setting.smtp_settings[:name]
     assert_equal "Jason Lee", Setting.smtp_settings["name"]
+    assert_record_value :smtp_settings, new_value
+
+    new_value = {
+      "sym" => :symbol,
+      "str" => "string",
+      "num" => 27.72
+    }
+    Setting.smtp_settings = new_value
+    assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
+    assert_equal :symbol, Setting.smtp_settings[:sym]
+    assert_equal "string", Setting.smtp_settings["str"]
+    assert_equal 27.72, Setting.smtp_settings["num"]
+    assert_record_value :smtp_settings, new_value
+
+    Setting.smtp_settings = new_value.to_s
+    assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
+    assert_equal :symbol, Setting.smtp_settings[:sym]
+    assert_equal "string", Setting.smtp_settings["str"]
+    assert_equal 27.72, Setting.smtp_settings["num"]
+    assert_record_value :smtp_settings, new_value
+
+    Setting.smtp_settings = new_value.to_yaml
+    assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
+    assert_equal :symbol, Setting.smtp_settings[:sym]
+    assert_equal "string", Setting.smtp_settings["str"]
+    assert_equal 27.72, Setting.smtp_settings["num"]
     assert_record_value :smtp_settings, new_value
   end
 
