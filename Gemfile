@@ -3,4 +3,4 @@
 source "https://rubygems.org"
 gemspec
 
-gem "rails", "6.0.0.rc1"
+gem "rails", "6.0.0"

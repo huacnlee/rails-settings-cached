@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-$:.push File.expand_path("../lib", __FILE__)
+$LOAD_PATH.push File.expand_path("lib", __dir__)
 require "rails-settings/version"
 
 Gem::Specification.new do |s|
@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 4.2.0"
   s.add_dependency "request_store"
 
-  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "codecov"
+  s.add_development_dependency "minitest"
   s.add_development_dependency "rubocop"
   s.add_development_dependency "simplecov"
-  s.add_development_dependency "minitest"
-  s.add_development_dependency "codecov"
+  s.add_development_dependency "sqlite3"
 end

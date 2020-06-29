@@ -1,3 +1,8 @@
+## 2.2.0
+
+- Improve setting to support Float and BigDecimal.
+- Add `Setting.keys` methods to get all keys.
+
 ## 2.1.0
 
 - Fix default array separator, remove "space", now only: `\n` and `,`.

@@ -50,6 +50,7 @@ class Setting < RailsSettings::Base
   field :host, default: "http://example.com"
   field :readonly_item, type: :integer, default: 100, readonly: true
   field :user_limits, type: :integer, default: 20
+  field :exchange_rate, type: :float, default: 0.123
   field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
   # Override array separator, default: /[\n,]/ split with \n or comma.
   field :tips, type: :array, separator: /[\n]+/
@@ -327,14 +328,7 @@ Same values will fetch from the `settings` table.
 
 ## Use cases:
 
-- [ruby-china/ruby-china](https://github.com/ruby-china/ruby-china)
+- [ruby-china/homeland](https://github.com/ruby-china/homeland)
 - [thebluedoc/bluedoc](https://github.com/thebluedoc/bluedoc/blob/master/app/models/setting.rb)
 - [tootsuite/mastodon](https://github.com/tootsuite/mastodon)
 - [helpyio/helpy](https://github.com/helpyio/helpy)
-
-## Run minitest:
-
-```cmd
-bundle
-bundle exec rake test
-```
