@@ -328,7 +328,13 @@ Same values will fetch from the `settings` table.
 
 ## Use cases:
 
-- [ruby-china/homeland](https://github.com/ruby-china/homeland)
-- [thebluedoc/bluedoc](https://github.com/thebluedoc/bluedoc/blob/master/app/models/setting.rb)
-- [tootsuite/mastodon](https://github.com/tootsuite/mastodon)
-- [helpyio/helpy](https://github.com/helpyio/helpy)
+- [ruby-china/homeland](https://github.com/ruby-china/homeland) - master
+- [forem/forem](https://github.com/forem/forem) - 2.x
+- [siwapp/siwapp](https://github.com/siwapp/siwapp) - 2.x
+- [aidewoode/black_candy](https://github.com/aidewoode/black_candy) - 2.x
+- [thebluedoc/bluedoc](https://github.com/thebluedoc/bluedoc/blob/master/app/models/setting.rb) - 2.x
+- [tootsuite/mastodon](https://github.com/tootsuite/mastodon) - 0.6.x
+- [helpyio/helpy](https://github.com/helpyio/helpy) - 0.5.x
+
+
+And more than [1K repositories](https://github.com/huacnlee/rails-settings-cached/network/dependents) used.
