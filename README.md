@@ -10,7 +10,6 @@ of object. Strings, numbers, arrays, or any object.
 > rails-settings-cached 2.x has redesigned the API, the new version will compatible with the stored setting values by an older version.
 > When you want to upgrade 2.x, you must read the README again, and follow guides to change your Setting model.
 > 0.x stable branch: https://github.com/huacnlee/rails-settings-cached/tree/0.x
-- [Backward compatible to support 0.x scoped settings](docs/backward-compatible-to-scoped-settings)
 
 ## Status
 
@@ -260,6 +259,10 @@ app/views/admin/settings/show.html.erb
   </div>
 <% end %>
 ```
+
+## Other documents
+
+- [Backward compatible to support 0.x scoped settings](docs/backward-compatible-to-scoped-settings.md)
 
 ## Use cases:
 
