@@ -201,7 +201,7 @@ config/routes.rb
 
 ```rb
 namespace :admin do
-  resources :settings
+  resource :settings
 end
 ```
 
@@ -256,6 +256,10 @@ app/views/admin/settings/show.html.erb
     <div class="form-text">
       Use YAML format to config the SMTP_html
     </div>
+  </div>
+  
+  <div>
+    <%= f.submit 'Update Settings' %>
   </div>
 <% end %>
 ```
