@@ -29,13 +29,7 @@ Generate your settings:
 $ rails g settings:install
 ```
 
-If you want custom model name:
-
-```bash
-$ rails g settings:install
-```
-
-Or use a custom name:
+If you want custom model name
 
 ```bash
 $ rails g settings:install SiteConfig
@@ -267,6 +261,9 @@ app/views/admin/settings/show.html.erb
 ## Other documents
 
 - [Backward compatible to support 0.x scoped settings](docs/backward-compatible-to-scoped-settings.md)
+
+## Gotchas
+- `:name` is a reserved and should not be used a a field on your model
 
 ## Use cases:
 
