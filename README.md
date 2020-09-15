@@ -13,14 +13,14 @@ of object. Strings, numbers, arrays, or any object.
 
 ## Status
 
-[![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![CI Status](https://travis-ci.org/huacnlee/rails-settings-cached.svg)](http://travis-ci.org/huacnlee/rails-settings-cached) [![Code Climate](https://codeclimate.com/github/huacnlee/rails-settings-cached/badges/gpa.svg)](https://codeclimate.com/github/huacnlee/rails-settings-cached) [![codecov.io](https://codecov.io/github/huacnlee/rails-settings-cached/coverage.svg?branch=master)](https://codecov.io/github/huacnlee/rails-settings-cached?branch=master)
+[![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![CI Status](https://travis-ci.org/huacnlee/rails-settings-cached.svg)](http://travis-ci.org/huacnlee/rails-settings-cached) [![codecov.io](https://codecov.io/github/huacnlee/rails-settings-cached/coverage.svg?branch=master)](https://codecov.io/github/huacnlee/rails-settings-cached?branch=master)
 
 ## Setup
 
 Edit your Gemfile:
 
-```ruby
-gem "rails-settings-cached", "~> 2.0"
+```bash
+$ bundle add rails-settings-cached
 ```
 
 Generate your settings:
@@ -46,20 +46,26 @@ You will get `app/models/setting.rb`
 ```rb
 class Setting < RailsSettings::Base
   # cache_prefix { "v1" }
-
+  field :app_name, default: "Rails Settings Cache Demo"
   field :host, default: "http://example.com"
+  field :default_locale, default: "zh-CN"
   field :readonly_item, type: :integer, default: 100, readonly: true
   field :user_limits, type: :integer, default: 20
   field :exchange_rate, type: :float, default: 0.123
   field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
+  field :captcha_enable, type: :boolean, default: true
+
   # Override array separator, default: /[\n,]/ split with \n or comma.
   field :tips, type: :array, separator: /[\n]+/
-  field :captcha_enable, type: :boolean, default: 1
+
   field :notification_options, type: :hash, default: {
     send_all: true,
     logging: true,
     sender_email: "foo@bar.com"
   }
+
+  # lambda default value
+  field :welcome_message, type: :string, default: -> { "welcome to #{self.app_name}" }
 end
 ```
 
@@ -68,7 +74,7 @@ You must use `field` method to statement the setting keys, otherwise you can't u
 Now just put that migration in the database with:
 
 ```bash
-rake db:migrate
+$ rails db:migrate
 ```
 
 ## Usage
@@ -257,7 +263,7 @@ app/views/admin/settings/show.html.erb
       Use YAML format to config the SMTP_html
     </div>
   </div>
-  
+
   <div>
     <%= f.submit 'Update Settings' %>
   </div>
