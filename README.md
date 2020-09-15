@@ -1,4 +1,4 @@
-## Rails Settings Cached
+# Rails Settings Cached
 
 This a plugin that makes managing a table of
 а global key, value pairs easy. Think of it like a global Hash stored in your database,
@@ -6,16 +6,9 @@ that uses simple ActiveRecord like methods for manipulation. Keep track of any g
 setting that you don't want to hard code into your rails app. You can store any kind
 of object. Strings, numbers, arrays, or any object.
 
-> 🚨 BREAK CHANGES WARNING:
-> rails-settings-cached 2.x has redesigned the API, the new version will compatible with the stored setting values by an older version.
-> When you want to upgrade 2.x, you must read the README again, and follow guides to change your Setting model.
-> 0.x stable branch: https://github.com/huacnlee/rails-settings-cached/tree/0.x
-
-## Status
-
 [![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![CI Status](https://travis-ci.org/huacnlee/rails-settings-cached.svg)](http://travis-ci.org/huacnlee/rails-settings-cached) [![codecov.io](https://codecov.io/github/huacnlee/rails-settings-cached/coverage.svg?branch=master)](https://codecov.io/github/huacnlee/rails-settings-cached?branch=master)
 
-## Setup
+## Installation
 
 Edit your Gemfile:
 
@@ -27,18 +20,9 @@ Generate your settings:
 
 ```bash
 $ rails g settings:install
-```
 
-If you want custom model name:
-
-```bash
-$ rails g settings:install
-```
-
-Or use a custom name:
-
-```bash
-$ rails g settings:install SiteConfig
+# Or use a custom name:
+$ rails g settings:install AppConfig
 ```
 
 You will get `app/models/setting.rb`
@@ -79,7 +63,7 @@ $ rails db:migrate
 
 ## Usage
 
-The syntax is easy.  First, let's create some settings to keep track of:
+The syntax is easy. First, let's create some settings to keep track of:
 
 ```ruby
 irb > Setting.host
@@ -270,7 +254,12 @@ app/views/admin/settings/show.html.erb
 <% end %>
 ```
 
-## Other documents
+## Backward compatible
+
+> 🚨 BREAK CHANGES WARNING:
+> rails-settings-cached 2.x has redesigned the API, the new version will compatible with the stored setting values by an older version.
+> When you want to upgrade 2.x, you must read the README again, and follow guides to change your Setting model.
+> 0.x stable branch: https://github.com/huacnlee/rails-settings-cached/tree/0.x
 
 - [Backward compatible to support 0.x scoped settings](docs/backward-compatible-to-scoped-settings.md)
 
