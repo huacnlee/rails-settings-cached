@@ -254,7 +254,7 @@ app/views/admin/settings/show.html.erb
 <% end %>
 ```
 
-## Backward compatible
+## Scoped Settings
 
 > 🚨 BREAK CHANGES WARNING:
 > rails-settings-cached 2.x has redesigned the API, the new version will compatible with the stored setting values by an older version.
@@ -262,6 +262,25 @@ app/views/admin/settings/show.html.erb
 > 0.x stable branch: https://github.com/huacnlee/rails-settings-cached/tree/0.x
 
 - [Backward compatible to support 0.x scoped settings](docs/backward-compatible-to-scoped-settings.md)
+
+For new project / new user of rails-settings-cached. The [ActiveRecord::AttributeMethods::Serialization](https://api.rubyonrails.org/classes/ActiveRecord/AttributeMethods/Serialization/ClassMethods.html#method-i-serialize) is best choice.
+
+> This is reason of why rails-settings-cached 2.x removed **Scoped Settings** feature.
+
+For example:
+
+We wants a preferences setting for user.
+
+```rb
+class User < ActiveRecord::Base
+  serialize :preferences
+end
+
+@user = User.new
+@user.preferences[:receive_emails] = true
+@user.preferences[:public_email] = true
+@user.save
+```
 
 ## Use cases:
 
