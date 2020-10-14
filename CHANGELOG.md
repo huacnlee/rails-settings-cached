@@ -1,3 +1,7 @@
+## 2.2.1
+
+- Fix generator module name `Settings` conflict issue. #172
+
 ## 2.2.0
 
 - Improve setting to support Float and BigDecimal.
