@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
   s.homepage      = "https://github.com/huacnlee/rails-settings-cached"
   s.require_paths = ["lib"]
+  s.license = "MIT"
 
   s.required_ruby_version = ">= 2.5"
   s.summary = "Settings plugin for Rails that makes managing a table of global keys."

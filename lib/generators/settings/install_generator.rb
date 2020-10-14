@@ -3,14 +3,15 @@
 require "rails/generators"
 require "rails/generators/migration"
 
-module Settings
+module RailsSettings
   class InstallGenerator < Rails::Generators::NamedBase
+    namespace "settings:install"
     desc "Generate RailsSettings files."
     include Rails::Generators::Migration
 
     argument :name, type: :string, default: "setting"
 
-    source_root File.expand_path("../templates", __FILE__)
+    source_root File.expand_path("templates", __dir__)
 
     @@migrations = false
 
