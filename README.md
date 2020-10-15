@@ -30,8 +30,8 @@ You will get `app/models/setting.rb`
 ```rb
 class Setting < RailsSettings::Base
   # cache_prefix { "v1" }
-  field :app_name, default: "Rails Settings Cache Demo"
-  field :host, default: "http://example.com"
+  field :app_name, default: "Rails Settings"
+  field :host, default: "http://example.com", readonly: true
   field :default_locale, default: "zh-CN"
   field :readonly_item, type: :integer, default: 100, readonly: true
   field :user_limits, type: :integer, default: 20
@@ -68,9 +68,11 @@ The syntax is easy. First, let's create some settings to keep track of:
 ```ruby
 irb > Setting.host
 "http://example.com"
-irb > Setting.host = "https://your-host.com"
-irb > Setting.host
-"https://your-host.com"
+irb > Setting.app_name
+"Rails Settings"
+irb > Setting.app_name = "Rails Settings Cached"
+irb > Setting.app_name
+"Rails Settings Cached"
 
 irb > Setting.user_limits
 20
@@ -122,6 +124,31 @@ irb > Setting.notification_options
 {
   sender_email: "notice@rubyonrails.org"
 }
+```
+
+
+### Get defined fields
+
+> version 2.3+
+
+```rb
+# Get all keys
+Setting.keys
+=> ["app_name", "host", "default_locale", "readonly_item"]
+
+# Get editable keys
+Settng.editable_keys
+=> ["app_name", "default_locale"]
+
+# Get readonly keys
+Setting.readonly_keys
+=> ["host", "readonly_item"]
+
+# Get options of field
+Setting.get_field("host")
+=> { key: "host", type: :string, default: "http://example.com", readonly: true }
+Setting.get_field("app_name")
+=> { key: "app_name", type: :string, default: "Rails Settings", readonly: false }
 ```
 
 ## Readonly field

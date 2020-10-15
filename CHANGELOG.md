@@ -1,4 +1,15 @@
-## 2.3.0
+## 2.3.1
+
+- Add `get_field` method to get field option.
+
+```rb
+class Setting
+  field :admin_emails, type: :array, default: "huacnlee"
+end
+
+Setting.get_field(:admin_emails)
+=> { key: "admin_emails", type: :array, default: "huacnlee@gmail.com", readonly: false }
+```
 
 - Add `editable_keys` to get keys that allow to modify.
 - Add `readonly_keys` to get readonly keys.

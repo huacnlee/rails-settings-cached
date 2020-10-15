@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails-settings-cached (2.3.0)
+    rails-settings-cached (2.3.1)
       rails (>= 4.2.0)
       request_store
 
