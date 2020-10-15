@@ -209,6 +209,7 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal "Jason Lee", Setting.smtp_settings["name"]
     assert_record_value :smtp_settings, new_value
 
+    # JSON key
     new_value = {
       "sym" => :symbol,
       "str" => "string",
@@ -217,7 +218,9 @@ class BaseTest < ActiveSupport::TestCase
     Setting.smtp_settings = new_value
     assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
     assert_equal :symbol, Setting.smtp_settings[:sym]
+    assert_equal :symbol, Setting.smtp_settings["sym"]
     assert_equal "string", Setting.smtp_settings["str"]
+    assert_equal "string", Setting.smtp_settings[:str]
     assert_equal 27.72, Setting.smtp_settings["num"]
     assert_record_value :smtp_settings, new_value
 
