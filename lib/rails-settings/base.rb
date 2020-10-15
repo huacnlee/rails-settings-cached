@@ -32,8 +32,13 @@ module RailsSettings
       def field(key, **opts)
         @keys ||= []
         @readonly_keys ||= []
+        @editable_keys ||= []
         @keys << key.to_s
-        @readonly_keys << key.to_s if opts[:readonly]
+        if opts[:readonly]
+          @readonly_keys << key.to_s
+        else
+          @editable_keys << key.to_s
+        end
         _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator])
       end
 
@@ -49,6 +54,7 @@ module RailsSettings
 
       attr_reader :keys
       attr_reader :readonly_keys
+      attr_reader :editable_keys
 
       private
 

@@ -42,6 +42,10 @@ class BaseTest < ActiveSupport::TestCase
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
+    assert_equal 9, Setting.editable_keys.size
+    assert_includes(Setting.editable_keys, "host")
+    assert_includes(Setting.editable_keys, "default_tags")
+
     assert_equal 2, Setting.readonly_keys.size
     assert_includes(Setting.readonly_keys, "readonly_item")
     assert_includes(Setting.readonly_keys, "omniauth_google_options")
