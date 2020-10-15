@@ -1,3 +1,15 @@
+## 2.3.2
+
+- Fix hash type with indifferent access.
+
+```rb
+Setting.smtp_settings = { foo: 1, bar: 2 }
+Setting.smtp_settings[:foo]
+=> 1
+Setting.smtp_settings["foo"]
+=> 1
+```
+
 ## 2.3.1
 
 - Add `get_field` method to get field option.
