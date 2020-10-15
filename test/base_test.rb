@@ -224,19 +224,24 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal 27.72, Setting.smtp_settings["num"]
     assert_record_value :smtp_settings, new_value
 
+    Setting.find_by(var: :smtp_settings).update(value: new_value.to_json)
+    assert_equal({ "sym" => "symbol", "str" => "string", "num" => 27.72 }, Setting.smtp_settings)
+    assert_equal "symbol", Setting.smtp_settings[:sym]
+    assert_equal "symbol", Setting.smtp_settings["sym"]
+
     Setting.smtp_settings = new_value.to_s
     assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
     assert_equal :symbol, Setting.smtp_settings[:sym]
     assert_equal "string", Setting.smtp_settings["str"]
     assert_equal 27.72, Setting.smtp_settings["num"]
-    assert_record_value :smtp_settings, new_value
+    assert_record_value :smtp_settings, ActiveSupport::HashWithIndifferentAccess.new(new_value)
 
     Setting.smtp_settings = new_value.to_yaml
     assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
     assert_equal :symbol, Setting.smtp_settings[:sym]
     assert_equal "string", Setting.smtp_settings["str"]
     assert_equal 27.72, Setting.smtp_settings["num"]
-    assert_record_value :smtp_settings, new_value
+    assert_record_value :smtp_settings, ActiveSupport::HashWithIndifferentAccess.new(new_value)
   end
 
   test "boolean field" do

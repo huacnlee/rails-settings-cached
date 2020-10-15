@@ -121,15 +121,15 @@ module RailsSettings
         when :hash
           value = begin
                     begin
-                                          YAML.load(value).to_h
+                      YAML.load(value).to_h
                     rescue StandardError
                       eval(value).to_h
-                                        end
+                    end
                   rescue StandardError
                     {}
                   end
           value.deep_stringify_keys!
-          value
+          ActiveSupport::HashWithIndifferentAccess.new(value)
         when :integer
           value.to_i
         when :float
