@@ -30,16 +30,11 @@ module RailsSettings
       end
 
       def field(key, **opts)
-        @keys ||= []
-        @readonly_keys ||= []
-        @editable_keys ||= []
-        @keys << key.to_s
-        if opts[:readonly]
-          @readonly_keys << key.to_s
-        else
-          @editable_keys << key.to_s
-        end
         _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator])
+      end
+
+      def get_field(key)
+        @defined_fields.find { |field| field[:key] == key.to_s } || {}
       end
 
       def cache_prefix(&block)
@@ -52,13 +47,29 @@ module RailsSettings
         scope.join("/")
       end
 
-      attr_reader :keys
-      attr_reader :readonly_keys
-      attr_reader :editable_keys
+      def keys
+        @defined_fields.map { |field| field[:key] }
+      end
+
+      def editable_keys
+        @defined_fields.reject { |field| field[:readonly] }.map { |field| field[:key] }
+      end
+
+      def readonly_keys
+        @defined_fields.select { |field| field[:readonly] }.map { |field| field[:key] }
+      end
 
       private
 
       def _define_field(key, default: nil, type: :string, readonly: false, separator: nil)
+        @defined_fields ||= []
+        @defined_fields << {
+          key: key.to_s,
+          default: default,
+          type: type || :string,
+          readonly: readonly.nil? ? false : readonly
+        }
+
         if readonly
           define_singleton_method(key) do
             send(:_convert_string_to_typeof_value, type, default, separator: separator)

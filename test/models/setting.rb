@@ -18,7 +18,7 @@ class Setting < RailsSettings::Base
   field :omniauth_google_options, default: {
     client_id: "the-client-id",
     client_secret: "the-client-secret",
-  }, type: :string, readonly: true
+  }, type: :hash, readonly: true
   field :float_item, type: :float, default: 7
   field :big_decimal_item, type: :big_decimal, default: 9
 end

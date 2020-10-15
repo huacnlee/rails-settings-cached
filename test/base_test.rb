@@ -51,6 +51,12 @@ class BaseTest < ActiveSupport::TestCase
     assert_includes(Setting.readonly_keys, "omniauth_google_options")
   end
 
+  test "get_field" do
+    assert_equal({}, Setting.get_field("foooo"))
+    assert_equal({ key: "host", default: "http://example.com", type: :string, readonly: false }, Setting.get_field("host"))
+    assert_equal({ key: "omniauth_google_options", default: { client_id: "the-client-id", client_secret: "the-client-secret" }, type: :hash, readonly: true }, Setting.get_field("omniauth_google_options"))
+  end
+
   test "not exist field" do
     assert_raise(NoMethodError) { Setting.not_exist_method }
   end
