@@ -1,3 +1,8 @@
+## 2.3.0
+
+- Add `editable_keys` to get keys that allow to modify.
+- Add `readonly_keys` to get readonly keys.
+
 ## 2.2.1
 
 - Fix generator module name `Settings` conflict issue. #172
