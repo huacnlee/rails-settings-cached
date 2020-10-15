@@ -6,7 +6,7 @@ module RailsSettings
   class Base < ActiveRecord::Base
     class SettingNotFound < RuntimeError; end
 
-    SEPARATOR_REGEXP = /[\n,;]+/
+    SEPARATOR_REGEXP = /[\n,;]+/.freeze
     self.table_name = table_name_prefix + "settings"
 
     # get the value field, YAML decoded
@@ -26,12 +26,14 @@ module RailsSettings
     class << self
       def clear_cache
         RequestStore.store[:rails_settings_all_settings] = nil
-        Rails.cache.delete(self.cache_key)
+        Rails.cache.delete(cache_key)
       end
 
       def field(key, **opts)
         @keys ||= []
+        @readonly_keys ||= []
         @keys << key.to_s
+        @readonly_keys << key.to_s if opts[:readonly]
         _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator])
       end
 
@@ -45,97 +47,105 @@ module RailsSettings
         scope.join("/")
       end
 
-      def keys
-        @keys
-      end
+      attr_reader :keys
+      attr_reader :readonly_keys
 
       private
 
-        def _define_field(key, default: nil, type: :string, readonly: false, separator: nil)
-          if readonly
-            define_singleton_method(key) do
-              self.send(:_convert_string_to_typeof_value, type, default, separator: separator)
-            end
-          else
-            define_singleton_method(key) do
-              val = self.send(:_value_of, key)
-              result = nil
-              if !val.nil?
-                result = val
-              else
-                result = default
-                result = default.call if default.is_a?(Proc)
-              end
-
-              result = self.send(:_convert_string_to_typeof_value, type, result, separator: separator)
-
-              result
+      def _define_field(key, default: nil, type: :string, readonly: false, separator: nil)
+        if readonly
+          define_singleton_method(key) do
+            send(:_convert_string_to_typeof_value, type, default, separator: separator)
+          end
+        else
+          define_singleton_method(key) do
+            val = send(:_value_of, key)
+            result = nil
+            if !val.nil?
+              result = val
+            else
+              result = default
+              result = default.call if default.is_a?(Proc)
             end
 
-            define_singleton_method("#{key}=") do |value|
-              var_name = key.to_s
+            result = send(:_convert_string_to_typeof_value, type, result, separator: separator)
 
-              record = find_by(var: var_name) || new(var: var_name)
-              value = self.send(:_convert_string_to_typeof_value, type, value, separator: separator)
-
-              record.value = value
-              record.save!
-
-              value
-            end
+            result
           end
 
-          if type == :boolean
-            define_singleton_method("#{key}?") do
-              self.send(key)
-            end
-          end
-        end
+          define_singleton_method("#{key}=") do |value|
+            var_name = key.to_s
 
-        def _convert_string_to_typeof_value(type, value, separator: nil)
-          return value unless [String, Integer, Float, BigDecimal].include?(value.class)
+            record = find_by(var: var_name) || new(var: var_name)
+            value = send(:_convert_string_to_typeof_value, type, value, separator: separator)
 
-          case type
-          when :boolean
-            value == "true" || value == "1" || value == 1 || value == true
-          when :array
-            value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }.map(&:strip)
-          when :hash
-            value = YAML.load(value).to_h rescue eval(value).to_h rescue {}
-            value.deep_stringify_keys!
-            value
-          when :integer
-            value.to_i
-          when :float
-            value.to_f
-          when :big_decimal
-            value.to_d
-          else
+            record.value = value
+            record.save!
+
             value
           end
         end
 
-        def _value_of(var_name)
-          raise "#{self.table_name} does not exist." unless table_exists?
-
-          _all_settings[var_name.to_s]
-        end
-
-        def rails_initialized?
-          Rails.application && Rails.application.initialized?
-        end
-
-        def _all_settings
-          raise "You cannot use settings before Rails initialize." unless rails_initialized?
-          RequestStore.store[:rails_settings_all_settings] ||= begin
-            Rails.cache.fetch(self.cache_key, expires_in: 1.week) do
-              vars = unscoped.select("var, value")
-              result = {}
-              vars.each { |record| result[record.var] = record.value }
-              result.with_indifferent_access
-            end
+        if type == :boolean
+          define_singleton_method("#{key}?") do
+            send(key)
           end
         end
+      end
+
+      def _convert_string_to_typeof_value(type, value, separator: nil)
+        return value unless [String, Integer, Float, BigDecimal].include?(value.class)
+
+        case type
+        when :boolean
+          value == "true" || value == "1" || value == 1 || value == true
+        when :array
+          value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }.map(&:strip)
+        when :hash
+          value = begin
+                    begin
+                                          YAML.load(value).to_h
+                    rescue StandardError
+                      eval(value).to_h
+                                        end
+                  rescue StandardError
+                    {}
+                  end
+          value.deep_stringify_keys!
+          value
+        when :integer
+          value.to_i
+        when :float
+          value.to_f
+        when :big_decimal
+          value.to_d
+        else
+          value
+        end
+      end
+
+      def _value_of(var_name)
+        raise "#{table_name} does not exist." unless table_exists?
+
+        _all_settings[var_name.to_s]
+      end
+
+      def rails_initialized?
+        Rails.application&.initialized?
+      end
+
+      def _all_settings
+        raise "You cannot use settings before Rails initialize." unless rails_initialized?
+
+        RequestStore.store[:rails_settings_all_settings] ||= begin
+          Rails.cache.fetch(cache_key, expires_in: 1.week) do
+            vars = unscoped.select("var, value")
+            result = {}
+            vars.each { |record| result[record.var] = record.value }
+            result.with_indifferent_access
+          end
+        end
+      end
     end
   end
 end

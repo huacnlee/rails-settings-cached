@@ -41,19 +41,23 @@ class BaseTest < ActiveSupport::TestCase
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
+
+    assert_equal 2, Setting.readonly_keys.size
+    assert_includes(Setting.readonly_keys, "readonly_item")
+    assert_includes(Setting.readonly_keys, "omniauth_google_options")
   end
 
   test "not exist field" do
-    assert_raise(NoMethodError) { Setting.not_exist_method  }
+    assert_raise(NoMethodError) { Setting.not_exist_method }
   end
 
   test "readonly field" do
     assert_equal 100, Setting.readonly_item
-    assert_raise(NoMethodError) { Setting.readonly_item = 1  }
+    assert_raise(NoMethodError) { Setting.readonly_item = 1 }
     assert_kind_of Hash, Setting.omniauth_google_options
     assert_equal "the-client-id", Setting.omniauth_google_options[:client_id]
     assert_equal "the-client-secret", Setting.omniauth_google_options[:client_secret]
-    assert_raise(NoMethodError) { Setting.omniauth_google_options = { foo: 1 }  }
+    assert_raise(NoMethodError) { Setting.omniauth_google_options = { foo: 1 } }
   end
 
   test "value serialize" do
@@ -277,8 +281,8 @@ class BaseTest < ActiveSupport::TestCase
 
   test "array with separator" do
     value = <<~TIP
-    Hello this is first line, and have comma.
-    This is second line.
+      Hello this is first line, and have comma.
+      This is second line.
     TIP
     direct_update_record(:tips, value)
 
