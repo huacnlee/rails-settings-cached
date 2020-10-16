@@ -17,6 +17,7 @@ SimpleCov.start
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 require_relative "./models/setting"
+require_relative "./models/no_table_setting"
 
 # Hit readonly field before Rails initialize
 Setting.readonly_item
@@ -27,7 +28,7 @@ end
 
 module Rails
   def self.root
-    Pathname.new(File.expand_path("../", __FILE__))
+    Pathname.new(File.expand_path(__dir__))
   end
 
   def self.cache
@@ -67,7 +68,7 @@ class ActiveSupport::TestCase
     queries = []
 
     counter_f = lambda do |_name, _started, _finished, _unique_id, payload|
-      if !payload[:name].in? %w(CACHE SCHEMA)
+      unless payload[:name].in? %w[CACHE SCHEMA]
         queries_count += 1
         queries << payload
        end
