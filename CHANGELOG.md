@@ -1,3 +1,7 @@
+## 2.3.3
+
+- Allows use setting, that if table was not ready (before migrate), print a warning and returns default value.
+
 ## 2.3.2
 
 - Fix hash type with indifferent access.
