@@ -1,3 +1,9 @@
+## 2.4.0
+
+- Allows to use Setting without database connection, fallback to default value.
+
+This changes is used to avoid startup errors in a database-free environment (such as assets:precompile in Docker build).
+
 ## 2.3.3
 
 - Allows use setting, that if table was not ready (before migrate), print a warning and returns default value.

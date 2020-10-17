@@ -173,6 +173,26 @@ class Setting < RailsSettings::Base
 end
 ```
 
+## Use Setting in Rails initalizing:
+
+You can't use Setting in these locations:
+
+```
+config/application.rb
+config/environments/*.rb
+```
+
+If you wants do that, put the setting into `config/initializers/*.rb`
+
+For example:
+
+```rb
+# config/initializers/devise.rb
+Devise.setup do |config|
+  config.omniauth :twitter, Setting.twitter_api_key, Setting.twitter_api_secret
+end
+```
+
 ### Caching flow:
 
 ```
