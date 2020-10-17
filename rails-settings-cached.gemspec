@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "codecov"
   s.add_development_dependency "minitest"
+  s.add_development_dependency "pg"
   s.add_development_dependency "rubocop"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "sqlite3"
