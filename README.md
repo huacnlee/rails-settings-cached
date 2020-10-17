@@ -153,9 +153,9 @@ Setting.get_field("app_name")
 
 ## Use Setting in Rails initalizing:
 
-Sometimes you may need to use Setting before Rails is initialized, for example `config/initializers/devise.rb`
+In `version 2.3+` we allows you to use Setting before Rails is initialized.
 
-In 2.3+ we allows you do that.
+For example `config/initializers/devise.rb`
 
 ```rb
 Devise.setup do |config|
@@ -174,14 +174,14 @@ end
 
 ## Readonly field
 
-You may want use Setting field in these locations:
+You may also want use Setting in these locations:
 
 ```
 config/application.rb
 config/environments/*.rb
 ```
 
-If you wants do that do that, the settings fields must has `readonly: true`.
+If you want do that do that, the setting field must has `readonly: true`.
 
 For example:
 
