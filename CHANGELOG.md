@@ -1,4 +1,4 @@
-## 2.4.0
+## 2.3.5
 
 - Allows to use Setting without database connection, fallback to default value.
 
