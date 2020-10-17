@@ -18,12 +18,15 @@ Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 require_relative "./models/setting"
 require_relative "./models/no_table_setting"
+require_relative "./models/no_connection_setting"
 
 # Hit readonly field before Rails initialize
 Setting.readonly_item
 Setting.omniauth_google_options
+NoConnectionSetting.bar
 
 class TestApplication < Rails::Application
+  puts "NoConnectionSetting.bar = #{NoConnectionSetting.bar}"
 end
 
 module Rails

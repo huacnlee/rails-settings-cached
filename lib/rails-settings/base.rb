@@ -149,6 +149,13 @@ module RailsSettings
         end
 
         _all_settings[var_name.to_s]
+      rescue => e
+        if e.message.include?("connect")
+          puts "WARNING: `#{name}.#{var_name}` called but no connection, fallback to returns the default value."
+          return nil
+        end
+
+        raise e
       end
 
       def rails_initialized?
@@ -156,8 +163,6 @@ module RailsSettings
       end
 
       def _all_settings
-        raise "You cannot use settings before Rails initialize." unless rails_initialized?
-
         RequestStore.store[:rails_settings_all_settings] ||= begin
           Rails.cache.fetch(cache_key, expires_in: 1.week) do
             vars = unscoped.select("var, value")

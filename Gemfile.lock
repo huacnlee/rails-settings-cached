@@ -96,6 +96,7 @@ GEM
     parallel (1.17.0)
     parser (2.6.2.1)
       ast (~> 2.4.0)
+    pg (1.2.3)
     psych (3.1.0)
     rack (2.2.3)
     rack-test (1.1.0)
@@ -167,6 +168,7 @@ PLATFORMS
 DEPENDENCIES
   codecov
   minitest
+  pg
   rails (= 6.0.0)
   rails-settings-cached!
   rubocop
