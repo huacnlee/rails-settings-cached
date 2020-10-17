@@ -151,9 +151,11 @@ Setting.get_field("app_name")
 => { key: "app_name", type: :string, default: "Rails Settings", readonly: false }
 ```
 
-## Readonly field
+## Use Setting in Rails initalizing:
 
-Sometimes you may need to use Setting before Rails is initialized, for example `config/devise.rb`
+Sometimes you may need to use Setting before Rails is initialized, for example `config/initializers/devise.rb`
+
+In 2.3+ we allows you do that.
 
 ```rb
 Devise.setup do |config|
@@ -163,33 +165,45 @@ Devise.setup do |config|
 end
 ```
 
-In this case, you must define the `readonly` field:
-
 ```rb
 class Setting < RailsSettings::Base
-  # cache_prefix { "v1" }
-  field :omniauth_google_client_id, default: ENV["OMNIAUTH_GOOGLE_CLIENT_ID"], readonly: true
-  field :omniauth_google_client_secret, default: ENV["OMNIAUTH_GOOGLE_CLIENT_SECRET"], readonly: true
+  field :omniauth_google_client_id, default: ENV["OMNIAUTH_GOOGLE_CLIENT_ID"]
+  field :omniauth_google_client_secret, default: ENV["OMNIAUTH_GOOGLE_CLIENT_SECRET"]
 end
 ```
 
-## Use Setting in Rails initalizing:
+## Readonly field
 
-You can't use Setting in these locations:
+You may want use Setting field in these locations:
 
 ```
 config/application.rb
 config/environments/*.rb
 ```
 
-If you wants do that, put the setting into `config/initializers/*.rb`
+If you wants do that do that, the settings fields must has `readonly: true`.
 
 For example:
 
 ```rb
-# config/initializers/devise.rb
-Devise.setup do |config|
-  config.omniauth :twitter, Setting.twitter_api_key, Setting.twitter_api_secret
+class Setting < RailsSettings::Base
+  field :mailer_provider, default: (ENV["mailer_provider"] || "smtp"), readonly: true
+  field :mailer_options, type: :hash, readonly: true, default: {
+    address: ENV["mailer_options.address"],
+    port: ENV["mailer_options.port"],
+    domain: ENV["mailer_options.domain"],
+    user_name: ENV["mailer_options.user_name"],
+    password: ENV["mailer_options.password"],
+    authentication: ENV["mailer_options.authentication"] || "login",
+    enable_starttls_auto: ENV["mailer_options.enable_starttls_auto"]
+  }
+end
+```
+
+```rb
+Rails.application.configure do
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = Setting.mailer_options.deep_symbolize_keys
 end
 ```
 
