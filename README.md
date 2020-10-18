@@ -262,8 +262,6 @@ app/controllers/admin/settings_controller.rb
 ```rb
 module Admin
   class SettingsController < ApplicationController
-    before_action :get_setting, only: [:edit, :update]
-
     def create
       setting_params.keys.each do |key|
         Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
