@@ -207,7 +207,7 @@ Rails.application.configure do
 end
 ```
 
-### Caching flow:
+## Caching flow:
 
 ```
 Setting.host -> Check Cache -> Exist - Get value of key for cache -> Return
