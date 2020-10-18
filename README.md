@@ -151,7 +151,7 @@ Setting.get_field("app_name")
 => { key: "app_name", type: :string, default: "Rails Settings", readonly: false }
 ```
 
-## Use Setting in Rails initalizing:
+## Use Setting in Rails initializing:
 
 In `version 2.3+` we allows you to use Setting before Rails is initialized.
 
