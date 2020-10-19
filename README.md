@@ -1,6 +1,6 @@
 # Rails Settings Cached
 
-This a plugin that makes managing a table of
+This is a plugin that makes managing a table of
 а global key, value pairs easy. Think of it like a global Hash stored in your database,
 that uses simple ActiveRecord like methods for manipulation. Keep track of any global
 setting that you don't want to hard code into your rails app. You can store any kind
@@ -53,7 +53,7 @@ class Setting < RailsSettings::Base
 end
 ```
 
-You must use `field` method to statement the setting keys, otherwise you can't use it.
+You must use the `field` method to statement the setting keys, otherwise you can't use it.
 
 Now just put that migration in the database with:
 
@@ -153,7 +153,7 @@ Setting.get_field("app_name")
 
 ## Use Setting in Rails initializing:
 
-In `version 2.3+` we allows you to use Setting before Rails is initialized.
+In `version 2.3+` you can use Setting before Rails is initialized.
 
 For example `config/initializers/devise.rb`
 
