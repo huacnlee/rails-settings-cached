@@ -174,10 +174,9 @@ end
 
 ## Readonly field
 
-You may also want use Setting in these locations:
+You may also want use Setting before Rails initialize:
 
 ```
-config/application.rb
 config/environments/*.rb
 ```
 
