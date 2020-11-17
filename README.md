@@ -199,7 +199,12 @@ class Setting < RailsSettings::Base
 end
 ```
 
+config/environments/production.rb
+
 ```rb
+# You must require_relative directly in Rails 6.1+ in config/environments/production.rb
+require_relative "../../app/models/setting"
+
 Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = Setting.mailer_options.deep_symbolize_keys
