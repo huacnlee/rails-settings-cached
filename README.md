@@ -270,7 +270,7 @@ module Admin
       setting_params.keys.each do |key|
         Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
       end
-      redirect_to settings_path, notice: "Setting was successfully updated."
+      redirect_to admin_settings_path, notice: "Setting was successfully updated."
     end
 
     private
