@@ -1,3 +1,8 @@
+## 2.4.0
+
+- Use [ActiveSupport::CurrentAttributes](https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html) instead of the [request_store](https://github.com/steveklabnik/request_store) for storage request cache.
+- Remove request_store dependency.
+
 ## 2.3.5
 
 - Allows to use Setting without database connection, fallback to default value.
@@ -95,7 +100,6 @@ Setting.get_field(:admin_emails)
 - One SQL or Cache hit in each request, even you has multiple of keys call in a page.
 
   > NOTE: This design will load all settings from db/cache in memory, so I recommend that you do not design a lot of Setting keys (below 1000 keys), and do not store large value。
-
 
 ## Changes logs for 0.x
 
