@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "request_store"
-
 module RailsSettings
   class Base < ActiveRecord::Base
     class SettingNotFound < RuntimeError; end
@@ -25,7 +23,7 @@ module RailsSettings
 
     class << self
       def clear_cache
-        RequestStore.store[:rails_settings_all_settings] = nil
+        RequestStore.reset
         Rails.cache.delete(cache_key)
       end
 
@@ -162,7 +160,7 @@ module RailsSettings
       end
 
       def _all_settings
-        RequestStore.store[:rails_settings_all_settings] ||= begin
+        RequestStore.settings ||= begin
           Rails.cache.fetch(cache_key, expires_in: 1.week) do
             vars = unscoped.select("var, value")
             result = {}

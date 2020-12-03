@@ -126,7 +126,6 @@ irb > Setting.notification_options
 }
 ```
 
-
 ### Get defined fields
 
 > version 2.3+
@@ -221,7 +220,7 @@ Setting.host -> Check Cache -> Exist - Get value of key for cache -> Return
                 Return default value or nil
 ```
 
-In each Setting keys call, we will load the cache/db and save in [RequestStore](https://github.com/steveklabnik/request_store) to avoid hit cache/db.
+In each Setting keys call, we will load the cache/db and save in [ActiveSupport::CurrentAttributes](https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html) to avoid hit cache/db.
 
 Each key update will expire the cache, so do not add some frequent update key.
 
@@ -246,7 +245,7 @@ class ActiveSupport::TestCase
 end
 ```
 
------
+---
 
 ## How to manage Settings in the admin interface?
 
@@ -259,7 +258,6 @@ namespace :admin do
   resource :settings
 end
 ```
-
 
 app/controllers/admin/settings_controller.rb
 
@@ -354,6 +352,5 @@ end
 - [thebluedoc/bluedoc](https://github.com/thebluedoc/bluedoc/blob/master/app/models/setting.rb) - 2.x
 - [tootsuite/mastodon](https://github.com/tootsuite/mastodon) - 0.6.x
 - [helpyio/helpy](https://github.com/helpyio/helpy) - 0.5.x
-
 
 And more than [1K repositories](https://github.com/huacnlee/rails-settings-cached/network/dependents) used.
