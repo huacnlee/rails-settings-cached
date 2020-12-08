@@ -28,7 +28,7 @@ module RailsSettings
       end
 
       def field(key, **opts)
-        _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator])
+        _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator], validates: opts[:validates])
       end
 
       def get_field(key)
@@ -59,7 +59,7 @@ module RailsSettings
 
       private
 
-      def _define_field(key, default: nil, type: :string, readonly: false, separator: nil)
+      def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil)
         @defined_fields ||= []
         @defined_fields << {
           key: key.to_s,
@@ -95,9 +95,18 @@ module RailsSettings
             value = send(:_convert_string_to_typeof_value, type, value, separator: separator)
 
             record.value = value
-            record.save!
+            record.save(validate: false)
 
             value
+          end
+
+          if validates
+            validates[:if] = Proc.new { |item| item.var.to_s == key.to_s }
+            send(:validates, key, **validates)
+
+            define_method(:read_attribute_for_validation) do |_key|
+              self.value
+            end
           end
         end
 

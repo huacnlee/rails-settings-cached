@@ -10,7 +10,7 @@ class BaseTest < ActiveSupport::TestCase
   def direct_update_record(var, value)
     record = find_value(var) || Setting.new(var: var)
     record[:value] = YAML.dump(value)
-    record.save!
+    record.save!(validate: false)
   end
 
   def assert_no_record(var)
@@ -36,13 +36,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 11, Setting.keys.size
+    assert_equal 12, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 9, Setting.editable_keys.size
+    assert_equal 10, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
