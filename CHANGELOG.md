@@ -1,3 +1,16 @@
+## 2.4.1
+
+- Fix request_cache for backward compatible with Rails 5.0.x;
+- No effect for Rails 5.2+;
+
+In Rails 5.0:
+
+```ruby
+# You must add request_store dependency in to you Gemfile
+gem "request_store"
+gem "rails-settings-cached"
+```
+
 ## 2.4.0
 
 - Use [ActiveSupport::CurrentAttributes](https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html) instead of the [request_store](https://github.com/steveklabnik/request_store) for storage request cache.

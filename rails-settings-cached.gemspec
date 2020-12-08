@@ -14,18 +14,18 @@ Gem::Specification.new do |s|
   s.license = "MIT"
 
   s.required_ruby_version = ">= 2.5"
-  s.summary = "Settings plugin for Rails that makes managing a table of global keys."
+  s.summary = "The best solution for store global settings in Rails applications."
   s.description = """
-  This is improved from rails-settings, added caching.
-  Settings plugin for Rails that makes managing a table of global key,
-  value pairs easy. Think of it like a global Hash stored in you database,
-  that uses simple ActiveRecord like methods for manipulation.
+  The best solution for store global settings in Rails applications.
+
+  This gem will managing a table of а global key, value pairs easy. Think of it like a 
+  global Hash stored in your database, that uses simple ActiveRecord like methods for manipulation.
 
   Keep track of any global setting that you dont want to hard code into your rails app.
   You can store any kind of object.  Strings, numbers, arrays, or any object.
   """
 
-  s.add_dependency "rails", ">= 4.2.0"
+  s.add_dependency "rails", ">= 5.0.0"
 
   s.add_development_dependency "codecov"
   s.add_development_dependency "minitest"

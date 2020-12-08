@@ -23,7 +23,7 @@ module RailsSettings
 
     class << self
       def clear_cache
-        RequestStore.reset
+        RequestCache.reset
         Rails.cache.delete(cache_key)
       end
 
@@ -160,7 +160,7 @@ module RailsSettings
       end
 
       def _all_settings
-        RequestStore.settings ||= begin
+        RequestCache.settings ||= begin
           Rails.cache.fetch(cache_key, expires_in: 1.week) do
             vars = unscoped.select("var, value")
             result = {}
