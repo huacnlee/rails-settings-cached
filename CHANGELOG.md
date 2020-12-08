@@ -1,3 +1,15 @@
+## 2.5.0
+
+- Add `validates` options to special the Rails Validation for fields (#201)
+
+```rb
+class Setting < RailsSettings::Base
+  # cache_prefix { "v1" }
+  field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
+  field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp], message: "is not included in [zh-CN, en, jp]" } }
+end
+```
+
 ## 2.4.1
 
 - Fix request_cache for backward compatible with Rails 5.0.x;
