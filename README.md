@@ -1,10 +1,10 @@
 # Rails Settings Cached
 
-This is a plugin that makes managing a table of
-а global key, value pairs easy. Think of it like a global Hash stored in your database,
-that uses simple ActiveRecord like methods for manipulation. Keep track of any global
-setting that you don't want to hard code into your rails app. You can store any kind
-of object. Strings, numbers, arrays, or any object.
+The best solution for store global settings in Rails applications.
+
+This gem will managing a table of а global key, value pairs easy. Think of it like a global Hash stored in your database, that uses simple ActiveRecord like methods for manipulation. Keep track of any global setting that you don't want to hard code into your rails app.
+
+You can store any kind of object. Strings, numbers, arrays, booleans, or any object.
 
 [![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![CI Status](https://travis-ci.org/huacnlee/rails-settings-cached.svg)](http://travis-ci.org/huacnlee/rails-settings-cached) [![codecov.io](https://codecov.io/github/huacnlee/rails-settings-cached/coverage.svg?branch=master)](https://codecov.io/github/huacnlee/rails-settings-cached?branch=master)
 
@@ -349,8 +349,11 @@ end
 - [forem/forem](https://github.com/forem/forem) - 2.x
 - [siwapp/siwapp](https://github.com/siwapp/siwapp) - 2.x
 - [aidewoode/black_candy](https://github.com/aidewoode/black_candy) - 2.x
-- [thebluedoc/bluedoc](https://github.com/thebluedoc/bluedoc/blob/master/app/models/setting.rb) - 2.x
+- [huacnlee/bluedoc](https://github.com/huacnlee/bluedoc) - 2.x
+- [getzealot/zealot](https://github.com/getzealot/zealot) - 2.x
+- [kaishuu0123/rebacklogs](https://github.com/kaishuu0123/rebacklogs) - 2.x
 - [tootsuite/mastodon](https://github.com/tootsuite/mastodon) - 0.6.x
 - [helpyio/helpy](https://github.com/helpyio/helpy) - 0.5.x
+- [daqing/rabel](https://github.com/daqing/rabel) - 0.4.x
 
 And more than [1K repositories](https://github.com/huacnlee/rails-settings-cached/network/dependents) used.

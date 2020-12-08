@@ -2,7 +2,7 @@ PATH
   remote: .
   specs:
     rails-settings-cached (2.4.0)
-      rails (>= 4.2.0)
+      rails (>= 5.0.0)
 
 GEM
   remote: https://rubygems.org/
@@ -176,4 +176,4 @@ DEPENDENCIES
   sqlite3
 
 BUNDLED WITH
-   1.17.2
+   1.17.3
