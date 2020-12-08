@@ -30,9 +30,9 @@ You will get `app/models/setting.rb`
 ```rb
 class Setting < RailsSettings::Base
   # cache_prefix { "v1" }
-  field :app_name, default: "Rails Settings"
+  field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
   field :host, default: "http://example.com", readonly: true
-  field :default_locale, default: "zh-CN"
+  field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp] } }
   field :readonly_item, type: :integer, default: 100, readonly: true
   field :user_limits, type: :integer, default: 20
   field :exchange_rate, type: :float, default: 0.123
@@ -49,7 +49,7 @@ class Setting < RailsSettings::Base
   }
 
   # lambda default value
-  field :welcome_message, type: :string, default: -> { "welcome to #{self.app_name}" }
+  field :welcome_message, type: :string, default: -> { "welcome to #{self.app_name}" }, validates: { length: { maximum: 255 } }
 end
 ```
 
@@ -148,6 +148,39 @@ Setting.get_field("host")
 => { key: "host", type: :string, default: "http://example.com", readonly: true }
 Setting.get_field("app_name")
 => { key: "app_name", type: :string, default: "Rails Settings", readonly: false }
+```
+
+## Validations
+
+You can use `validates` options to special the [Rails Validation](https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates) for fields.
+
+```rb
+class Setting < RailsSettings::Base
+  # cache_prefix { "v1" }
+  field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
+  field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp], message: "is not included in [zh-CN, en, jp]" } }
+end
+```
+
+Now validate will work on record save.
+
+```rb
+setting = Setting.find_or_initialize_by(var: :app_name)
+setting.value = ""
+setting.valid?
+# => false
+setting.errors.full_messages
+# => ["App name can't be blank", "App name too short (minimum is 2 characters)"]
+
+setting = Setting.find_or_initialize_by(var: :default_locale)
+setting.value = "zh-TW"
+setting.save
+# => false
+setting.errors.full_messages
+# => ["Default locale is not included in [zh-CN, en, jp]"]
+setting.value = "en"
+setting.valid?
+# => true
 ```
 
 ## Use Setting in Rails initializing:
@@ -265,9 +298,25 @@ app/controllers/admin/settings_controller.rb
 module Admin
   class SettingsController < ApplicationController
     def create
+      @errors = ActiveModel::Errors.new
+      setting_params.keys.each do |key|
+        next if setting_params[key].nil?
+
+        setting = Setting.new(var: key)
+        setting.value = setting_params[key].strip
+        unless setting.valid?
+          @errors.merge!(setting.errors)
+        end
+      end
+
+      if @errors.any?
+        render :new
+      end
+
       setting_params.keys.each do |key|
         Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
       end
+
       redirect_to admin_settings_path, notice: "Setting was successfully updated."
     end
 
@@ -284,6 +333,16 @@ app/views/admin/settings/show.html.erb
 
 ```erb
 <%= form_for(Setting.new, url: admin_settings_path) do |f| %>
+  <% if @errors.any? %>
+    <div class="alert alert-block alert-danger">
+      <ul>
+        <% @errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <div class="form-group">
     <label class="control-label">Host</label>
     <%= f.text_field :host, value: Setting.host, class: "form-control", placeholder: "http://localhost"  %>

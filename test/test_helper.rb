@@ -88,7 +88,7 @@ class ActiveSupport::TestCase
 
   def assert_errors_on(model, key, messages)
     messages = Array(messages) unless messages.is_a?(Array)
-    assert_equal true, model.errors.has_key?(key.to_s), message: "#{model.errors.attribute_names} not include #{key}"
+    assert_equal true, model.errors.has_key?(key), "#{model.errors.messages.keys} not include #{key}"
     assert_equal messages, model.errors.full_messages_for(key)
   end
 end
