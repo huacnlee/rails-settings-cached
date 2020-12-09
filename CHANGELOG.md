@@ -1,3 +1,12 @@
+## 2.5.1
+
+- Do validate on directly assignment (#202)
+
+```rb
+irb> Setting.default_locale = "foo"
+ActiveRecord::RecordInvalid: (Validation failed: Default locale is not included in [zh-CN, en, jp])
+```
+
 ## 2.5.0
 
 - Add `validates` options to special the Rails Validation for fields (#201)
