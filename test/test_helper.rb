@@ -91,4 +91,9 @@ class ActiveSupport::TestCase
     assert_equal true, model.errors.has_key?(key), "#{model.errors.messages.keys} not include #{key}"
     assert_equal messages, model.errors.full_messages_for(key)
   end
+
+  def assert_raise_with_validation_message(message)
+    ex = assert_raise(ActiveRecord::RecordInvalid) {yield}
+    assert_equal message, ex.message
+  end
 end
