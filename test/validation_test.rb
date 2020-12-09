@@ -35,4 +35,25 @@ class ValidationTest < ActiveSupport::TestCase
     assert_equal true, setting.valid?
     assert_equal 0, setting.errors.size
   end
+
+  test "validation with assignment" do
+    assert_raise_with_validation_message("Validation failed: Host can't be blank") do
+      Setting.host = ""
+    end
+    assert_nothing_raised do
+      Setting.host = "foo"
+    end
+
+    assert_raise_with_validation_message("Validation failed: Mailer provider is not included in the list") do
+      Setting.mailer_provider = "foo"
+    end
+    assert_nothing_raised do
+      Setting.host = "smtp"
+    end
+  end
+end
+
+def assert_raise_with_validation_message(message)
+  ex = assert_raise(ActiveRecord::RecordInvalid) {yield}
+  assert_equal message, ex.message
 end

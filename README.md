@@ -162,9 +162,23 @@ class Setting < RailsSettings::Base
 end
 ```
 
-Now validate will work on record save.
+Now validate will work on record save:
 
 ```rb
+irb> Setting.app_name = ""
+ActiveRecord::RecordInvalid: (Validation failed: App name can't be blank)
+irb> Setting.app_name = "Rails Settings"
+"Rails Settings"
+irb> Setting.default_locale = "zh-TW"
+ActiveRecord::RecordInvalid: (Validation failed: Default locale is not included in [zh-CN, en, jp])
+irb> Setting.default_locale = "en"
+"en"
+```
+
+Validate by `save` / `valid?` method:
+
+```rb
+
 setting = Setting.find_or_initialize_by(var: :app_name)
 setting.value = ""
 setting.valid?

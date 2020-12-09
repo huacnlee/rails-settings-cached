@@ -95,7 +95,7 @@ module RailsSettings
             value = send(:_convert_string_to_typeof_value, type, value, separator: separator)
 
             record.value = value
-            record.save(validate: false)
+            record.save!
 
             value
           end
