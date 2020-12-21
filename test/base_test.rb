@@ -36,13 +36,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 12, Setting.keys.size
+    assert_equal 13, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 10, Setting.editable_keys.size
+    assert_equal 11, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -53,8 +53,12 @@ class BaseTest < ActiveSupport::TestCase
 
   test "get_field" do
     assert_equal({}, Setting.get_field("foooo"))
-    assert_equal({ key: "host", default: "http://example.com", type: :string, readonly: false }, Setting.get_field("host"))
-    assert_equal({ key: "omniauth_google_options", default: { client_id: "the-client-id", client_secret: "the-client-secret" }, type: :hash, readonly: true }, Setting.get_field("omniauth_google_options"))
+    assert_equal({ key: "host", default: "http://example.com", type: :string, readonly: false },
+                 Setting.get_field("host"))
+    assert_equal(
+      { key: "omniauth_google_options", default: { client_id: "the-client-id", client_secret: "the-client-secret" },
+        type: :hash, readonly: true }, Setting.get_field("omniauth_google_options")
+    )
   end
 
   test "not exist field" do
@@ -104,6 +108,10 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal 2, Setting.user_limits
     assert_instance_of Integer, Setting.user_limits
     assert_record_value :user_limits, 2
+
+    assert_equal 2, Setting.default_value_with_block
+    Setting.default_value_with_block = 100
+    assert_equal 100, Setting.default_value_with_block
   end
 
   test "float field" do
