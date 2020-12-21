@@ -28,7 +28,8 @@ module RailsSettings
       end
 
       def field(key, **opts)
-        _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly], separator: opts[:separator], validates: opts[:validates])
+        _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly],
+                           separator: opts[:separator], validates: opts[:validates])
       end
 
       def get_field(key)
@@ -60,9 +61,11 @@ module RailsSettings
       private
 
       def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil)
+        key = key.to_s
+
         @defined_fields ||= []
         @defined_fields << {
-          key: key.to_s,
+          key: key,
           default: default,
           type: type || :string,
           readonly: readonly.nil? ? false : readonly
@@ -89,7 +92,7 @@ module RailsSettings
           end
 
           define_singleton_method("#{key}=") do |value|
-            var_name = key.to_s
+            var_name = key
 
             record = find_by(var: var_name) || new(var: var_name)
             value = send(:_convert_string_to_typeof_value, type, value, separator: separator)
@@ -101,7 +104,7 @@ module RailsSettings
           end
 
           if validates
-            validates[:if] = Proc.new { |item| item.var.to_s == key.to_s }
+            validates[:if] = proc { |item| item.var.to_s == key }
             send(:validates, key, **validates)
 
             define_method(:read_attribute_for_validation) do |_key|
@@ -122,19 +125,19 @@ module RailsSettings
 
         case type
         when :boolean
-          value == "true" || value == "1" || value == 1 || value == true
+          ["true", "1", 1, true].include?(value)
         when :array
           value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }.map(&:strip)
         when :hash
           value = begin
-                    begin
-                      YAML.load(value).to_h
-                    rescue StandardError
-                      eval(value).to_h
-                    end
-                  rescue StandardError
-                    {}
-                  end
+            begin
+              YAML.load(value).to_h
+            rescue StandardError
+              eval(value).to_h
+            end
+          rescue StandardError
+            {}
+          end
           value.deep_stringify_keys!
           ActiveSupport::HashWithIndifferentAccess.new(value)
         when :integer
@@ -155,7 +158,7 @@ module RailsSettings
           return nil
         end
 
-        _all_settings[var_name.to_s]
+        _all_settings[var_name]
       end
 
       def _table_exists?
