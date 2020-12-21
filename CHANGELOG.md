@@ -1,3 +1,7 @@
+## 2.5.2
+
+- Avoid allocate string on get value.
+
 ## 2.5.1
 
 - Do validate on directly assignment (#202)
