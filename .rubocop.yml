@@ -1,5 +1,0 @@
-Style/StringLiterals:
-  Enabled: true
-  EnforcedStyle: double_quotes
-Style/RescueStandardError:
-  Enabled: false

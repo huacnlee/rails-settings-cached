@@ -6,7 +6,7 @@ This gem will managing a table of а global key, value pairs easy. Think of it l
 
 You can store any kind of object. Strings, numbers, arrays, booleans, or any object.
 
-[![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![CI Status](https://travis-ci.org/huacnlee/rails-settings-cached.svg)](http://travis-ci.org/huacnlee/rails-settings-cached) [![codecov.io](https://codecov.io/github/huacnlee/rails-settings-cached/coverage.svg?branch=master)](https://codecov.io/github/huacnlee/rails-settings-cached?branch=master)
+[![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![build](https://github.com/huacnlee/rails-settings-cached/workflows/build/badge.svg)](https://github.com/huacnlee/rails-settings-cached/actions?query=workflow%3Abuild) [![codecov.io](https://codecov.io/github/huacnlee/rails-settings-cached/coverage.svg?branch=master)](https://codecov.io/github/huacnlee/rails-settings-cached?branch=master)
 
 ## Installation
 
