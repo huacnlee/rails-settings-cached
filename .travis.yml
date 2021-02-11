@@ -2,6 +2,7 @@ language: ruby
 rvm:
   - 2.5.2
   - 2.6.5
+  - 3.0.0
 gemfile:
   - Gemfile
   - gemfiles/Gemfile-5-0
@@ -10,3 +11,9 @@ gemfile:
 before_script: bundle install
 script:
  - bundle exec rake test
+jobs:
+  exclude:
+    - rvm: 3.0.0
+      gemfile: gemfiles/Gemfile-5-0
+    - rvm: 3.0.0
+      gemfile: gemfiles/Gemfile-5-2
