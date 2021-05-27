@@ -53,11 +53,14 @@ class BaseTest < ActiveSupport::TestCase
 
   test "get_field" do
     assert_equal({}, Setting.get_field("foooo"))
-    assert_equal({ key: "host", default: "http://example.com", type: :string, readonly: false },
+    assert_equal({
+                   key: "host", default: "http://example.com", type: :string, readonly: false,
+                   metadata: { description: 'Host url' }
+                 },
                  Setting.get_field("host"))
     assert_equal(
       { key: "omniauth_google_options", default: { client_id: "the-client-id", client_secret: "the-client-secret" },
-        type: :hash, readonly: true }, Setting.get_field("omniauth_google_options")
+        type: :hash, readonly: true, metadata: nil }, Setting.get_field("omniauth_google_options")
     )
   end
 
@@ -319,5 +322,9 @@ class BaseTest < ActiveSupport::TestCase
     value = "Ruby Rails,GitHub"
     direct_update_record(:default_tags, value)
     assert_equal %w[Ruby Rails GitHub], Setting.default_tags
+  end
+
+  test "field retains metadata" do
+    assert_equal({ description: "Host url" }, Setting.get_field('host')[:metadata])
   end
 end

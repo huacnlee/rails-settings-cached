@@ -29,7 +29,7 @@ module RailsSettings
 
       def field(key, **opts)
         _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly],
-                           separator: opts[:separator], validates: opts[:validates])
+                           separator: opts[:separator], validates: opts[:validates], metadata: opts[:metadata])
       end
 
       def get_field(key)
@@ -60,7 +60,8 @@ module RailsSettings
 
       private
 
-      def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil)
+      def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil,
+                        metadata: nil)
         key = key.to_s
 
         @defined_fields ||= []
@@ -68,7 +69,8 @@ module RailsSettings
           key: key,
           default: default,
           type: type || :string,
-          readonly: readonly.nil? ? false : readonly
+          readonly: readonly.nil? ? false : readonly,
+          metadata: metadata
         }
 
         if readonly

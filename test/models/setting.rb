@@ -3,7 +3,7 @@
 class Setting < RailsSettings::Base
   cache_prefix { "v1" }
 
-  field :host, default: "http://example.com", validates: { presence: true } 
+  field :host, default: "http://example.com", validates: { presence: true }, metadata: { description: "Host url" }
   field :mailer_provider, default: "smtp", validates: { presence: true, inclusion: { in: %w[smtp sendmail sendgrid] } }
   field :readonly_item, type: :integer, default: 100, readonly: true
   field :user_limits, type: :integer, default: 1, validates: { presence: true, format: { with: /[\d]+/, message: "must be numbers" } }
