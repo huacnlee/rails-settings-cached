@@ -74,7 +74,7 @@ class ActiveSupport::TestCase
       unless payload[:name].in? %w[CACHE SCHEMA]
         queries_count += 1
         queries << payload
-       end
+      end
     end
 
     ActiveSupport::Notifications.subscribed(counter_f, "sql.active_record", &block)
@@ -93,7 +93,7 @@ class ActiveSupport::TestCase
   end
 
   def assert_raise_with_validation_message(message)
-    ex = assert_raise(ActiveRecord::RecordInvalid) {yield}
+    ex = assert_raise(ActiveRecord::RecordInvalid) { yield }
     assert_equal message, ex.message
   end
 end

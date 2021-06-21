@@ -4,11 +4,12 @@ module RailsSettings
   class Base < ActiveRecord::Base
     class SettingNotFound < RuntimeError; end
 
-    SEPARATOR_REGEXP = /[\n,;]+/.freeze
+    SEPARATOR_REGEXP = /[\n,;]+/
     self.table_name = table_name_prefix + "settings"
 
     # get the value field, YAML decoded
     def value
+      # rubocop:disable Security/YAMLLoad
       YAML.load(self[:value]) if self[:value].present?
     end
 
@@ -130,12 +131,8 @@ module RailsSettings
           value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }.map(&:strip)
         when :hash
           value = begin
-            begin
-              YAML.load(value).to_h
-            rescue StandardError
-              eval(value).to_h
-            end
-          rescue StandardError
+            YAML.safe_load(value).to_h
+          rescue
             {}
           end
           value.deep_stringify_keys!
@@ -163,7 +160,7 @@ module RailsSettings
 
       def _table_exists?
         table_exists?
-      rescue => e
+      rescue
         false
       end
 
@@ -172,13 +169,11 @@ module RailsSettings
       end
 
       def _all_settings
-        RequestCache.settings ||= begin
-          Rails.cache.fetch(cache_key, expires_in: 1.week) do
-            vars = unscoped.select("var, value")
-            result = {}
-            vars.each { |record| result[record.var] = record.value }
-            result.with_indifferent_access
-          end
+        RequestCache.settings ||= Rails.cache.fetch(cache_key, expires_in: 1.week) do
+          vars = unscoped.select("var, value")
+          result = {}
+          vars.each { |record| result[record.var] = record.value }
+          result.with_indifferent_access
         end
       end
     end

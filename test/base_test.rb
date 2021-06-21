@@ -36,13 +36,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 13, Setting.keys.size
+    assert_equal 14, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 11, Setting.editable_keys.size
+    assert_equal 12, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -53,11 +53,13 @@ class BaseTest < ActiveSupport::TestCase
 
   test "get_field" do
     assert_equal({}, Setting.get_field("foooo"))
-    assert_equal({ key: "host", default: "http://example.com", type: :string, readonly: false },
-                 Setting.get_field("host"))
     assert_equal(
-      { key: "omniauth_google_options", default: { client_id: "the-client-id", client_secret: "the-client-secret" },
-        type: :hash, readonly: true }, Setting.get_field("omniauth_google_options")
+      {key: "host", default: "http://example.com", type: :string, readonly: false},
+      Setting.get_field("host")
+    )
+    assert_equal(
+      {key: "omniauth_google_options", default: {client_id: "the-client-id", client_secret: "the-client-secret"}, type: :hash, readonly: true},
+      Setting.get_field("omniauth_google_options")
     )
   end
 
@@ -71,7 +73,8 @@ class BaseTest < ActiveSupport::TestCase
     assert_kind_of Hash, Setting.omniauth_google_options
     assert_equal "the-client-id", Setting.omniauth_google_options[:client_id]
     assert_equal "the-client-secret", Setting.omniauth_google_options[:client_secret]
-    assert_raise(NoMethodError) { Setting.omniauth_google_options = { foo: 1 } }
+    assert_raise(NoMethodError) { Setting.omniauth_google_options = {foo: 1} }
+    assert_equal "", Setting.signin_redirect_target
   end
 
   test "value serialize" do
@@ -221,7 +224,9 @@ class BaseTest < ActiveSupport::TestCase
     new_value = {
       "sym" => :symbol,
       "str" => "string",
-      "num" => 27.72
+      "num" => 27.72,
+      "float" => 9.to_f,
+      "big_decimal" => 2.9.to_d
     }
     Setting.smtp_settings = new_value
     assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
@@ -230,26 +235,14 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal "string", Setting.smtp_settings["str"]
     assert_equal "string", Setting.smtp_settings[:str]
     assert_equal 27.72, Setting.smtp_settings["num"]
+    assert_equal 9.to_f, Setting.smtp_settings["float"]
+    assert_equal 2.9.to_d, Setting.smtp_settings["big_decimal"]
     assert_record_value :smtp_settings, new_value
 
     Setting.find_by(var: :smtp_settings).update(value: new_value.to_json)
-    assert_equal({ "sym" => "symbol", "str" => "string", "num" => 27.72 }, Setting.smtp_settings)
+    assert_equal({"sym" => "symbol", "str" => "string", "num" => 27.72, "float" => 9.to_f, "big_decimal" => "2.9"}, Setting.smtp_settings)
     assert_equal "symbol", Setting.smtp_settings[:sym]
     assert_equal "symbol", Setting.smtp_settings["sym"]
-
-    Setting.smtp_settings = new_value.to_s
-    assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
-    assert_equal :symbol, Setting.smtp_settings[:sym]
-    assert_equal "string", Setting.smtp_settings["str"]
-    assert_equal 27.72, Setting.smtp_settings["num"]
-    assert_record_value :smtp_settings, ActiveSupport::HashWithIndifferentAccess.new(new_value)
-
-    Setting.smtp_settings = new_value.to_yaml
-    assert_equal new_value.deep_stringify_keys, Setting.smtp_settings
-    assert_equal :symbol, Setting.smtp_settings[:sym]
-    assert_equal "string", Setting.smtp_settings["str"]
-    assert_equal 27.72, Setting.smtp_settings["num"]
-    assert_record_value :smtp_settings, ActiveSupport::HashWithIndifferentAccess.new(new_value)
   end
 
   test "boolean field" do
