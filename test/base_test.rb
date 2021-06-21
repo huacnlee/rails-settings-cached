@@ -36,13 +36,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 15, Setting.keys.size
+    assert_equal 14, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 12, Setting.editable_keys.size
+    assert_equal 11, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -76,7 +76,6 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal "the-client-id", Setting.omniauth_google_options[:client_id]
     assert_equal "the-client-secret", Setting.omniauth_google_options[:client_secret]
     assert_raise(NoMethodError) { Setting.omniauth_google_options = {foo: 1} }
-    assert_equal "", Setting.signin_redirect_target
   end
 
   test "value serialize" do
