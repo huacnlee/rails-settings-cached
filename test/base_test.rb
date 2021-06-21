@@ -2,6 +2,7 @@
 
 require "test_helper"
 
+# rubocop:disable Lint/ConstantDefinitionInBlock
 class BaseTest < ActiveSupport::TestCase
   def find_value(var_name)
     Setting.where(var: var_name).take
@@ -23,6 +24,20 @@ class BaseTest < ActiveSupport::TestCase
     assert_not_nil record
     assert_equal val.to_yaml, record[:value]
     assert_equal val, record.value
+  end
+
+  test "define setting with protected keys" do
+    assert_raise(RailsSettings::ProcetedKeyError, "Can't use var as setting key.") do
+      class NewSetting < RailsSettings::Base
+        field :var
+      end
+    end
+
+    assert_raise(RailsSettings::ProcetedKeyError, "Can't use value as setting key.") do
+      class NewSetting < RailsSettings::Base
+        field :value
+      end
+    end
   end
 
   test "cache_prefix and cache_key" do
@@ -76,6 +91,14 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal "the-client-id", Setting.omniauth_google_options[:client_id]
     assert_equal "the-client-secret", Setting.omniauth_google_options[:client_secret]
     assert_raise(NoMethodError) { Setting.omniauth_google_options = {foo: 1} }
+  end
+
+  test "instance method get field" do
+    setting = Setting.new
+    assert_equal Setting.host, setting.host
+    assert_equal Setting.default_tags, setting.default_tags
+    assert_equal Setting.readonly_item, setting.readonly_item
+    assert_equal 103, setting.readonly_item_with_proc
   end
 
   test "value serialize" do
