@@ -54,6 +54,6 @@ class ValidationTest < ActiveSupport::TestCase
 end
 
 def assert_raise_with_validation_message(message)
-  ex = assert_raise(ActiveRecord::RecordInvalid) {yield}
+  ex = assert_raise(ActiveRecord::RecordInvalid) { yield }
   assert_equal message, ex.message
 end
