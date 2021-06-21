@@ -1,3 +1,9 @@
+## 2.6.0
+
+- Allows call key in Setting instance to support use keys in ActionView helpers.
+  - Fix #212 not can use `f.select` with Setting instance method.
+- Brake Changes: Limit use `var`, `value` as Setting key, now will raise error.
+
 ## 2.5.3
 
 - Improve implement for avoid use `eval` method.
