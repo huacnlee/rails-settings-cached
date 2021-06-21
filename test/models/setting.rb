@@ -6,6 +6,7 @@ class Setting < RailsSettings::Base
   field :host, default: "http://example.com", validates: {presence: true}
   field :mailer_provider, default: "smtp", validates: {presence: true, inclusion: {in: %w[smtp sendmail sendgrid]}}
   field :readonly_item, type: :integer, default: 100, readonly: true
+  field :readonly_item_with_proc, type: :integer, default: -> { readonly_item + 3 }, readonly: true
   field :user_limits, type: :integer, default: 1, validates: {presence: true, format: {with: /\d+/, message: "must be numbers"}}
   field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
   field :tips, type: :array, separator: /\n+/
