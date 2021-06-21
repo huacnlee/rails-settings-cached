@@ -36,7 +36,7 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 14, Setting.keys.size
+    assert_equal 15, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
@@ -46,8 +46,9 @@ class BaseTest < ActiveSupport::TestCase
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
-    assert_equal 2, Setting.readonly_keys.size
+    assert_equal 3, Setting.readonly_keys.size
     assert_includes(Setting.readonly_keys, "readonly_item")
+    assert_includes(Setting.readonly_keys, "readonly_item_with_proc")
     assert_includes(Setting.readonly_keys, "omniauth_google_options")
   end
 
@@ -70,6 +71,7 @@ class BaseTest < ActiveSupport::TestCase
   test "readonly field" do
     assert_equal 100, Setting.readonly_item
     assert_raise(NoMethodError) { Setting.readonly_item = 1 }
+    assert_equal 103, Setting.readonly_item_with_proc
     assert_kind_of Hash, Setting.omniauth_google_options
     assert_equal "the-client-id", Setting.omniauth_google_options[:client_id]
     assert_equal "the-client-secret", Setting.omniauth_google_options[:client_secret]

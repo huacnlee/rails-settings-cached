@@ -74,7 +74,8 @@ module RailsSettings
 
         if readonly
           define_singleton_method(key) do
-            send(:_convert_string_to_typeof_value, type, default, separator: separator)
+            result = default.is_a?(Proc) ? default.call : default
+            send(:_convert_string_to_typeof_value, type, result, separator: separator)
           end
         else
           define_singleton_method(key) do
