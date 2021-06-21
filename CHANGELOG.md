@@ -1,3 +1,8 @@
+## 2.5.3
+
+- Improve implement for avoid use `eval` method.
+- Fix #211, support Proc default value for readonly field.
+
 ## 2.5.2
 
 - Avoid allocate string on get value.
