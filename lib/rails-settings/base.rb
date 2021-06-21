@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 module RailsSettings
-  class Base < ActiveRecord::Base
-    class SettingNotFound < RuntimeError; end
+  class ProcetedKeyError < RuntimeError
+    def initialize(key)
+      super("Can't use #{key} as setting key.")
+    end
+  end
 
+  class Base < ActiveRecord::Base
     SEPARATOR_REGEXP = /[\n,;]+/
+    PROTECTED_KEYS = %w[var value]
     self.table_name = table_name_prefix + "settings"
 
     # get the value field, YAML decoded
@@ -64,6 +69,8 @@ module RailsSettings
       def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil)
         key = key.to_s
 
+        raise ProcetedKeyError.new(key) if PROTECTED_KEYS.include?(key)
+
         @defined_fields ||= []
         @defined_fields << {
           key: key,
@@ -119,6 +126,13 @@ module RailsSettings
           define_singleton_method("#{key}?") do
             send(key)
           end
+        end
+
+        # delegate instance get method to class for support:
+        # setting = Setting.new
+        # setting.admin_emails
+        define_method(key) do
+          self.class.public_send(key)
         end
       end
 
