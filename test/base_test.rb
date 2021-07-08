@@ -70,13 +70,22 @@ class BaseTest < ActiveSupport::TestCase
   test "get_field" do
     assert_equal({}, Setting.get_field("foooo"))
     assert_equal(
-      {key: "host", default: "http://example.com", type: :string, readonly: false, options: {}},
+      {scope: :application, key: "host", default: "http://example.com", type: :string, readonly: false, options: {}},
       Setting.get_field("host")
     )
     assert_equal(
-      {key: "omniauth_google_options", default: {client_id: "the-client-id", client_secret: "the-client-secret"}, type: :hash, readonly: true, options: {}},
+      {scope: :omniauth, key: "omniauth_google_options", default: {client_id: "the-client-id", client_secret: "the-client-secret"}, type: :hash, readonly: true, options: {}},
       Setting.get_field("omniauth_google_options")
     )
+  end
+
+  test "defined_fields and scope" do
+    scopes = Setting.defined_fields.select { |field| !field[:readonly] }.group_by { |field| field[:scope] || :none }
+    # assert_equal 2, groups.length
+    assert_equal %i[application contents mailer none], scopes.keys
+    assert_equal 4, scopes[:application].length
+    assert_equal 5, scopes[:contents].length
+    assert_equal 2, scopes[:mailer].length
   end
 
   test "not exist field" do
@@ -341,14 +350,6 @@ class BaseTest < ActiveSupport::TestCase
   test "key with complex options" do
     assert_equal %w[foo bar], Setting.key_with_more_options
     field = Setting.get_field(:key_with_more_options)
-    assert_equal({key: "key_with_more_options", default: ["foo", "bar"], type: :array, readonly: false, options: {group: :appearance, section: :theme}}, field)
-  end
-
-  test "defined_fields" do
-    groups = Setting.defined_fields.select { |field| !field[:readonly] }.group_by { |field| field[:options][:group] || :other }
-    # assert_equal 2, groups.length
-    assert_equal %i[other appearance], groups.keys
-    assert_equal 1, groups[:appearance].length
-    assert_equal 11, groups[:other].length
+    assert_equal({scope: nil, key: "key_with_more_options", default: ["foo", "bar"], type: :array, readonly: false, options: {foo: 1, section: :theme}}, field)
   end
 end

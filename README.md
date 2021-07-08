@@ -30,26 +30,32 @@ You will get `app/models/setting.rb`
 ```rb
 class Setting < RailsSettings::Base
   # cache_prefix { "v1" }
-  field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
-  field :host, default: "http://example.com", readonly: true
-  field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp] } }
-  field :readonly_item, type: :integer, default: 100, readonly: true
-  field :user_limits, type: :integer, default: 20
-  field :exchange_rate, type: :float, default: 0.123
-  field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
-  field :captcha_enable, type: :boolean, default: true
 
-  # Override array separator, default: /[\n,]/ split with \n or comma.
-  field :tips, type: :array, separator: /[\n]+/
+  scope :application do
+    field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
+    field :host, default: "http://example.com", readonly: true
+    field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp] } }, option_values: %w[en zh-CN]
+    field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
+
+    # lambda default value
+    field :welcome_message, type: :string, default: -> { "welcome to #{self.app_name}" }, validates: { length: { maximum: 255 } }
+    # Override array separator, default: /[\n,]/ split with \n or comma.
+    field :tips, type: :array, separator: /[\n]+/
+  end
+
+  scope :limits do
+    field :user_limits, type: :integer, default: 20
+    field :exchange_rate, type: :float, default: 0.123
+    field :captcha_enable, type: :boolean, default: true, group: :limits
+  end
 
   field :notification_options, type: :hash, default: {
     send_all: true,
     logging: true,
     sender_email: "foo@bar.com"
-  }
+  }, group: :advanced
 
-  # lambda default value
-  field :welcome_message, type: :string, default: -> { "welcome to #{self.app_name}" }, validates: { length: { maximum: 255 } }
+  field :readonly_item, type: :integer, default: 100, readonly: true
 end
 ```
 
@@ -145,9 +151,24 @@ Setting.readonly_keys
 
 # Get options of field
 Setting.get_field("host")
-=> { key: "host", type: :string, default: "http://example.com", readonly: true }
+=> { scope: :application, key: "host", type: :string, default: "http://example.com", readonly: true }
 Setting.get_field("app_name")
-=> { key: "app_name", type: :string, default: "Rails Settings", readonly: false }
+=> { scope: :application, key: "app_name", type: :string, default: "Rails Settings", readonly: false }
+Setting.get_field(:user_limits)
+=> { scope: :limits, key: "user_limits", type: :integer, default: 20, readonly: false }
+```
+
+#### Get All defined fields
+
+> version 2.7.0+
+
+You can use `defined_fields` method to get all defined fields in Setting.
+
+```rb
+# Get editable fields and group by scope
+editable_fields = Setting.defined_fields
+  .select { |field| !field[:readonly] }
+  .group_by { |field| field[:scope] }
 ```
 
 ## Validations

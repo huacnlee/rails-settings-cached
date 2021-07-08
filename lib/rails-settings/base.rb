@@ -37,6 +37,12 @@ module RailsSettings
         _define_field(key, **opts)
       end
 
+      def scope(name)
+        @scope = name.to_sym
+        yield
+        @scope = nil
+      end
+
       def get_field(key)
         @defined_fields.find { |field| field[:key] == key.to_s } || {}
       end
@@ -46,9 +52,9 @@ module RailsSettings
       end
 
       def cache_key
-        scope = ["rails-settings-cached"]
-        scope << @cache_prefix.call if @cache_prefix
-        scope.join("/")
+        key_parts = ["rails-settings-cached"]
+        key_parts << @cache_prefix.call if @cache_prefix
+        key_parts.join("/")
       end
 
       def keys
@@ -74,6 +80,7 @@ module RailsSettings
 
         @defined_fields ||= []
         @defined_fields << {
+          scope: @scope,
           key: key,
           default: default,
           type: type || :string,
