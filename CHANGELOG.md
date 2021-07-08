@@ -1,3 +1,7 @@
+Visit:
+
+https://github.com/huacnlee/rails-settings-cached/releases
+
 ## 2.6.0
 
 - Allows call key in Setting instance to support use keys in ActionView helpers.
