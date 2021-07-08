@@ -281,6 +281,10 @@ Rails.application.configure do
 end
 ```
 
+TIP: You also can follow this file to rewrite ActionMailer method for configuration Mail options after Rails booted.
+
+https://github.com/ruby-china/homeland/commit/cfbde22d45201616c8d5a2bad228c8a266351401#diff-7d576f685c9af991345afb96f9b25a3033869dd1bd9c20561875abdba648022a
+
 ## Caching flow:
 
 ```
