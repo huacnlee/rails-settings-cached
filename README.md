@@ -34,7 +34,7 @@ class Setting < RailsSettings::Base
   scope :application do
     field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
     field :host, default: "http://example.com", readonly: true
-    field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp] } }, option_values: %w[en zh-CN]
+    field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp] } }, option_values: %w[en zh-CN jp], help_text: "Bla bla ..."
     field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
 
     # lambda default value
@@ -46,14 +46,14 @@ class Setting < RailsSettings::Base
   scope :limits do
     field :user_limits, type: :integer, default: 20
     field :exchange_rate, type: :float, default: 0.123
-    field :captcha_enable, type: :boolean, default: true, group: :limits
+    field :captcha_enable, type: :boolean, default: true
   end
 
   field :notification_options, type: :hash, default: {
     send_all: true,
     logging: true,
     sender_email: "foo@bar.com"
-  }, group: :advanced
+  }
 
   field :readonly_item, type: :integer, default: 100, readonly: true
 end
@@ -149,13 +149,16 @@ Settng.editable_keys
 Setting.readonly_keys
 => ["host", "readonly_item"]
 
-# Get options of field
+# Get field
 Setting.get_field("host")
 => { scope: :application, key: "host", type: :string, default: "http://example.com", readonly: true }
 Setting.get_field("app_name")
 => { scope: :application, key: "app_name", type: :string, default: "Rails Settings", readonly: false }
 Setting.get_field(:user_limits)
 => { scope: :limits, key: "user_limits", type: :integer, default: 20, readonly: false }
+# Get field options
+Setting.get_field("default_locale")[:options]
+=> { option_values: %w[en zh-CN jp], help_text: "Bla bla ..." }
 ```
 
 #### Get All defined fields
