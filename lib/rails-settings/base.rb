@@ -34,8 +34,7 @@ module RailsSettings
       end
 
       def field(key, **opts)
-        _define_field(key, default: opts[:default], type: opts[:type], readonly: opts[:readonly],
-                           separator: opts[:separator], validates: opts[:validates])
+        _define_field(key, **opts)
       end
 
       def get_field(key)
@@ -64,9 +63,11 @@ module RailsSettings
         @defined_fields.select { |field| field[:readonly] }.map { |field| field[:key] }
       end
 
+      attr_reader :defined_fields
+
       private
 
-      def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil)
+      def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil, **opts)
         key = key.to_s
 
         raise ProcetedKeyError.new(key) if PROTECTED_KEYS.include?(key)
@@ -76,7 +77,8 @@ module RailsSettings
           key: key,
           default: default,
           type: type || :string,
-          readonly: readonly.nil? ? false : readonly
+          readonly: readonly.nil? ? false : readonly,
+          options: opts
         }
 
         if readonly

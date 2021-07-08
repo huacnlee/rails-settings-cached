@@ -24,4 +24,6 @@ class Setting < RailsSettings::Base
   field :float_item, type: :float, default: 7
   field :big_decimal_item, type: :big_decimal, default: 9
   field :default_value_with_block, type: :integer, default: -> { 1 + 1 }
+
+  field :key_with_more_options, type: :array, validates: {presence: true}, default: %w[foo bar], group: :appearance, section: :theme
 end

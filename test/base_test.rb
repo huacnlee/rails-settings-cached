@@ -51,13 +51,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 14, Setting.keys.size
+    assert_equal 15, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 11, Setting.editable_keys.size
+    assert_equal 12, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -70,11 +70,11 @@ class BaseTest < ActiveSupport::TestCase
   test "get_field" do
     assert_equal({}, Setting.get_field("foooo"))
     assert_equal(
-      {key: "host", default: "http://example.com", type: :string, readonly: false},
+      {key: "host", default: "http://example.com", type: :string, readonly: false, options: {}},
       Setting.get_field("host")
     )
     assert_equal(
-      {key: "omniauth_google_options", default: {client_id: "the-client-id", client_secret: "the-client-secret"}, type: :hash, readonly: true},
+      {key: "omniauth_google_options", default: {client_id: "the-client-id", client_secret: "the-client-secret"}, type: :hash, readonly: true, options: {}},
       Setting.get_field("omniauth_google_options")
     )
   end
@@ -336,5 +336,19 @@ class BaseTest < ActiveSupport::TestCase
     value = "Ruby Rails,GitHub"
     direct_update_record(:default_tags, value)
     assert_equal %w[Ruby Rails GitHub], Setting.default_tags
+  end
+
+  test "key with complex options" do
+    assert_equal %w[foo bar], Setting.key_with_more_options
+    field = Setting.get_field(:key_with_more_options)
+    assert_equal({key: "key_with_more_options", default: ["foo", "bar"], type: :array, readonly: false, options: {group: :appearance, section: :theme}}, field)
+  end
+
+  test "defined_fields" do
+    groups = Setting.defined_fields.select { |field| !field[:readonly] }.group_by { |field| field[:options][:group] || :other }
+    # assert_equal 2, groups.length
+    assert_equal %i[other appearance], groups.keys
+    assert_equal 1, groups[:appearance].length
+    assert_equal 11, groups[:other].length
   end
 end
