@@ -3,6 +3,13 @@
 class Setting < RailsSettings::Base
   cache_prefix { "v1" }
 
+  scope :ordered, -> { order(id: :desc) }
+  scope :by_prefix, ->(key) { where("var like ?", "#{key}%") } do
+    def foo
+      "foo"
+    end
+  end
+
   scope :application do
     field :host, default: "http://example.com", validates: {presence: true}
     field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]

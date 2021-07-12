@@ -37,9 +37,16 @@ module RailsSettings
         _define_field(key, **opts)
       end
 
-      def scope(name)
+      alias_method :_rails_scope, :scope
+      def scope(*args, &block)
+        name = args.shift
+        body = args.shift
+        if body.respond_to?(:call)
+          return _rails_scope(name, body, &block)
+        end
+
         @scope = name.to_sym
-        yield
+        yield block
         @scope = nil
       end
 
