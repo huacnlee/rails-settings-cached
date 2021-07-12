@@ -352,4 +352,11 @@ class BaseTest < ActiveSupport::TestCase
     field = Setting.get_field(:key_with_more_options)
     assert_equal({scope: nil, key: "key_with_more_options", default: ["foo", "bar"], type: :array, readonly: false, options: {foo: 1, section: :theme}}, field)
   end
+
+  test "rails_scope" do
+    assert_kind_of ActiveRecord::Relation, Setting.ordered
+    assert_equal %(SELECT "settings".* FROM "settings" ORDER BY "settings"."id" DESC), Setting.ordered.to_sql
+    assert_equal %(SELECT "settings".* FROM "settings" WHERE (var like 'readonly_%')), Setting.by_prefix("readonly_").to_sql
+    assert_equal "foo", Setting.by_prefix("readonly_").foo
+  end
 end

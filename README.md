@@ -61,6 +61,8 @@ end
 
 You must use the `field` method to statement the setting keys, otherwise you can't use it.
 
+The `scope` method allows you to group the keys for admin UI.
+
 Now just put that migration in the database with:
 
 ```bash
