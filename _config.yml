@@ -1,0 +1,8 @@
+title: rails-settings-cached
+description: This is imporved from rails-settings, added caching for all settings
+google_analytics: UA-9745660-1
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
