@@ -2,7 +2,7 @@
 
 The best solution for store global settings in Rails applications.
 
-This gem will make managing a table of а global key, value pairs easy. Think of it like a global Hash stored in your database, that uses simple ActiveRecord like methods for manipulation. Keep track of any global setting that you don't want to hard code into your rails app.
+This gem will make managing a table of а global key, value pairs easy. Think of it like a global Hash stored in your database, that uses simple ActiveRecord like methods for manipulation. Keep track of any global setting that you don't want to hard code into your Rails application.
 
 You can store any kind of object. Strings, numbers, arrays, booleans, or any object.
 
