@@ -200,7 +200,7 @@ module RailsSettings
       end
 
       def _all_settings
-        RequestCache.settings ||= Rails.cache.fetch(cache_key, expires_in: 1.week) do
+        RequestCache.all_settings ||= Rails.cache.fetch(cache_key, expires_in: 1.week) do
           vars = unscoped.select("var, value")
           result = {}
           vars.each { |record| result[record.var] = record.value }
