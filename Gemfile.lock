@@ -68,19 +68,14 @@ GEM
       zeitwerk (~> 2.3)
     ast (2.4.0)
     builder (3.2.4)
-    codecov (0.2.11)
-      json
-      simplecov
     concurrent-ruby (1.1.9)
     crass (1.0.6)
-    docile (1.3.2)
     erubi (1.10.0)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
     jaro_winkler (1.5.2)
-    json (2.3.1)
     loofah (2.10.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -143,10 +138,6 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 1.6)
     ruby-progressbar (1.10.0)
-    simplecov (0.19.0)
-      docile (~> 1.1)
-      simplecov-html (~> 0.11)
-    simplecov-html (0.12.3)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
@@ -169,14 +160,12 @@ PLATFORMS
   x86_64-darwin-20
 
 DEPENDENCIES
-  codecov
   minitest
   pg
   rails (~> 6.1.0)
   rails-settings-cached!
   rubocop
-  simplecov
   sqlite3
 
 BUNDLED WITH
-   2.2.4
+   2.2.23
