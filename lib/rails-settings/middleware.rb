@@ -6,8 +6,9 @@ module RailsSettings
 
     def call(env)
       RailsSettings::RequestCache.enable!
-      @app.call(env)
+      result = @app.call(env)
       RailsSettings::RequestCache.disable!
+      result
     end
   end
 end
