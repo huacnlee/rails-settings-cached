@@ -1,4 +1,4 @@
-class WelcomeController < ActionController::Base
+class WelcomeController < ApplicationController
   def index
     render json: {
       host: Setting.host,
