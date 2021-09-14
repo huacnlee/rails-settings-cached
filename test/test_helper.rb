@@ -1,64 +1,15 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
-require "rails/all"
-require "sqlite3"
-require "rails-settings-cached"
 
-require "simplecov"
-if ENV["CI"] == "true"
-  require "codecov"
-  SimpleCov.formatter = SimpleCov::Formatter::Codecov
-end
-SimpleCov.start
+require File.expand_path("../test/dummy/config/environment.rb", __dir__)
 
 # Filter out Minitest backtrace while allowing backtrace from other libraries
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
-require_relative "./models/setting"
-require_relative "./models/no_table_setting"
-require_relative "./models/no_connection_setting"
-
-# Hit readonly field before Rails initialize
-Setting.readonly_item
-Setting.omniauth_google_options
-NoConnectionSetting.bar
-
 class TestApplication < Rails::Application
   puts "NoConnectionSetting.bar = #{NoConnectionSetting.bar}"
-end
-
-module Rails
-  def self.root
-    Pathname.new(File.expand_path(__dir__))
-  end
-
-  def self.cache
-    @cache ||= ActiveSupport::Cache::MemoryStore.new
-  end
-
-  def self.env
-    "test"
-  end
-end
-
-# run cache initializers
-RailsSettings::Railtie.initializers.each(&:run)
-Rails.application.instance_variable_set("@initialized", true)
-
-# ActiveRecord::Base.logger = Logger.new(STDOUT)
-ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
-# ActiveRecord::Base.configurations = true
-
-ActiveRecord::Schema.verbose = false
-ActiveRecord::Schema.define(version: 1) do
-  create_table :settings do |t|
-    t.string :var, null: false
-    t.text :value
-    t.datetime :created_at
-    t.datetime :updated_at
-  end
 end
 
 class ActiveSupport::TestCase
