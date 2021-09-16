@@ -11,5 +11,7 @@ module Dummy
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
     config.cache_store = :memory_store
+
+    # puts "call noconnection: #{NoConnectionSetting.bar}"
   end
 end

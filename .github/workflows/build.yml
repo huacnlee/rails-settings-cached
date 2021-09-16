@@ -10,6 +10,8 @@ jobs:
         include:
           - ruby: 3.0
             gemfile: Gemfile
+          - ruby: 3.0
+            gemfile: gemfiles/Gemfile-6-1
           - ruby: 2.7
             gemfile: gemfiles/Gemfile-6-0
           - ruby: 2.6

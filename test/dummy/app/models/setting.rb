@@ -19,7 +19,7 @@ class Setting < RailsSettings::Base
 
   scope :contents do
     field :tips, type: :array, separator: /\n+/
-    field :default_tags, type: :array, separator: /[\s,]+/
+    field :default_tags, type: :array, separator: /[\s,]+/, default: []
     field :float_item, type: :float, default: 7
     field :big_decimal_item, type: :big_decimal, default: 9
     field :default_value_with_block, type: :integer, default: -> { 1 + 1 }

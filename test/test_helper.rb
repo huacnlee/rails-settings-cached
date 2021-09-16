@@ -8,10 +8,6 @@ require File.expand_path("../test/dummy/config/environment.rb", __dir__)
 # to be shown.
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
-class TestApplication < Rails::Application
-  puts "NoConnectionSetting.bar = #{NoConnectionSetting.bar}"
-end
-
 class ActiveSupport::TestCase
   teardown do
     Setting.destroy_all
