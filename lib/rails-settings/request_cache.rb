@@ -51,7 +51,7 @@ module RailsSettings
         end
 
         def settings=(val)
-          RequestStore.store[:rails_settings_all_settings]
+          RequestStore.store[:rails_settings_all_settings] = val
         end
       end
     end
