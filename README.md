@@ -142,7 +142,7 @@ Setting.keys
 => ["app_name", "host", "default_locale", "readonly_item"]
 
 # Get editable keys
-Settng.editable_keys
+Setting.editable_keys
 => ["app_name", "default_locale"]
 
 # Get readonly keys
