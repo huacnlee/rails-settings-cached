@@ -8,4 +8,4 @@ vendor/
 pkg/
 coverage/
 gemfiles/*.lock
-
+Gemfile.lock
