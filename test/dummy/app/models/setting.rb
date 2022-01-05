@@ -2,6 +2,7 @@
 
 class Setting < RailsSettings::Base
   cache_prefix { "v1" }
+  permit_value_classes(ActiveSupport::Duration, Symbol, BigDecimal)
 
   scope :ordered, -> { order(id: :desc) }
   scope :by_prefix, ->(key) { where("var like ?", "#{key}%") } do
@@ -23,6 +24,8 @@ class Setting < RailsSettings::Base
     field :float_item, type: :float, default: 7
     field :big_decimal_item, type: :big_decimal, default: 9
     field :default_value_with_block, type: :integer, default: -> { 1 + 1 }
+    field  :duration_item, type: :duration, default: 12.hours
+
   end
 
   scope :mailer do

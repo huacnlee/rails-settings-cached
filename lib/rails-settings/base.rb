@@ -14,8 +14,10 @@ module RailsSettings
 
     # get the value field, YAML decoded
     def value
-      # rubocop:disable Security/YAMLLoad
-      YAML.load(self[:value]) if self[:value].present?
+      YAML.safe_load(
+        self[:value],
+        permitted_classes: Array(self.class.permitted_value_classes)
+      ) if self[:value].present?
     end
 
     # set the value field, YAML encoded
@@ -64,6 +66,10 @@ module RailsSettings
         key_parts.join("/")
       end
 
+      def permit_value_classes(*classes)
+        @permitted_value_classes = classes
+      end
+
       def keys
         @defined_fields.map { |field| field[:key] }
       end
@@ -76,7 +82,7 @@ module RailsSettings
         @defined_fields.select { |field| field[:readonly] }.map { |field| field[:key] }
       end
 
-      attr_reader :defined_fields
+      attr_reader :defined_fields, :permitted_value_classes
 
       private
 

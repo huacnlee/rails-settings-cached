@@ -51,13 +51,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 15, Setting.keys.size
+    assert_equal 16, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 12, Setting.editable_keys.size
+    assert_equal 13, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -84,7 +84,7 @@ class BaseTest < ActiveSupport::TestCase
     # assert_equal 2, groups.length
     assert_equal %i[application contents mailer none], scopes.keys
     assert_equal 4, scopes[:application].length
-    assert_equal 5, scopes[:contents].length
+    assert_equal 6, scopes[:contents].length
     assert_equal 2, scopes[:mailer].length
   end
 
@@ -190,6 +190,22 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal 2.9, Setting.big_decimal_item
     assert_instance_of BigDecimal, Setting.big_decimal_item
     assert_record_value :big_decimal_item, "2.9".to_d
+  end
+
+  test "duration field" do
+    assert_equal 12.hours, Setting.duration_item
+    assert_instance_of ActiveSupport::Duration, Setting.duration_item
+    assert_no_record :duration_item
+
+    Setting.duration_item = 15.hours
+    assert_equal 15.hours, Setting.duration_item
+    assert_instance_of ActiveSupport::Duration, Setting.duration_item
+    assert_record_value :duration_item, 15.hours
+
+    Setting.duration_item = 1.week
+    assert_equal 1.week, Setting.duration_item
+    assert_instance_of ActiveSupport::Duration, Setting.duration_item
+    assert_record_value :duration_item, 1.week
   end
 
   test "array field" do
