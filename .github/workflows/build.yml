@@ -21,8 +21,6 @@ jobs:
             gemfile: gemfiles/Gemfile-6-0
           - ruby: 2.6
             gemfile: gemfiles/Gemfile-5-2
-          - ruby: 2.5
-            gemfile: gemfiles/Gemfile-5-0
     env:
       CI: 1
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}
