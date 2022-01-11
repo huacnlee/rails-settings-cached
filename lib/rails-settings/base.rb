@@ -15,7 +15,11 @@ module RailsSettings
     # get the value field, YAML decoded
     def value
       # rubocop:disable Security/YAMLLoad
-      YAML.load(self[:value]) if self[:value].present?
+      payload = self[:value]
+
+      if payload.present?
+        YAML.respond_to?(:unsafe_load) ? YAML.unsafe_load(payload) : YAML.load(payload)
+      end
     end
 
     # set the value field, YAML encoded

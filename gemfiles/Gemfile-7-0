@@ -1,6 +1,6 @@
-# frozen_string_literal: true
-
 source "https://rubygems.org"
-gemspec
 
 gem "rails", "~> 7.0.0"
+gem "sqlite3", "~> 1.4.2"
+
+gemspec path: ".."
