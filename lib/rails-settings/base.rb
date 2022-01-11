@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module RailsSettings
-  class ProcetedKeyError < RuntimeError
+  class ProtectedKeyError < RuntimeError
     def initialize(key)
       super("Can't use #{key} as setting key.")
     end
@@ -87,7 +87,7 @@ module RailsSettings
       def _define_field(key, default: nil, type: :string, readonly: false, separator: nil, validates: nil, **opts)
         key = key.to_s
 
-        raise ProcetedKeyError.new(key) if PROTECTED_KEYS.include?(key)
+        raise ProtectedKeyError.new(key) if PROTECTED_KEYS.include?(key)
 
         @defined_fields ||= []
         @defined_fields << {
