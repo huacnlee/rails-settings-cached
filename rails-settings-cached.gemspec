@@ -25,9 +25,11 @@ Gem::Specification.new do |s|
   You can store any kind of object.  Strings, numbers, arrays, or any object.
   "
 
-  s.add_dependency "rails", ">= 5.0.0"
+  s.add_dependency "railties", ">= 5.0.0"
+  s.add_dependency "activerecord", ">= 5.0.0"
 
   s.add_development_dependency "pg"
+  s.add_development_dependency "rake"
   s.add_development_dependency "minitest"
   s.add_development_dependency "rubocop"
   s.add_development_dependency "sqlite3"
