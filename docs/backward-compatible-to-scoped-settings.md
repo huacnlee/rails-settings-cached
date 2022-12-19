@@ -1,4 +1,4 @@
-#  Backward compatible to support 0.x scoped settings
+# Backward compatible to support 0.x scoped settings
 
 The old `Scoped Settings` implement:
 
