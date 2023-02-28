@@ -14,8 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - ruby: 3.1
+          - ruby: 3.2
             gemfile: Gemfile
+          - ruby: 3.2
+            gemfile: gemfiles/Gemfile-7-0
+          - ruby: 3.2
+            gemfile: gemfiles/Gemfile-6-1
           - ruby: 3.1
             gemfile: gemfiles/Gemfile-7-0
           - ruby: 3.0.0
