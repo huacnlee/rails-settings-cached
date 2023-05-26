@@ -8,7 +8,6 @@ module RailsSettings
   end
 
   class Base < ActiveRecord::Base
-    SEPARATOR_REGEXP = /[\n,;]+/
     PROTECTED_KEYS = %w[var value]
     self.table_name = table_name_prefix + "settings"
 
@@ -55,7 +54,7 @@ module RailsSettings
       end
 
       def get_field(key)
-        @defined_fields.find { |field| field[:key] == key.to_s } || {}
+        @defined_fields.find { |field| field.key == key.to_s }.to_h || {}
       end
 
       def cache_prefix(&block)
@@ -69,15 +68,15 @@ module RailsSettings
       end
 
       def keys
-        @defined_fields.map { |field| field[:key] }
+        @defined_fields.map { |field| field.key }
       end
 
       def editable_keys
-        @defined_fields.reject { |field| field[:readonly] }.map { |field| field[:key] }
+        @defined_fields.reject { |field| field.readonly }.map { |field| field.key }
       end
 
       def readonly_keys
-        @defined_fields.select { |field| field[:readonly] }.map { |field| field[:key] }
+        @defined_fields.select { |field| field.readonly }.map { |field| field.key }
       end
 
       attr_reader :defined_fields
@@ -89,56 +88,24 @@ module RailsSettings
 
         raise ProtectedKeyError.new(key) if PROTECTED_KEYS.include?(key)
 
+        field = ::RailsSettings::Fields::Base.generate(
+          scope: @scope, key: key, default: default,
+          type: type, readonly: readonly, options: opts,
+          separator: separator, parent: self
+        )
         @defined_fields ||= []
-        @defined_fields << {
-          scope: @scope,
-          key: key,
-          default: default,
-          type: type || :string,
-          readonly: readonly.nil? ? false : readonly,
-          options: opts
-        }
+        @defined_fields << field
 
         if readonly
-          define_singleton_method(key) do
-            result = default.is_a?(Proc) ? default.call : default
-            send(:_convert_string_to_typeof_value, type, result, separator: separator)
-          end
+          define_singleton_method(key) { field.convert }
         else
-          define_singleton_method(key) do
-            val = send(:_value_of, key)
-            result = nil
-            if !val.nil?
-              result = val
-            else
-              result = default
-              result = default.call if default.is_a?(Proc)
-            end
-
-            result = send(:_convert_string_to_typeof_value, type, result, separator: separator)
-
-            result
-          end
-
-          define_singleton_method("#{key}=") do |value|
-            var_name = key
-
-            record = find_by(var: var_name) || new(var: var_name)
-            value = send(:_convert_string_to_typeof_value, type, value, separator: separator)
-
-            record.value = value
-            record.save!
-
-            value
-          end
+          define_singleton_method(key) { field.convert }
+          define_singleton_method("#{key}=") { |value| field.save!(value: value) }
 
           if validates
             validates[:if] = proc { |item| item.var.to_s == key }
             send(:validates, key, **validates)
-
-            define_method(:read_attribute_for_validation) do |_key|
-              self.value
-            end
+            define_method(:read_attribute_for_validation) { |_key| self.value }
           end
         end
 
@@ -153,33 +120,6 @@ module RailsSettings
         # setting.admin_emails
         define_method(key) do
           self.class.public_send(key)
-        end
-      end
-
-      def _convert_string_to_typeof_value(type, value, separator: nil)
-        return value unless [String, Integer, Float, BigDecimal].include?(value.class)
-
-        case type
-        when :boolean
-          ["true", "1", 1, true].include?(value)
-        when :array
-          value.split(separator || SEPARATOR_REGEXP).reject { |str| str.empty? }.map(&:strip)
-        when :hash
-          value = begin
-            YAML.safe_load(value).to_h
-          rescue
-            {}
-          end
-          value.deep_stringify_keys!
-          ActiveSupport::HashWithIndifferentAccess.new(value)
-        when :integer
-          value.to_i
-        when :float
-          value.to_f
-        when :big_decimal
-          value.to_d
-        else
-          value
         end
       end
 
