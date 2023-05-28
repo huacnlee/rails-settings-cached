@@ -68,15 +68,15 @@ module RailsSettings
       end
 
       def keys
-        @defined_fields.map { |field| field.key }
+        @defined_fields.map(&:key)
       end
 
       def editable_keys
-        @defined_fields.reject { |field| field.readonly }.map { |field| field.key }
+        @defined_fields.reject(&:readonly).map(&:key)
       end
 
       def readonly_keys
-        @defined_fields.select { |field| field.readonly }.map { |field| field.key }
+        @defined_fields.select(&:readonly).map(&:key)
       end
 
       attr_reader :defined_fields

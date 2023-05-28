@@ -32,6 +32,7 @@ module RailsSettings
 
       def convert
         return convert_to_value(default_value) if readonly || saved_value.nil?
+
         convert_to_value(saved_value)
       end
 
