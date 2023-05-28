@@ -97,9 +97,9 @@ module RailsSettings
         @defined_fields << field
 
         if readonly
-          define_singleton_method(key) { field.convert }
+          define_singleton_method(key) { field.read }
         else
-          define_singleton_method(key) { field.convert }
+          define_singleton_method(key) { field.read }
           define_singleton_method("#{key}=") { |value| field.save!(value: value) }
 
           if validates

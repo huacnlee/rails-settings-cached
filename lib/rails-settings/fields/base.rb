@@ -11,11 +11,11 @@ module RailsSettings
       end
 
       def save!(value:)
-        converted_value = convert_to_value(value)
+        serialized_value = serialize(value)
         parent_record = parent.find_by(var: key) || parent.new(var: key)
-        parent_record.value = converted_value
+        parent_record.value = serialized_value
         parent_record.save!
-        converted_value
+        parent_record.value
       end
 
       def saved_value
@@ -30,13 +30,17 @@ module RailsSettings
         default.is_a?(Proc) ? default.call : default
       end
 
-      def convert
-        return convert_to_value(default_value) if readonly || saved_value.nil?
+      def read
+        return deserialize(default_value) if readonly || saved_value.nil?
 
-        convert_to_value(saved_value)
+        deserialize(saved_value)
       end
 
-      def convert_to_value(value)
+      def deserialize(value)
+        raise NotImplementedError
+      end
+
+      def serialize(value)
         raise NotImplementedError
       end
 

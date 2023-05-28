@@ -1,8 +1,12 @@
 module RailsSettings
   module Fields
     class Integer < ::RailsSettings::Fields::Base
-      def convert_to_value(value)
+      def deserialize(value)
         value.to_i
+      end
+
+      def serialize(value)
+        deserialize(value)
       end
     end
   end
