@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "rails-settings/fields/array"
 require_relative "rails-settings/fields/base"
+require_relative "rails-settings/fields/array"
 require_relative "rails-settings/fields/big_decimal"
 require_relative "rails-settings/fields/boolean"
 require_relative "rails-settings/fields/float"

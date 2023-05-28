@@ -1,5 +1,3 @@
-require_relative './base'
-
 module RailsSettings
   module Fields
     class BigDecimal < ::RailsSettings::Fields::Base
