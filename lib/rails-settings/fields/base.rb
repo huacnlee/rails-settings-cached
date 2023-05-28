@@ -1,11 +1,13 @@
 module RailsSettings
   module Fields
-    class Base < Struct.new(:scope, :key, :default, :readonly, :parent, :separator, :type, :options, keyword_init: true)
+    class Base < Struct.new(:scope, :key, :default, :parent, :readonly, :separator, :type, :options, keyword_init: true)
       SEPARATOR_REGEXP = /[\n,;]+/
 
-      def initialize(scope:, key:, default:, parent:, readonly: false, separator: SEPARATOR_REGEXP, type: :string, options: nil)
-        self.readonly = !!readonly
+      def initialize(scope:, key:, default:, parent:, readonly:, separator:, type:, options:)
         super
+        self.readonly = !!readonly
+        self.type ||= :string
+        self.separator ||= SEPARATOR_REGEXP
       end
 
       def save!(value:)
