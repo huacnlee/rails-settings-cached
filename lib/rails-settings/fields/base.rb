@@ -17,7 +17,11 @@ module RailsSettings
       end
 
       def saved_value
-        parent.send(:_value_of, key)
+        return parent.send(:_all_settings)[key] if table_exists?
+
+        # Fallback to default value if table was not ready (before migrate)
+        puts "WARNING: table: \"#{parent.table_name}\" does not exist or not database connection, `#{parent.name}.#{key}` fallback to returns the default value."
+        nil        
       end
 
       def default_value
@@ -35,6 +39,12 @@ module RailsSettings
 
       def to_h
         super.slice(:scope, :key, :default, :type, :readonly, :options)
+      end
+
+      def table_exists?
+        parent.table_exists?
+      rescue StandardError
+        false
       end
 
       class << self

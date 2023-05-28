@@ -123,22 +123,6 @@ module RailsSettings
         end
       end
 
-      def _value_of(var_name)
-        unless _table_exists?
-          # Fallback to default value if table was not ready (before migrate)
-          puts "WARNING: table: \"#{table_name}\" does not exist or not database connection, `#{name}.#{var_name}` fallback to returns the default value."
-          return nil
-        end
-
-        _all_settings[var_name]
-      end
-
-      def _table_exists?
-        table_exists?
-      rescue
-        false
-      end
-
       def rails_initialized?
         Rails.application&.initialized?
       end
