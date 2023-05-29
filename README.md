@@ -161,6 +161,55 @@ Setting.get_field("default_locale")[:options]
 => { option_values: %w[en zh-CN jp], help_text: "Bla bla ..." }
 ```
 
+### Custom type for setting
+
+> Since: 2.9.0
+
+You can write your custom field type by under `RailsSettings::Fields` module.
+
+#### For example
+
+```rb
+module RailsSettings
+  module Fields
+    class YesNo < ::RailsSettings::Fields::Base
+      def serialize(value)
+        case value
+        when true then "YES"
+        when false then "NO"
+        else raise StandardError, 'invalid value'
+        end
+      end
+
+      def deserialize(value)
+        case value
+        when "YES" then true
+        when "NO" then false
+        else nil
+        end
+      end
+    end
+  end
+end
+```
+
+Now you can use `yes_no` type in you setting:
+
+```rb
+class Setting
+  field :custom_item, type: :yes_no, default: 'YES'
+end
+```
+
+```rb
+irb> Setting.custom_item = 'YES'
+irb> Setting.custom_item
+true
+irb> Setting.custom_item = 'NO'
+irb> Setting.custom_item
+false
+```
+
 #### Get All defined fields
 
 > version 2.7.0+
