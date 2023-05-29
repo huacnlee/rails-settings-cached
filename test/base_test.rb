@@ -51,13 +51,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 15, Setting.keys.size
+    assert_equal 16, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 12, Setting.editable_keys.size
+    assert_equal 13, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -84,7 +84,7 @@ class BaseTest < ActiveSupport::TestCase
     # assert_equal 2, groups.length
     assert_equal %i[application contents mailer none], scopes.keys
     assert_equal 4, scopes[:application].length
-    assert_equal 5, scopes[:contents].length
+    assert_equal 6, scopes[:contents].length
     assert_equal 2, scopes[:mailer].length
   end
 
@@ -305,6 +305,24 @@ class BaseTest < ActiveSupport::TestCase
     Setting.captcha_enable = true
     assert_equal true, Setting.captcha_enable
     assert_equal true, Setting.captcha_enable?
+  end
+
+  test "custom field" do
+    assert_equal 1, Setting.custom_item
+    assert_instance_of Integer, Setting.custom_item
+    assert_no_record :custom_item
+
+    Setting.custom_item = 2
+    assert_equal 2, Setting.custom_item
+    assert_instance_of Integer, Setting.custom_item
+    assert_record_value :custom_item, 'b'
+
+    Setting.custom_item = 3
+    assert_equal 3, Setting.custom_item
+    assert_instance_of Integer, Setting.custom_item
+    assert_record_value :custom_item, 'c'
+
+    assert_raise(StandardError) { Setting.custom_item = 4 }
   end
 
   test "string value in db compatible" do
