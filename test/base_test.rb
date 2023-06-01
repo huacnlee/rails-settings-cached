@@ -51,13 +51,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 16, Setting.keys.size
+    assert_equal 17, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 13, Setting.editable_keys.size
+    assert_equal 14, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -363,6 +363,13 @@ class BaseTest < ActiveSupport::TestCase
     value = "Ruby Rails,GitHub"
     direct_update_record(:default_tags, value)
     assert_equal %w[Ruby Rails GitHub], Setting.default_tags
+  end
+
+  test "unsupported type to string" do
+    assert_equal "hello", Setting.fallback_field
+
+    Setting.fallback_field = "bar"
+    assert_equal "bar", Setting.fallback_field
   end
 
   test "key with complex options" do

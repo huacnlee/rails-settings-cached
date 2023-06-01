@@ -22,8 +22,10 @@ module RailsSettings
         return parent.send(:_all_settings)[key] if table_exists?
 
         # Fallback to default value if table was not ready (before migrate)
-        puts "WARNING: table: \"#{parent.table_name}\" does not exist or not database connection, `#{parent.name}.#{key}` fallback to returns the default value."
-        nil        
+        puts(
+          "WARNING: table: \"#{parent.table_name}\" does not exist or not database connection, `#{parent.name}.#{key}` fallback to returns the default value."
+        )
+        nil
       end
 
       def default_value
@@ -62,8 +64,12 @@ module RailsSettings
         private
 
         def fetch_field_class(type)
-          field_class_name = type.to_s.split('_').map(&:capitalize).join('')
-          const_get("::RailsSettings::Fields::#{field_class_name}")
+          field_class_name = type.to_s.split("_").map(&:capitalize).join("")
+          begin
+            const_get("::RailsSettings::Fields::#{field_class_name}")
+          rescue StandardError
+            ::RailsSettings::Fields::String
+          end
         end
       end
     end

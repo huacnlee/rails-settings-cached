@@ -48,4 +48,5 @@ class Setting < RailsSettings::Base
   end
 
   field :key_with_more_options, type: :array, validates: {presence: true}, default: %w[foo bar], foo: 1, section: :theme
+  field :fallback_field, type: :foo_bar, default: "hello"
 end
