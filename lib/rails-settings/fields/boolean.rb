@@ -2,6 +2,8 @@ module RailsSettings
   module Fields
     class Boolean < ::RailsSettings::Fields::Base
       def deserialize(value)
+        return nil if value.nil?
+
         ["true", "1", 1, true].include?(value)
       end
 

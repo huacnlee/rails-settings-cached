@@ -2,6 +2,8 @@ module RailsSettings
   module Fields
     class Hash < ::RailsSettings::Fields::Base
       def deserialize(value)
+        return nil if value.nil?
+
         return value unless value.is_a?(::String)
 
         load_value(value).deep_stringify_keys.with_indifferent_access

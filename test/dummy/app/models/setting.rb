@@ -20,10 +20,7 @@ class Setting < RailsSettings::Base
   scope :contents do
     field :tips, type: :array, separator: /\n+/
     field :default_tags, type: :array, separator: /[\s,]+/, default: []
-    field :float_item, type: :float, default: 7
-    field :big_decimal_item, type: :big_decimal, default: 9
     field :default_value_with_block, type: :integer, default: -> { 1 + 1 }
-    field :custom_item, type: :custom, default: 1
   end
 
   scope :mailer do
@@ -45,6 +42,17 @@ class Setting < RailsSettings::Base
       client_id: "the-client-id",
       client_secret: "the-client-secret"
     }, type: :hash, readonly: true
+  end
+
+  scope :test_types do
+    field :string_item, type: :string
+    field :integer_item, type: :integer
+    field :float_item, type: :float, default: 7
+    field :big_decimal_item, type: :big_decimal, default: 9
+    field :boolean_item, type: :boolean
+    field :array_item, type: :array
+    field :hash_item, type: :hash
+    field :custom_item, type: :custom, default: 1
   end
 
   field :key_with_more_options, type: :array, validates: {presence: true}, default: %w[foo bar], foo: 1, section: :theme

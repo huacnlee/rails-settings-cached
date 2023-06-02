@@ -26,6 +26,13 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal val, record.value
   end
 
+  def assert_record_value_nil(var)
+    record = find_value(var)
+    assert_not_nil record
+    assert_equal nil.to_yaml, record[:value]
+    assert_nil record.value
+  end
+
   test "define setting with protected keys" do
     assert_raise(RailsSettings::ProtectedKeyError, "Can't use var as setting key.") do
       class NewSetting < RailsSettings::Base
@@ -51,13 +58,13 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "setting_keys" do
-    assert_equal 17, Setting.keys.size
+    assert_equal 22, Setting.keys.size
     assert_includes(Setting.keys, "host")
     assert_includes(Setting.keys, "readonly_item")
     assert_includes(Setting.keys, "default_tags")
     assert_includes(Setting.keys, "omniauth_google_options")
 
-    assert_equal 14, Setting.editable_keys.size
+    assert_equal 19, Setting.editable_keys.size
     assert_includes(Setting.editable_keys, "host")
     assert_includes(Setting.editable_keys, "default_tags")
 
@@ -82,9 +89,9 @@ class BaseTest < ActiveSupport::TestCase
   test "defined_fields and scope" do
     scopes = Setting.defined_fields.select { |field| !field[:readonly] }.group_by { |field| field[:scope] || :none }
     # assert_equal 2, groups.length
-    assert_equal %i[application contents mailer none], scopes.keys
+    assert_equal %i[application contents mailer test_types none], scopes.keys
     assert_equal 4, scopes[:application].length
-    assert_equal 6, scopes[:contents].length
+    assert_equal 3, scopes[:contents].length
     assert_equal 2, scopes[:mailer].length
   end
 
@@ -126,24 +133,26 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "integer field" do
-    assert_equal 1, Setting.user_limits
-    assert_instance_of Integer, Setting.user_limits
-    assert_no_record :user_limits
+    assert_nil Setting.integer_item
 
-    Setting.user_limits = 12
-    assert_equal 12, Setting.user_limits
-    assert_instance_of Integer, Setting.user_limits
-    assert_record_value :user_limits, 12
+    Setting.integer_item = 12
+    assert_equal 12, Setting.integer_item
+    assert_instance_of Integer, Setting.integer_item
+    assert_record_value :integer_item, 12
 
-    Setting.user_limits = "27"
-    assert_equal 27, Setting.user_limits
-    assert_instance_of Integer, Setting.user_limits
-    assert_record_value :user_limits, 27
+    Setting.integer_item = "27"
+    assert_equal 27, Setting.integer_item
+    assert_instance_of Integer, Setting.integer_item
+    assert_record_value :integer_item, 27
 
-    Setting.user_limits = 2.7
-    assert_equal 2, Setting.user_limits
-    assert_instance_of Integer, Setting.user_limits
-    assert_record_value :user_limits, 2
+    Setting.integer_item = 2.7
+    assert_equal 2, Setting.integer_item
+    assert_instance_of Integer, Setting.integer_item
+    assert_record_value :integer_item, 2
+
+    Setting.integer_item = nil
+    assert_nil Setting.integer_item
+    assert_record_value_nil :integer_item
 
     assert_equal 2, Setting.default_value_with_block
     Setting.default_value_with_block = 100
@@ -151,7 +160,9 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "float field" do
-    assert_equal 7, Setting.float_item
+    default_val = 7
+
+    assert_equal default_val, Setting.float_item
     assert_instance_of Float, Setting.float_item
     assert_no_record :float_item
 
@@ -169,10 +180,16 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal 2.9, Setting.float_item
     assert_instance_of Float, Setting.float_item
     assert_record_value :float_item, "2.9".to_f
+
+    Setting.float_item = nil
+    assert_record_value_nil :float_item
+    assert_equal default_val, Setting.float_item
   end
 
   test "big decimal field" do
-    assert_equal 9, Setting.big_decimal_item
+    default_val = 9
+
+    assert_equal default_val, Setting.big_decimal_item
     assert_instance_of BigDecimal, Setting.big_decimal_item
     assert_no_record :big_decimal_item
 
@@ -190,35 +207,58 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal 2.9, Setting.big_decimal_item
     assert_instance_of BigDecimal, Setting.big_decimal_item
     assert_record_value :big_decimal_item, "2.9".to_d
+
+    Setting.big_decimal_item = nil
+    assert_record_value_nil :big_decimal_item
+    assert_equal default_val, Setting.big_decimal_item
   end
 
   test "array field" do
-    assert_equal %w[admin@rubyonrails.org], Setting.admin_emails
-    assert_no_record :admin_emails
+    assert_nil Setting.array_item
+    assert_no_record :array_item
 
     new_emails = %w[admin@rubyonrails.org huacnlee@gmail.com]
-    Setting.admin_emails = new_emails
-    assert_equal new_emails, Setting.admin_emails
-    assert_record_value :admin_emails, new_emails
+    Setting.array_item = new_emails
+    assert_equal new_emails, Setting.array_item
+    assert_record_value :array_item, new_emails
 
-    Setting.admin_emails = new_emails.join("\n")
-    assert_equal new_emails, Setting.admin_emails
-    assert_record_value :admin_emails, new_emails
+    Setting.array_item = new_emails.join("\n")
+    assert_equal new_emails, Setting.array_item
+    assert_record_value :array_item, new_emails
 
-    Setting.admin_emails = new_emails.join(",")
-    assert_equal new_emails, Setting.admin_emails
-    assert_record_value :admin_emails, new_emails
+    Setting.array_item = new_emails.join(",")
+    assert_equal new_emails, Setting.array_item
+    assert_record_value :array_item, new_emails
 
-    Setting.admin_emails = new_emails.join(";")
-    assert_equal new_emails, Setting.admin_emails
-    assert_record_value :admin_emails, new_emails
+    Setting.array_item = new_emails.join(";")
+    assert_equal new_emails, Setting.array_item
+    assert_record_value :array_item, new_emails
 
-    Setting.admin_emails = new_emails.join(" , ")
-    assert_equal new_emails, Setting.admin_emails
-    assert_record_value :admin_emails, new_emails
+    Setting.array_item = new_emails.join(" , ")
+    assert_equal new_emails, Setting.array_item
+    assert_record_value :array_item, new_emails
+
+    Setting.array_item = nil
+    assert_nil Setting.array_item
+    assert_record_value_nil :array_item
   end
 
   test "hash field" do
+    assert_nil Setting.hash_item
+
+    Setting.hash_item = { "foo" => "bar" }
+    assert_equal({ "foo" => "bar" }, Setting.hash_item)
+    assert_record_value :hash_item, { "foo" => "bar" }
+
+    Setting.hash_item = { foo: "bar" }
+    assert_equal({ "foo" => "bar" }, Setting.hash_item)
+
+    Setting.hash_item = nil
+    assert_nil Setting.hash_item
+    assert_record_value_nil :hash_item
+  end
+
+  test "hash field intergration" do
     default_value = {
       host: "foo.com",
       username: "foo@bar.com",
