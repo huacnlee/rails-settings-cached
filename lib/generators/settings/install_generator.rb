@@ -15,8 +15,16 @@ module RailsSettings
 
     @@migrations = false
 
+    def self.timestamped_migrations
+      if ActiveRecord::Base.respond_to?(:timestamped_migrations)
+        ActiveRecord::Base.timestamped_migrations
+      elsif ActiveRecord.respond_to?(:timestamped_migrations)
+        ActiveRecord.timestamped_migrations
+      end
+    end
+
     def self.next_migration_number(dirname) #:nodoc:
-      if ActiveRecord::Base.timestamped_migrations
+      if timestamped_migrations
         if @@migrations
           (current_migration_number(dirname) + 1)
         else
