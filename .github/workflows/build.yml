@@ -3,9 +3,9 @@ on:
   pull_request:
   push:
     branches:
-      - "*"
+      - '*'
     tags:
-      - "*"
+      - '*'
 jobs:
   build:
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
@@ -16,6 +16,8 @@ jobs:
         include:
           - ruby: 3.2
             gemfile: Gemfile
+          - ruby: 3.2
+            gemfile: gemfiles/Gemfile-7-1
           - ruby: 3.2
             gemfile: gemfiles/Gemfile-7-0
           - ruby: 3.2
