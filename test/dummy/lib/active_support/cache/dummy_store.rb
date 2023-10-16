@@ -11,15 +11,15 @@ module ActiveSupport
         @data = {}
       end
 
-      def read_entry(key, _options)
+      def read_entry(key, **options)
         data[key]
       end
 
-      def write_entry(key, value, _options)
+      def write_entry(key, value, **options)
         data[key] = value
       end
 
-      def delete_entry(key, _options)
+      def delete_entry(key, **options)
         data.delete(key)
       end
     end

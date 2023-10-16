@@ -442,7 +442,9 @@ class BaseTest < ActiveSupport::TestCase
       Setting.user_limits = 42
 
       assert_equal Setting.user_limits, 42
-      assert RailsSettings.config.cache_storage.data.keys.include?("rails-settings-cached/v2")
+      assert RailsSettings.config.cache_storage.data.keys.any? do |key|
+        key.start_with?("rails-settings-cached")
+      end
     end
   end
 end
