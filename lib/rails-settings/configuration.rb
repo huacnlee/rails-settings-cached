@@ -1,33 +1,23 @@
 # frozen_string_literal: true
 
 module RailsSettings
-  InvalidConfigurationError = Class.new(StandardError)
-
   class Configuration
-    attr_reader :storage
-
-    def initialize
-      @storage = Rails.cache
-    end
-
-    def storage=(value)
-      unless value.is_a?(ActiveSupport::Cache::Store)
-        raise InvalidConfigurationError, <<~TXT
-          Option `storage` must be an instance of `ActiveSupport::Cache::Store` class.
-        TXT
-      end
-
-      @storage = value
-    end
+    # Caching storage backend.
+    # Default: `Rails.cache`
+    attr_accessor :cache_storage
   end
 
   class << self
-    def configuration
-      @configuration ||= Configuration.new
+    def config
+      return @config if defined?(@config)
+
+      @config = Configuration.new
+      @config.cache_storage = Rails.cache
+      @config
     end
 
-    def configure
-      yield configuration
+    def configure(&block)
+      config.instance_exec(&block)
     end
   end
 end
