@@ -472,8 +472,8 @@ You can use `cache_store` to change cache storage, default is `Rails.cache`.
 Add `config/initializers/rails_settings.rb`
 
 ```rb
-RailsSettings.configure do |config|
-  config.cache_store = :redis_store, "redis://localhost:6379/0/cache", { expires_in: 1.hour }
+RailsSettings.configure do
+  self.cache_storage = ActiveSupport::Cache::RedisCacheStore.new(url: "redis://localhost:6379")
 end
 ```
 
