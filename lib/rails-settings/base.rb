@@ -33,7 +33,7 @@ module RailsSettings
     class << self
       def clear_cache
         RequestCache.reset
-        Rails.cache.delete(cache_key)
+        cache_storage.delete(cache_key)
       end
 
       def field(key, **opts)
@@ -127,12 +127,16 @@ module RailsSettings
       end
 
       def _all_settings
-        RequestCache.all_settings ||= Rails.cache.fetch(cache_key, expires_in: 1.week) do
+        RequestCache.all_settings ||= cache_storage.fetch(cache_key, expires_in: 1.week) do
           vars = unscoped.select("var, value")
           result = {}
           vars.each { |record| result[record.var] = record.value }
           result.with_indifferent_access
         end
+      end
+
+      def cache_storage
+        RailsSettings.config.cache_storage
       end
     end
   end

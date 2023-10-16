@@ -424,4 +424,27 @@ class BaseTest < ActiveSupport::TestCase
     assert_equal %(SELECT "settings".* FROM "settings" WHERE (var like 'readonly_%')), Setting.by_prefix("readonly_").to_sql
     assert_equal "foo", Setting.by_prefix("readonly_").foo
   end
+
+  class CustomCacheStorageTest < ActiveSupport::TestCase
+    setup do
+      RailsSettings.configure do
+        self.cache_storage = ActiveSupport::Cache.lookup_store(:dummy_store)
+      end
+    end
+
+    teardown do
+      RailsSettings.configure do
+        self.cache_storage = Rails.cache
+      end
+    end
+
+    test "uses expected cached storage" do
+      Setting.user_limits = 42
+
+      assert_equal Setting.user_limits, 42
+      assert RailsSettings.config.cache_storage.data.keys.any? do |key|
+        key.start_with?("rails-settings-cached")
+      end
+    end
+  end
 end
