@@ -465,6 +465,18 @@ app/views/admin/settings/show.html.erb
 <% end %>
 ```
 
+## Special Cache Storage
+
+You can use `cache_store` to change cache storage, default is `Rails.cache`.
+
+Add `config/initializers/rails_settings.rb`
+
+```rb
+RailsSettings.configure do |config|
+  config.cache_store = :redis_store, "redis://localhost:6379/0/cache", { expires_in: 1.hour }
+end
+```
+
 ## Scoped Settings
 
 > 🚨 BREAK CHANGES WARNING:
