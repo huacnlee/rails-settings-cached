@@ -1,15 +1,11 @@
 # frozen_string_literal: true
 
 module RailsSettings
-  class ProtectedKeyError < RuntimeError
-    def initialize(key)
-      super("Can't use #{key} as setting key.")
-    end
-  end
-
   class Base < ActiveRecord::Base
     PROTECTED_KEYS = %w[var value]
     self.table_name = table_name_prefix + "settings"
+
+    after_commit :clear_cache, on: %i[create update destroy]
 
     # get the value field, YAML decoded
     def value
