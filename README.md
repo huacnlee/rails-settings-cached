@@ -517,6 +517,6 @@ end
 - [texterify/texterify](https://github.com/texterify/texterify) - 2.x
 - [mastodon/mastodon](https://github.com/mastodon/mastodon) - 0.6.x
 - [helpyio/helpy](https://github.com/helpyio/helpy) - 0.5.x
-- [daqing/rabel](https://github.com/daqing/rabel) - 0.4.x
+- [maybe-finance/maybe](https://github.com/maybe-finance/maybe) - 2.x
 
 And more than [1K repositories](https://github.com/huacnlee/rails-settings-cached/network/dependents) used.
