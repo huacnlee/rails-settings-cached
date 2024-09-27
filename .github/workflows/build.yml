@@ -17,6 +17,8 @@ jobs:
           - ruby: 3.3
             gemfile: Gemfile
           - ruby: 3.3
+            gemfile: gemfiles/Gemfile-8-0
+          - ruby: 3.3
             gemfile: gemfiles/Gemfile-7-2
           - ruby: 3.2
             gemfile: gemfiles/Gemfile-7-1
