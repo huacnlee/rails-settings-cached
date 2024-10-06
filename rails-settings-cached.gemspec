@@ -14,11 +14,11 @@ Gem::Specification.new do |s|
   s.license = "MIT"
 
   s.required_ruby_version = ">= 2.5"
-  s.summary = "The best solution for store global settings in Rails applications."
+  s.summary = "The best solution to store global settings in Rails applications."
   s.description = "
-  The best solution for store global settings in Rails applications.
+  The best solution to store global settings in Rails applications.
 
-  This gem will managing a table of а global key, value pairs easy. Think of it like a
+  This gem will managing a table of a global key, value pairs easy. Think of it like a
   global Hash stored in your database, that uses simple ActiveRecord like methods for manipulation.
 
   Keep track of any global setting that you dont want to hard code into your rails app.
