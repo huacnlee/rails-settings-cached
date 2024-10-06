@@ -1,6 +1,6 @@
-module RailsSettings
+module RailsAppSettings
   module Fields
-    class Custom < ::RailsSettings::Fields::Base
+    class Custom < ::RailsAppSettings::Fields::Base
       def serialize(value)
         case value
         when 'a', 1 then 'a'

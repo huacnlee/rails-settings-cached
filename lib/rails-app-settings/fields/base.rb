@@ -1,4 +1,4 @@
-module RailsSettings
+module RailsAppSettings
   module Fields
     class Base < Struct.new(:scope, :key, :default, :parent, :readonly, :separator, :type, :options, keyword_init: true)
       SEPARATOR_REGEXP = /[\n,;]+/
@@ -66,9 +66,9 @@ module RailsSettings
         def fetch_field_class(type)
           field_class_name = type.to_s.split("_").map(&:capitalize).join("")
           begin
-            const_get("::RailsSettings::Fields::#{field_class_name}")
+            const_get("::RailsAppSettings::Fields::#{field_class_name}")
           rescue StandardError
-            ::RailsSettings::Fields::String
+            ::RailsAppSettings::Fields::String
           end
         end
       end

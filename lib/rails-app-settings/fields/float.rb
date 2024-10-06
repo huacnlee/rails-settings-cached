@@ -1,10 +1,10 @@
-module RailsSettings
+module RailsAppSettings
   module Fields
-    class BigDecimal < ::RailsSettings::Fields::Base
+    class Float < ::RailsAppSettings::Fields::Base
       def deserialize(value)
         return nil if value.nil?
 
-        value.to_d
+        value.to_f
       end
 
       def serialize(value)

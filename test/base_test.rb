@@ -34,14 +34,14 @@ class BaseTest < ActiveSupport::TestCase
   end
 
   test "define setting with protected keys" do
-    assert_raise(RailsSettings::ProtectedKeyError, "Can't use var as setting key.") do
-      class NewSetting < RailsSettings::Base
+    assert_raise(RailsAppSettings::ProtectedKeyError, "Can't use var as setting key.") do
+      class NewSetting < RailsAppSettings::Base
         field :var
       end
     end
 
-    assert_raise(RailsSettings::ProtectedKeyError, "Can't use value as setting key.") do
-      class NewSetting < RailsSettings::Base
+    assert_raise(RailsAppSettings::ProtectedKeyError, "Can't use value as setting key.") do
+      class NewSetting < RailsAppSettings::Base
         field :value
       end
     end
@@ -427,13 +427,13 @@ class BaseTest < ActiveSupport::TestCase
 
   class CustomCacheStorageTest < ActiveSupport::TestCase
     setup do
-      RailsSettings.configure do
+      RailsAppSettings.configure do
         self.cache_storage = ActiveSupport::Cache.lookup_store(:dummy_store)
       end
     end
 
     teardown do
-      RailsSettings.configure do
+      RailsAppSettings.configure do
         self.cache_storage = Rails.cache
       end
     end
@@ -442,7 +442,7 @@ class BaseTest < ActiveSupport::TestCase
       Setting.user_limits = 42
 
       assert_equal Setting.user_limits, 42
-      assert RailsSettings.config.cache_storage.data.keys.any? do |key|
+      assert RailsAppSettings.config.cache_storage.data.keys.any? do |key|
         key.start_with?("rails-settings-cached")
       end
     end

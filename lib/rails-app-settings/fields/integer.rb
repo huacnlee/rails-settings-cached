@@ -1,10 +1,10 @@
-module RailsSettings
+module RailsAppSettings
   module Fields
-    class Float < ::RailsSettings::Fields::Base
+    class Integer < ::RailsAppSettings::Fields::Base
       def deserialize(value)
         return nil if value.nil?
 
-        value.to_f
+        value.to_i
       end
 
       def serialize(value)

@@ -1,10 +1,10 @@
-module RailsSettings
+module RailsAppSettings
   module Fields
-    class Boolean < ::RailsSettings::Fields::Base
+    class BigDecimal < ::RailsAppSettings::Fields::Base
       def deserialize(value)
         return nil if value.nil?
 
-        ["true", "1", 1, true].include?(value)
+        value.to_d
       end
 
       def serialize(value)

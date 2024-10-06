@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 $LOAD_PATH.push File.expand_path("lib", __dir__)
-require "rails-settings/version"
+require "rails-app-settings/version"
 
 Gem::Specification.new do |s|
-  s.name = "rails-settings-cached"
-  s.version = RailsSettings.version
+  s.name = "rails-app-settings"
+  s.version = RailsAppSettings.version
   s.authors = ["Jason Lee"]
   s.email = "huacnlee@gmail.com"
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]

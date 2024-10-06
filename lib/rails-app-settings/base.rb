@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-module RailsSettings
+module RailsAppSettings
   class ProtectedKeyError < RuntimeError
     def initialize(key)
-      super("Can't use #{key} as setting key.")
+      super("Can't use #{key} as app setting key.")
     end
   end
 
   class Base < ActiveRecord::Base
     PROTECTED_KEYS = %w[var value]
-    self.table_name = table_name_prefix + "settings"
+    self.abstract_class = true
 
     # get the value field, YAML decoded
     def value
@@ -88,7 +88,7 @@ module RailsSettings
 
         raise ProtectedKeyError.new(key) if PROTECTED_KEYS.include?(key)
 
-        field = ::RailsSettings::Fields::Base.generate(
+        field = ::RailsAppSettings::Fields::Base.generate(
           scope: @scope, key: key, default: default,
           type: type, readonly: readonly, options: opts,
           separator: separator, parent: self
@@ -136,7 +136,7 @@ module RailsSettings
       end
 
       def cache_storage
-        RailsSettings.config.cache_storage
+        RailsAppSettings.config.cache_storage
       end
     end
   end

@@ -1,6 +1,6 @@
-module RailsSettings
+module RailsAppSettings
   module Fields
-    class String < ::RailsSettings::Fields::Base
+    class String < ::RailsAppSettings::Fields::Base
       def deserialize(value)
         return nil if value.nil?
 

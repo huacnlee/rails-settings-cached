@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module RailsSettings
+module RailsAppSettings
   class Configuration
     # Caching storage backend.
     # Default: `Rails.cache`

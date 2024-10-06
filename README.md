@@ -11,26 +11,43 @@ This gem will make managing a table of а global key, value pairs easy. Think of
 Edit your Gemfile:
 
 ```bash
-$ bundle add rails-settings-cached
+bundle add rails-settings-cached
 ```
 
-Generate your settings:
+Generate your app settings:
 
 ```bash
-$ rails g settings:install
-
-# Or use a custom name:
-$ rails g settings:install AppConfig
+rails g app_settings:install
 ```
 
-You will get `app/models/setting.rb`
+Will create:
+- `app/models/app_setting.rb`
+- `db/migrate/create_app_setting.rb`
+
+Or use a custom name for the model (which will also affect the table name):
+
+```bash
+rails g app_settings:install AppConfig
+```
+
+Will create:
+- `app/models/app_config.rb`
+- `db/migrate/create_app_configs.rb`
+
+## Important Naming Consideration
+
+### Avoid Naming Your Model `Settings`
+
+If you are using both this gem (`rails-settings-cached`) and the [`ledermann/rails-settings`](https://github.com/ledermann/rails-settings) gem in your project, **do not** name your model `Settings`.
+
+The `ledermann/rails-settings` gem already defines a model named `Settings`, and using the same name for your model will result in **namespace conflicts**. This could lead to unexpected behavior, bugs, and errors in your application.
 
 ```rb
-class Setting < RailsSettings::Base
+class AppSetting < RailsAppSettings::Base
   # cache_prefix { "v1" }
 
   scope :application do
-    field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
+    field :app_name, default: "Rails App Settings", validates: { presence: true, length: { in: 2..20 } }
     field :host, default: "http://example.com", readonly: true
     field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp] } }, option_values: %w[en zh-CN jp], help_text: "Bla bla ..."
     field :admin_emails, type: :array, default: %w[admin@rubyonrails.org]
@@ -57,14 +74,14 @@ class Setting < RailsSettings::Base
 end
 ```
 
-You must use the `field` method to statement the setting keys, otherwise you can't use it.
+You must use the `field` method to statement the app setting keys, otherwise you can't use it.
 
 The `scope` method allows you to group the keys for admin UI.
 
-Now just put that migration in the database with:
+Now just run that migration:
 
 ```bash
-$ rails db:migrate
+rails db:migrate
 ```
 
 ## Usage
@@ -72,61 +89,61 @@ $ rails db:migrate
 The syntax is easy. First, let's create some settings to keep track of:
 
 ```ruby
-irb > Setting.host
+irb > AppSetting.host
 "http://example.com"
-irb > Setting.app_name
-"Rails Settings"
-irb > Setting.app_name = "Rails Settings Cached"
-irb > Setting.app_name
-"Rails Settings Cached"
+irb > AppSetting.app_name
+"Rails App Settings"
+irb > AppSetting.app_name = "Rails App Settings"
+irb > AppSetting.app_name
+"Rails App Settings"
 
-irb > Setting.user_limits
+irb > AppSetting.user_limits
 20
-irb > Setting.user_limits = "30"
-irb > Setting.user_limits
+irb > AppSetting.user_limits = "30"
+irb > AppSetting.user_limits
 30
-irb > Setting.user_limits = 45
-irb > Setting.user_limits
+irb > AppSetting.user_limits = 45
+irb > AppSetting.user_limits
 45
 
-irb > Setting.captcha_enable
+irb > AppSetting.captcha_enable
 1
-irb > Setting.captcha_enable?
+irb > AppSetting.captcha_enable?
 true
-irb > Setting.captcha_enable = "0"
-irb > Setting.captcha_enable
+irb > AppSetting.captcha_enable = "0"
+irb > AppSetting.captcha_enable
 false
-irb > Setting.captcha_enable = "1"
-irb > Setting.captcha_enable
+irb > AppSetting.captcha_enable = "1"
+irb > AppSetting.captcha_enable
 true
-irb > Setting.captcha_enable = "false"
-irb > Setting.captcha_enable
+irb > AppSetting.captcha_enable = "false"
+irb > AppSetting.captcha_enable
 false
-irb > Setting.captcha_enable = "true"
-irb > Setting.captcha_enable
+irb > AppSetting.captcha_enable = "true"
+irb > AppSetting.captcha_enable
 true
-irb > Setting.captcha_enable?
+irb > AppSetting.captcha_enable?
 true
 
-irb > Setting.admin_emails
+irb > AppSetting.admin_emails
 ["admin@rubyonrails.org"]
-irb > Setting.admin_emails = %w[foo@bar.com bar@dar.com]
-irb > Setting.admin_emails
+irb > AppSetting.admin_emails = %w[foo@bar.com bar@dar.com]
+irb > AppSetting.admin_emails
 ["foo@bar.com", "bar@dar.com"]
-irb > Setting.admin_emails = "huacnlee@gmail.com,admin@admin.com\nadmin@rubyonrails.org"
-irb > Setting.admin_emails
+irb > AppSetting.admin_emails = "huacnlee@gmail.com,admin@admin.com\nadmin@rubyonrails.org"
+irb > AppSetting.admin_emails
 ["huacnlee@gmail.com", "admin@admin.com", "admin@rubyonrails.org"]
 
-irb > Setting.notification_options
+irb > AppSetting.notification_options
 {
   send_all: true,
   logging: true,
   sender_email: "foo@bar.com"
 }
-irb > Setting.notification_options = {
+irb > AppSetting.notification_options = {
   sender_email: "notice@rubyonrails.org"
 }
-irb > Setting.notification_options
+irb > AppSetting.notification_options
 {
   sender_email: "notice@rubyonrails.org"
 }
@@ -138,41 +155,41 @@ irb > Setting.notification_options
 
 ```rb
 # Get all keys
-Setting.keys
+AppSetting.keys
 => ["app_name", "host", "default_locale", "readonly_item"]
 
 # Get editable keys
-Setting.editable_keys
+AppSetting.editable_keys
 => ["app_name", "default_locale"]
 
 # Get readonly keys
-Setting.readonly_keys
+AppSetting.readonly_keys
 => ["host", "readonly_item"]
 
 # Get field
-Setting.get_field("host")
+AppSetting.get_field("host")
 => { scope: :application, key: "host", type: :string, default: "http://example.com", readonly: true }
-Setting.get_field("app_name")
-=> { scope: :application, key: "app_name", type: :string, default: "Rails Settings", readonly: false }
-Setting.get_field(:user_limits)
+AppSetting.get_field("app_name")
+=> { scope: :application, key: "app_name", type: :string, default: "Rails App Settings", readonly: false }
+AppSetting.get_field(:user_limits)
 => { scope: :limits, key: "user_limits", type: :integer, default: 20, readonly: false }
 # Get field options
-Setting.get_field("default_locale")[:options]
+AppSetting.get_field("default_locale")[:options]
 => { option_values: %w[en zh-CN jp], help_text: "Bla bla ..." }
 ```
 
-### Custom type for setting
+### Custom type for app setting
 
 > Since: 2.9.0
 
-You can write your custom field type by under `RailsSettings::Fields` module.
+You can write your custom field type by under `RailsAppSettings::Fields` module.
 
 #### For example
 
 ```rb
-module RailsSettings
+module RailsAppSettings
   module Fields
-    class YesNo < ::RailsSettings::Fields::Base
+    class YesNo < ::RailsAppSettings::Fields::Base
       def serialize(value)
         case value
         when true then "YES"
@@ -193,20 +210,20 @@ module RailsSettings
 end
 ```
 
-Now you can use `yes_no` type in you setting:
+Now you can use `yes_no` type in your app setting:
 
 ```rb
-class Setting
+class AppSetting
   field :custom_item, type: :yes_no, default: 'YES'
 end
 ```
 
 ```rb
-irb> Setting.custom_item = 'YES'
-irb> Setting.custom_item
+irb> AppSetting.custom_item = 'YES'
+irb> AppSetting.custom_item
 true
-irb> Setting.custom_item = 'NO'
-irb> Setting.custom_item
+irb> AppSetting.custom_item = 'NO'
+irb> AppSetting.custom_item
 false
 ```
 
@@ -214,11 +231,11 @@ false
 
 > version 2.7.0+
 
-You can use `defined_fields` method to get all defined fields in Setting.
+You can use `defined_fields` method to get all defined fields in AppSetting.
 
 ```rb
 # Get editable fields and group by scope
-editable_fields = Setting.defined_fields
+editable_fields = AppSetting.defined_fields
   .select { |field| !field[:readonly] }
   .group_by { |field| field[:scope] }
 ```
@@ -228,9 +245,9 @@ editable_fields = Setting.defined_fields
 You can use `validates` options to special the [Rails Validation](https://api.rubyonrails.org/classes/ActiveModel/Validations/ClassMethods.html#method-i-validates) for fields.
 
 ```rb
-class Setting < RailsSettings::Base
+class AppSetting < RailsAppSettings::Base
   # cache_prefix { "v1" }
-  field :app_name, default: "Rails Settings", validates: { presence: true, length: { in: 2..20 } }
+  field :app_name, default: "Rails App Settings", validates: { presence: true, length: { in: 2..20 } }
   field :default_locale, default: "zh-CN", validates: { presence: true, inclusion: { in: %w[zh-CN en jp], message: "is not included in [zh-CN, en, jp]" } }
 end
 ```
@@ -238,13 +255,13 @@ end
 Now validate will work on record save:
 
 ```rb
-irb> Setting.app_name = ""
+irb> AppSetting.app_name = ""
 ActiveRecord::RecordInvalid: (Validation failed: App name can't be blank)
-irb> Setting.app_name = "Rails Settings"
-"Rails Settings"
-irb> Setting.default_locale = "zh-TW"
+irb> AppSetting.app_name = "Rails App Settings"
+"Rails App Settings"
+irb> AppSetting.default_locale = "zh-TW"
 ActiveRecord::RecordInvalid: (Validation failed: Default locale is not included in [zh-CN, en, jp])
-irb> Setting.default_locale = "en"
+irb> AppSetting.default_locale = "en"
 "en"
 ```
 
@@ -252,14 +269,14 @@ Validate by `save` / `valid?` method:
 
 ```rb
 
-setting = Setting.find_or_initialize_by(var: :app_name)
+setting = AppSetting.find_or_initialize_by(var: :app_name)
 setting.value = ""
 setting.valid?
 # => false
 setting.errors.full_messages
 # => ["App name can't be blank", "App name too short (minimum is 2 characters)"]
 
-setting = Setting.find_or_initialize_by(var: :default_locale)
+setting = AppSetting.find_or_initialize_by(var: :default_locale)
 setting.value = "zh-TW"
 setting.save
 # => false
@@ -270,22 +287,22 @@ setting.valid?
 # => true
 ```
 
-## Use Setting in Rails initializing:
+## Use AppSetting in Rails initializing:
 
-In `version 2.3+` you can use Setting before Rails is initialized.
+In `version 2.3+` you can use AppSetting before Rails is initialized.
 
 For example `config/initializers/devise.rb`
 
 ```rb
 Devise.setup do |config|
-  if Setting.omniauth_google_client_id.present?
-    config.omniauth :google_oauth2, Setting.omniauth_google_client_id, Setting.omniauth_google_client_secret
+  if AppSetting.omniauth_google_client_id.present?
+    config.omniauth :google_oauth2, AppSetting.omniauth_google_client_id, AppSetting.omniauth_google_client_secret
   end
 end
 ```
 
 ```rb
-class Setting < RailsSettings::Base
+class AppSetting < RailsAppSettings::Base
   field :omniauth_google_client_id, default: ENV["OMNIAUTH_GOOGLE_CLIENT_ID"]
   field :omniauth_google_client_secret, default: ENV["OMNIAUTH_GOOGLE_CLIENT_SECRET"]
 end
@@ -293,18 +310,18 @@ end
 
 ## Readonly field
 
-You may also want use Setting before Rails initialize:
+You may also want use AppSetting before Rails initialize:
 
 ```
 config/environments/*.rb
 ```
 
-If you want do that do that, the setting field must has `readonly: true`.
+If you want do that do that, the app setting field must has `readonly: true`.
 
 For example:
 
 ```rb
-class Setting < RailsSettings::Base
+class AppSetting < RailsAppSettings::Base
   field :mailer_provider, default: (ENV["mailer_provider"] || "smtp"), readonly: true
   field :mailer_options, type: :hash, readonly: true, default: {
     address: ENV["mailer_options.address"],
@@ -322,29 +339,29 @@ config/environments/production.rb
 
 ```rb
 # You must require_relative directly in Rails 6.1+ in config/environments/production.rb
-require_relative "../../app/models/setting"
+require_relative "../../app/models/app_setting"
 
 Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = Setting.mailer_options.deep_symbolize_keys
+  config.action_mailer.smtp_settings = AppSetting.mailer_options.deep_symbolize_keys
 end
 ```
 
-TIP: You also can follow this file to rewrite ActionMailer's `mail` method for configuration Mail options from Setting after Rails booted.
+TIP: You also can follow this file to rewrite ActionMailer's `mail` method for configuration Mail options from AppSetting after Rails booted.
 
 https://github.com/ruby-china/homeland/blob/main/app/mailers/application_mailer.rb#L19
 
 ## Caching flow:
 
 ```
-Setting.host -> Check Cache -> Exist - Get value of key for cache -> Return
+AppSetting.host -> Check Cache -> Exist - Get value of key for cache -> Return
                    |
                 Fetch all key and values from DB -> Write Cache -> Get value of key for cache -> return
                    |
                 Return default value or nil
 ```
 
-In each Setting keys call, we will load the cache/db and save in [ActiveSupport::CurrentAttributes](https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html) to avoid hit cache/db.
+In each AppSetting keys call, we will load the cache/db and save in [ActiveSupport::CurrentAttributes](https://api.rubyonrails.org/classes/ActiveSupport/CurrentAttributes.html) to avoid hit cache/db.
 
 Each key update will expire the cache, so do not add some frequent update key.
 
@@ -353,47 +370,47 @@ Each key update will expire the cache, so do not add some frequent update key.
 Some times you may need to force update cache, now you can use `cache_prefix`
 
 ```ruby
-class Setting < RailsSettings::Base
+class AppSetting < RailsAppSettings::Base
   cache_prefix { "you-prefix" }
   ...
 end
 ```
 
-In testing, you need add `Setting.clear_cache` for each Test case:
+In testing, you need add `AppSetting.clear_cache` for each Test case:
 
 ```rb
 class ActiveSupport::TestCase
   teardown do
-    Setting.clear_cache
+    AppSetting.clear_cache
   end
 end
 ```
 
 ---
 
-## How to manage Settings in the admin interface?
+## How to manage AppSettings in the admin interface?
 
-If you want to create an admin interface to editing the Settings, you can try methods in following:
+If you want to create an admin interface to editing the AppSettings, you can try methods in following:
 
 config/routes.rb
 
 ```rb
 namespace :admin do
-  resource :settings
+  resource :app_settings
 end
 ```
 
-app/controllers/admin/settings_controller.rb
+app/controllers/admin/app_settings_controller.rb
 
 ```rb
 module Admin
-  class SettingsController < ApplicationController
+  class AppSettingsController < ApplicationController
     def create
       @errors = ActiveModel::Errors.new
       setting_params.keys.each do |key|
         next if setting_params[key].nil?
 
-        setting = Setting.new(var: key)
+        setting = AppSetting.new(var: key)
         setting.value = setting_params[key].strip
         unless setting.valid?
           @errors.merge!(setting.errors)
@@ -405,25 +422,25 @@ module Admin
       end
 
       setting_params.keys.each do |key|
-        Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
+        AppSetting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
       end
 
-      redirect_to admin_settings_path, notice: "Setting was successfully updated."
+      redirect_to admin_settings_path, notice: "AppSetting was successfully updated."
     end
 
     private
       def setting_params
-        params.require(:setting).permit(:host, :user_limits, :admin_emails,
+        params.require(:app_setting).permit(:host, :user_limits, :admin_emails,
           :captcha_enable, :notification_options)
       end
   end
 end
 ```
 
-app/views/admin/settings/show.html.erb
+app/views/admin/app_settings/show.html.erb
 
 ```erb
-<%= form_for(Setting.new, url: admin_settings_path) do |f| %>
+<%= form_for(AppSetting.new, url: admin_app_settings_path) do |f| %>
   <% if @errors.any? %>
     <div class="alert alert-block alert-danger">
       <ul>
@@ -436,31 +453,31 @@ app/views/admin/settings/show.html.erb
 
   <div class="form-group">
     <label class="control-label">Host</label>
-    <%= f.text_field :host, value: Setting.host, class: "form-control", placeholder: "http://localhost"  %>
+    <%= f.text_field :host, value: AppSetting.host, class: "form-control", placeholder: "http://localhost"  %>
   </div>
 
   <div class="form-group form-checkbox">
     <label>
-      <%= f.check_box :captcha_enable, checked: Setting.captcha_enable? %>
+      <%= f.check_box :captcha_enable, checked: AppSetting.captcha_enable? %>
       Enable/Disable Captcha
     </label>
   </div>
 
   <div class="form-group">
     <label class="control-label">Admin Emails</label>
-    <%= f.text_area :admin_emails, value: Setting.admin_emails.join("\n"), class: "form-control" %>
+    <%= f.text_area :admin_emails, value: AppSetting.admin_emails.join("\n"), class: "form-control" %>
   </div>
 
   <div class="form-group">
     <label class="control-label">Notification options</label>
-    <%= f.text_area :notification_options, value: YAML.dump(Setting.notification_options), class: "form-control", style: "height: 180px;"  %>
+    <%= f.text_area :notification_options, value: YAML.dump(AppSetting.notification_options), class: "form-control", style: "height: 180px;"  %>
     <div class="form-text">
       Use YAML format to config the SMTP_html
     </div>
   </div>
 
   <div>
-    <%= f.submit 'Update Settings' %>
+    <%= f.submit 'Update AppSettings' %>
   </div>
 <% end %>
 ```
@@ -469,10 +486,10 @@ app/views/admin/settings/show.html.erb
 
 You can use `cache_store` to change cache storage, default is `Rails.cache`.
 
-Add `config/initializers/rails_settings.rb`
+Add `config/initializers/rails_app_settings.rb`
 
 ```rb
-RailsSettings.configure do
+RailsAppSettings.configure do
   self.cache_storage = ActiveSupport::Cache::RedisCacheStore.new(url: "redis://localhost:6379")
 end
 ```

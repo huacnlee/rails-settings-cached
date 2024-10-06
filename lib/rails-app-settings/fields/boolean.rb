@@ -1,10 +1,10 @@
-module RailsSettings
+module RailsAppSettings
   module Fields
-    class Integer < ::RailsSettings::Fields::Base
+    class Boolean < ::RailsAppSettings::Fields::Base
       def deserialize(value)
         return nil if value.nil?
 
-        value.to_i
+        ["true", "1", 1, true].include?(value)
       end
 
       def serialize(value)
