@@ -1,0 +1,6 @@
+## Release Guides
+
+1. Change the `lib/rails-settings/version.rb` file to the new version number.
+2. Run `bundle install` to make `Gemfile.lock` reflect the new version number.
+3. Git commit with `Version vX.Y.Z`.
+4. Run `rake release` to publish gem, this command will create a git tag for the version.
