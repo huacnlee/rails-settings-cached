@@ -34,6 +34,10 @@ Will create:
 - `app/models/app_config.rb`
 - `db/migrate/create_app_configs.rb`
 
+## 🚨 BREAKING CHANGES - v2.10.0
+The `RailsSettings` module was renamed to `RailsAppSettings` to avoid name collisions with [`ledermann/rails-settings`](https://github.com/ledermann/rails-settings) modules.
+If you were already using `rails-settings-cached` please change your application settings model's base class from `RailsSettings::Base` to `RailsAppSettings::Base` to make sure everything works as expected.
+
 ## Important Naming Consideration
 
 ### Avoid Naming Your Model `Settings`
