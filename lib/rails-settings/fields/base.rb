@@ -33,9 +33,9 @@ module RailsSettings
       end
 
       def read
-        return deserialize(default_value) if readonly || saved_value.nil?
-
-        deserialize(saved_value)
+        stored_value = saved_value
+        return deserialize(default_value) if readonly || stored_value.nil?
+        deserialize(stored_value)
       end
 
       def deserialize(value)
