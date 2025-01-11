@@ -1,9 +1,9 @@
-<div class="settings-form">
+<div>
   <h2>Application Settings</h2>
 
   <%%= form_with(model: Setting.new, url: admin_settings_path) do |f| %>
     <%% if @errors&.any? %>
-      <div class="alert alert-danger">
+      <div>
         <ul>
           <%% @errors.full_messages.each do |msg| %>
             <li><%%= msg %></li>
@@ -13,11 +13,11 @@
     <%% end %>
 
     <%% Setting.defined_fields.group_by { |f| f[:scope] }.each do |scope, fields| %>
-      <div class="settings-section">
+      <div>
         <h3><%%= scope.to_s.titleize %></h3>
         
         <%% fields.each do |field| %>
-          <div class="form-group">
+          <div>
             <%% field_name = field[:key] %>
             <%% field_type = field[:type] %>
             <%% readonly = field[:readonly] %>
@@ -26,40 +26,36 @@
             
             <%% case field_type %>
             <%% when :boolean %>
-              <div class="form-check">
+              <div>
                 <%%= f.check_box field_name, 
                               checked: Setting.send(field_name), 
-                              class: "form-check-input",
                               disabled: readonly %>
               </div>
             <%% when :array %>
               <%%= f.text_area field_name,
                             value: Setting.send(field_name)&.join("\n"),
-                            class: "form-control",
                             rows: 3,
                             disabled: readonly %>
             <%% when :hash %>
               <%%= f.text_area field_name,
                             value: YAML.dump(Setting.send(field_name)),
-                            class: "form-control",
                             rows: 5,
                             disabled: readonly %>
-              <small class="form-text text-muted">Use YAML format</small>
+              <small>Use YAML format</small>
             <%% else %>
               <%%= f.text_field field_name,
                              value: Setting.send(field_name),
-                             class: "form-control",
                              disabled: readonly %>
             <%% end %>
 
             <%% if field[:options]&.dig(:help_text).present? %>
-              <small class="form-text text-muted">
+              <small>
                 <%%= field[:options][:help_text] %>
               </small>
             <%% end %>
             
             <%% if readonly %>
-              <small class="form-text text-muted">
+              <small>
                 <em>This setting is readonly</em>
               </small>
             <%% end %>
@@ -68,35 +64,8 @@
       </div>
     <%% end %>
 
-    <div class="form-actions">
-      <%%= f.submit 'Save Settings', class: 'btn btn-primary' %>
+    <div>
+      <%%= f.submit 'Save Settings' %>
     </div>
   <%% end %>
 </div>
-
-<%% content_for :styles do %>
-<style>
-  .settings-form {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-  }
-  
-  .settings-section {
-    margin-bottom: 30px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 5px;
-  }
-  
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
-  .form-actions {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    border-top: 1px solid #dee2e6;
-  }
-</style>
-<%% end %> 
