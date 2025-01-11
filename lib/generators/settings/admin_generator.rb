@@ -4,6 +4,7 @@ module Settings
 
     def create_controller
       template 'admin_controller.rb', 'app/controllers/admin/settings_controller.rb'
+      template 'admin_controller_test.rb', 'test/controllers/admin/settings_controller_test.rb'
     end
 
     def create_view
