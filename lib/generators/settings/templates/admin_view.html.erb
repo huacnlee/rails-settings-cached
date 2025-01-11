@@ -16,10 +16,11 @@
       <div class="settings-section">
         <h3><%%= scope.to_s.titleize %></h3>
         
-        <%% fields.reject { |f| f[:readonly] }.each do |field| %>
+        <%% fields.each do |field| %>
           <div class="form-group">
             <%% field_name = field[:key] %>
             <%% field_type = field[:type] %>
+            <%% readonly = field[:readonly] %>
             
             <label><%%= field_name.humanize %></label>
             
@@ -28,28 +29,38 @@
               <div class="form-check">
                 <%%= f.check_box field_name, 
                               checked: Setting.send(field_name), 
-                              class: "form-check-input" %>
+                              class: "form-check-input",
+                              disabled: readonly %>
               </div>
             <%% when :array %>
               <%%= f.text_area field_name,
                             value: Setting.send(field_name)&.join("\n"),
                             class: "form-control",
-                            rows: 3 %>
+                            rows: 3,
+                            disabled: readonly %>
             <%% when :hash %>
               <%%= f.text_area field_name,
                             value: YAML.dump(Setting.send(field_name)),
                             class: "form-control",
-                            rows: 5 %>
+                            rows: 5,
+                            disabled: readonly %>
               <small class="form-text text-muted">Use YAML format</small>
             <%% else %>
               <%%= f.text_field field_name,
                              value: Setting.send(field_name),
-                             class: "form-control" %>
+                             class: "form-control",
+                             disabled: readonly %>
             <%% end %>
 
             <%% if field[:options]&.dig(:help_text).present? %>
               <small class="form-text text-muted">
                 <%%= field[:options][:help_text] %>
+              </small>
+            <%% end %>
+            
+            <%% if readonly %>
+              <small class="form-text text-muted">
+                <em>This setting is readonly</em>
               </small>
             <%% end %>
           </div>
