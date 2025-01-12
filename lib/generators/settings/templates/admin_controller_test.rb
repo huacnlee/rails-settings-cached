@@ -28,7 +28,7 @@ module Admin
         }
       }
 
-      assert_response :success
+      assert_response :unprocessable_entity
       assert_select 'li', /is not a number/
     end
 
