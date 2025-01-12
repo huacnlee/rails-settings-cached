@@ -38,7 +38,7 @@
                             disabled: readonly %>
             <%% when :hash %>
               <%%= f.text_area field_name,
-                            value: YAML.dump(Setting.send(field_name)),
+                            value: YAML.dump(Setting.send(field_name).to_hash.transform_keys(&:to_s)),
                             rows: 5,
                             disabled: readonly %>
               <small>Use YAML format</small>
