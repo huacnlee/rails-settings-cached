@@ -14,7 +14,7 @@ module Admin
       end
 
       if @errors.any?
-        render :show
+        render :show, status: :unprocessable_entity
         return
       end
 
