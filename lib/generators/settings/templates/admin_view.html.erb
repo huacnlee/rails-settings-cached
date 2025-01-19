@@ -43,9 +43,16 @@
                             disabled: readonly %>
               <small>Use YAML format</small>
             <%% else %>
-              <%%= f.text_field field_name,
-                             value: Setting.send(field_name),
+              <% if field[:options]&.dig(:option_values).present? %>
+                <%= f.select field_name,
+                             options_for_select(field[:options][:option_values], Setting.send(field_name)),
+                             { include_blank: !field[:validates]&.dig(:presence) && field[:default].nil? },
                              disabled: readonly %>
+              <% else %>
+                <%= f.text_field field_name,
+                              value: Setting.send(field_name),
+                              disabled: readonly %>
+              <% end %>
             <%% end %>
 
             <%% if field[:options]&.dig(:help_text).present? %>
