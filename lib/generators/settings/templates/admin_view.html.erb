@@ -46,7 +46,7 @@
               <% if field[:options]&.dig(:option_values).present? %>
                 <%= f.select field_name,
                              options_for_select(field[:options][:option_values], Setting.send(field_name)),
-                             { include_blank: !field[:validates]&.dig(:presence) && field[:default].nil? },
+                             {},
                              disabled: readonly %>
               <% else %>
                 <%= f.text_field field_name,
