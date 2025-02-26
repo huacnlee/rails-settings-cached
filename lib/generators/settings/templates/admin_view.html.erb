@@ -42,6 +42,11 @@
                             rows: 5,
                             disabled: readonly %>
               <small>Use YAML format</small>
+            <% when :text %>
+              <%= f.text_area field_name,
+                            value: Setting.send(field_name),
+                            rows: 5,
+                            disabled: readonly %>
             <%% else %>
               <% if field[:options]&.dig(:option_values).present? %>
                 <%= f.select field_name,
