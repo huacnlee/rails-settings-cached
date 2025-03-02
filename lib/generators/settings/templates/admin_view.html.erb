@@ -22,7 +22,7 @@
             <%% field_type = field[:type] %>
             <%% readonly = field[:readonly] %>
             
-            <label for="setting_<%%= field_name %>"><%%= field_name.humanize %></label>
+            <label for="setting_<%= field_name %>"><%= t("activerecord.attributes.setting.#{field_name}", default: field_name.humanize) %></label>
             
             <%% case field_type %>
             <%% when :boolean %>
