@@ -56,7 +56,7 @@
               <% else %>
                 <%= f.text_field field_name,
                               value: Setting.send(field_name),
-                              disabled: readonly %>
+                              disabled: readonly, style: "width: 100%;" %>
               <% end %>
             <%% end %>
 
