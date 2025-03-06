@@ -379,15 +379,6 @@ Generate an admin interface to manage your settings:
 $ rails generate settings:admin
 ```
 
-Now you can visit [http://localhost:3000/admin/settings](http://localhost:3000/admin/settings) to manage your settings.
-
-The generated interface:
-- Groups settings by scope
-- Handles all setting types (string, boolean, array, hash)
-- Shows validation errors
-- Includes basic styling
-- Supports help text from field definitions
-
 ## Special Cache Storage
 
 You can use `cache_store` to change cache storage, default is `Rails.cache`.
