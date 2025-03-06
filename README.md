@@ -371,98 +371,12 @@ end
 
 ---
 
-## How to manage Settings in the admin interface?
+## Admin Interface Generator
 
-If you want to create an admin interface to editing the Settings, you can try methods in following:
+Generate an admin interface to manage your settings:
 
-config/routes.rb
-
-```rb
-namespace :admin do
-  resource :settings
-end
-```
-
-app/controllers/admin/settings_controller.rb
-
-```rb
-module Admin
-  class SettingsController < ApplicationController
-    def create
-      @errors = ActiveModel::Errors.new
-      setting_params.keys.each do |key|
-        next if setting_params[key].nil?
-
-        setting = Setting.new(var: key)
-        setting.value = setting_params[key].strip
-        unless setting.valid?
-          @errors.merge!(setting.errors)
-        end
-      end
-
-      if @errors.any?
-        render :new
-      end
-
-      setting_params.keys.each do |key|
-        Setting.send("#{key}=", setting_params[key].strip) unless setting_params[key].nil?
-      end
-
-      redirect_to admin_settings_path, notice: "Setting was successfully updated."
-    end
-
-    private
-      def setting_params
-        params.require(:setting).permit(:host, :user_limits, :admin_emails,
-          :captcha_enable, :notification_options)
-      end
-  end
-end
-```
-
-app/views/admin/settings/show.html.erb
-
-```erb
-<%= form_for(Setting.new, url: admin_settings_path) do |f| %>
-  <% if @errors.any? %>
-    <div class="alert alert-block alert-danger">
-      <ul>
-        <% @errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="form-group">
-    <label class="control-label">Host</label>
-    <%= f.text_field :host, value: Setting.host, class: "form-control", placeholder: "http://localhost"  %>
-  </div>
-
-  <div class="form-group form-checkbox">
-    <label>
-      <%= f.check_box :captcha_enable, checked: Setting.captcha_enable? %>
-      Enable/Disable Captcha
-    </label>
-  </div>
-
-  <div class="form-group">
-    <label class="control-label">Admin Emails</label>
-    <%= f.text_area :admin_emails, value: Setting.admin_emails.join("\n"), class: "form-control" %>
-  </div>
-
-  <div class="form-group">
-    <label class="control-label">Notification options</label>
-    <%= f.text_area :notification_options, value: YAML.dump(Setting.notification_options), class: "form-control", style: "height: 180px;"  %>
-    <div class="form-text">
-      Use YAML format to config the SMTP_html
-    </div>
-  </div>
-
-  <div>
-    <%= f.submit 'Update Settings' %>
-  </div>
-<% end %>
+```bash
+$ rails generate settings:admin
 ```
 
 ## Special Cache Storage
