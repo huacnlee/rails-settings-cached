@@ -40,7 +40,7 @@ module RailsSettings
     # https://github.com/steveklabnik/request_store
     # For Rails 5.0
     #
-    # NOTE: As Rails 5.2 EOF was June 2022, removing this condition must be considered.
+    # NOTE: As Rails 5.2 EOL was June 2022, removing this condition must be considered.
     # Keeping for now just for backward compatibility.
     #
     require "request_store"
