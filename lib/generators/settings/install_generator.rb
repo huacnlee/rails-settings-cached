@@ -16,10 +16,12 @@ module RailsSettings
     @@migrations = false
 
     def self.timestamped_migrations
-      if ActiveRecord::Base.respond_to?(:timestamped_migrations)
-        ActiveRecord::Base.timestamped_migrations
-      elsif ActiveRecord.respond_to?(:timestamped_migrations)
+      # ActiveRecord.timestamped_migrations was added in Rails 7.1, and the
+      # ActiveRecord::Base version was removed in Rails 7.2.
+      if ActiveRecord.respond_to?(:timestamped_migrations)
         ActiveRecord.timestamped_migrations
+      else
+        ActiveRecord::Base.timestamped_migrations
       end
     end
 
@@ -50,7 +52,7 @@ module RailsSettings
     end
 
     def migration_version
-      "[#{rails_version_major}.#{rails_version_minor}]" if rails_version_major >= 5
+      "[#{rails_version_major}.#{rails_version_minor}]"
     end
   end
 end

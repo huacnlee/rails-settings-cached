@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.license = "MIT"
 
-  s.required_ruby_version = ">= 2.5"
+  s.required_ruby_version = ">= 3.2"
   s.summary = "The best solution for store global settings in Rails applications."
   s.description = "
   The best solution for store global settings in Rails applications.
@@ -25,8 +25,8 @@ Gem::Specification.new do |s|
   You can store any kind of object.  Strings, numbers, arrays, or any object.
   "
 
-  s.add_dependency "railties", ">= 5.0.0"
-  s.add_dependency "activerecord", ">= 5.0.0"
+  s.add_dependency "railties", ">= 6.1.0"
+  s.add_dependency "activerecord", ">= 6.1.0"
 
   s.add_development_dependency "pg"
   s.add_development_dependency "rake"
