@@ -1,3 +1,6 @@
+###
+# TODO: This module can be simplify by removing Rails 5 support.
+#
 module RailsSettings
   module RequestCacheGetter
     extend ActiveSupport::Concern
@@ -36,6 +39,10 @@ module RailsSettings
   else
     # https://github.com/steveklabnik/request_store
     # For Rails 5.0
+    #
+    # NOTE: As Rails 5.2 EOF was June 2022, removing this condition must be considered.
+    # Keeping for now just for backward compatibility.
+    #
     require "request_store"
 
     class RequestCache
