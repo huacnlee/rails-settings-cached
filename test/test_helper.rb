@@ -1,5 +1,21 @@
 # frozen_string_literal: true
 
+# Must start before the gem is loaded, so every file in lib/ is tracked.
+require "simplecov"
+if ENV["CI"]
+  # Cobertura XML (coverage/coverage.xml) is uploaded to Codecov by the CI workflow.
+  require "simplecov-cobertura"
+  SimpleCov.formatters = [SimpleCov::Formatter::HTMLFormatter, SimpleCov::Formatter::CoberturaFormatter]
+end
+SimpleCov.start do
+  enable_coverage :branch
+  add_filter "/test/"
+  # Templates are copied into apps, not run; version.rb is loaded by the gemspec before this point.
+  add_filter "/lib/generators/settings/templates/"
+  add_filter "/lib/rails-settings/version.rb"
+  track_files "lib/**/*.rb"
+end
+
 require "minitest/autorun"
 
 require File.expand_path("../test/dummy/config/environment.rb", __dir__)

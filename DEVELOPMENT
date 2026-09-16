@@ -23,4 +23,7 @@ Gems are kept in a Docker volume per Ruby version (`rails-settings-cached-bundle
 and missing gems are installed automatically when the container starts. After changing
 `RUBY_VERSION`, pass `--build` (or run `docker compose build`) so the matching image exists.
 
+Each test run writes a coverage report (SimpleCov) to `coverage/index.html` and prints a
+line/branch coverage summary.
+
 To refresh the root lockfile: `docker compose run --rm test bundle lock --update`.
