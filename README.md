@@ -4,7 +4,7 @@ The best solution for store global settings in Rails applications.
 
 This gem will make managing a table of а global key, value pairs easy. Think of it like a global Hash stored in your database, that uses simple ActiveRecord like methods for manipulation. Keep track of any global setting that you don't want to hard code into your Rails application.
 
-[![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![build](https://github.com/huacnlee/rails-settings-cached/workflows/build/badge.svg)](https://github.com/huacnlee/rails-settings-cached/actions?query=workflow%3Abuild)
+[![Gem Version](https://badge.fury.io/rb/rails-settings-cached.svg)](https://rubygems.org/gems/rails-settings-cached) [![build](https://github.com/huacnlee/rails-settings-cached/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/huacnlee/rails-settings-cached/actions/workflows/build.yml) [![codecov](https://codecov.io/gh/huacnlee/rails-settings-cached/branch/main/graph/badge.svg)](https://codecov.io/gh/huacnlee/rails-settings-cached)
 
 ## Installation
 
