@@ -1,0 +1,23 @@
+# Usage:
+#   docker compose run --rm test
+#   GEMFILE=gemfiles/Gemfile-7-2 docker compose run --rm test
+#   RUBY_VERSION=3.2 GEMFILE=gemfiles/Gemfile-7-1 docker compose run --rm --build test
+services:
+  test:
+    image: rails-settings-cached-test:ruby-${RUBY_VERSION:-3.4}
+    build:
+      context: .
+      args:
+        RUBY_VERSION: ${RUBY_VERSION:-3.4}
+        BUNDLE_GEMFILE: ${GEMFILE:-Gemfile}
+    environment:
+      BUNDLE_GEMFILE: /app/${GEMFILE:-Gemfile}
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+    command: ["bundle", "exec", "rails", "test"]
+
+volumes:
+  # One gem volume per Ruby version, so native extensions never mix ABIs.
+  bundle:
+    name: rails-settings-cached-bundle-${RUBY_VERSION:-3.4}

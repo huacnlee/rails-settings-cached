@@ -4,3 +4,23 @@
 2. Run `bundle install` to make `Gemfile.lock` reflect the new version number.
 3. Git commit with `Version vX.Y.Z`.
 4. Run `rake release` to publish gem, this command will create a git tag for the version.
+
+## Running tests with Docker
+
+No database service is needed; the test suite uses an in-memory SQLite database.
+
+```sh
+docker compose build
+docker compose run --rm test                                    # Ruby 3.4, root Gemfile
+GEMFILE=gemfiles/Gemfile-7-2 docker compose run --rm test       # another Rails version
+RUBY_VERSION=3.2 GEMFILE=gemfiles/Gemfile-7-1 docker compose run --rm --build test
+docker compose run --rm test bundle exec rails test test/base_test.rb
+docker compose run --rm test bundle exec rubocop
+docker compose run --rm test bash                               # shell
+```
+
+Gems are kept in a Docker volume per Ruby version (`rails-settings-cached-bundle-<version>`),
+and missing gems are installed automatically when the container starts. After changing
+`RUBY_VERSION`, pass `--build` (or run `docker compose build`) so the matching image exists.
+
+To refresh the root lockfile: `docker compose run --rm test bundle lock --update`.

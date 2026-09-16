@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+# Install missing gems, e.g. after switching GEMFILE or editing a Gemfile.
+bundle check >/dev/null 2>&1 || bundle install --jobs 4
+
+exec "$@"

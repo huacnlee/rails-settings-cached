@@ -1,0 +1,14 @@
+.git
+.github
+.idea
+.bundle
+.DS_Store
+vendor
+pkg
+coverage
+log
+tmp
+*.gem
+gemfiles/*.lock
+test/dummy/log
+test/dummy/tmp

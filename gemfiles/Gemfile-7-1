@@ -3,5 +3,8 @@ source "https://rubygems.org"
 gem "railties", "~> 7.1.0"
 gem "activerecord", "~> 7.1.0"
 gem "sqlite3"
+# Rails < 8.1 is incompatible with minitest 6 and json 3
+gem "minitest", "< 6"
+gem "json", "< 3"
 
 gemspec path: ".."
