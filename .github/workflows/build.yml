@@ -28,8 +28,6 @@ jobs:
             gemfile: gemfiles/Gemfile-7-1
           - ruby: 3.2
             gemfile: gemfiles/Gemfile-7-0
-          - ruby: 3.2
-            gemfile: gemfiles/Gemfile-6-1
     env:
       CI: 1
       BUNDLE_GEMFILE: ${{ matrix.gemfile }}

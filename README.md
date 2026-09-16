@@ -8,7 +8,7 @@ This gem will make managing a table of а global key, value pairs easy. Think of
 
 ## Installation
 
-Requires Ruby 3.2+ and Rails 6.1+. For older Ruby or Rails versions, use the 2.9.x releases.
+Requires Ruby 3.2+ and Rails 7.0+. For older Ruby or Rails versions, use the 2.9.x releases.
 
 Edit your Gemfile:
 
